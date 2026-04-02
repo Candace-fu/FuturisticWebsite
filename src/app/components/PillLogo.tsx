@@ -28,7 +28,14 @@ export default function PillLogo({ size = "medium" }: PillLogoProps) {
       >
         <defs>
           {/* Main gradient - smooth red to cyan */}
-          <linearGradient id="pillGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+          <linearGradient
+            id="pillGradient"
+            gradientUnits="userSpaceOnUse"
+            x1="0"
+            y1={height / 2}
+            x2={width}
+            y2={height / 2}
+          >
             <motion.stop
               offset="0%"
               animate={{
