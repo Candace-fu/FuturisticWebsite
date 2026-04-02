@@ -8,14 +8,132 @@ interface IconPosition {
   offset: number; // percentage along the edge
 }
 
+interface AgentEyeProps {
+  compact?: boolean;
+  isTyping: boolean;
+  flash: boolean;
+}
+
+function AgentEye({ compact = false, isTyping, flash }: AgentEyeProps) {
+  const shellShadow = flash
+    ? "0 0 20px rgba(255, 70, 70, 0.24), inset 0 1px 2px rgba(255,255,255,0.32), inset 0 -4px 10px rgba(0,0,0,0.78)"
+    : "0 0 12px rgba(255,255,255,0.05), inset 0 1px 2px rgba(255,255,255,0.28), inset 0 -4px 10px rgba(0,0,0,0.76)";
+
+  const coreShadow = flash
+    ? [
+        "0 0 18px rgba(255,60,60,0.85), 0 0 34px rgba(255,60,60,0.44)",
+        "0 0 28px rgba(255,92,92,1), 0 0 50px rgba(255,72,72,0.74)",
+        "0 0 18px rgba(255,60,60,0.85), 0 0 34px rgba(255,60,60,0.44)",
+      ]
+    : isTyping
+      ? [
+          "0 0 15px rgba(255,50,50,0.82), 0 0 28px rgba(255,50,50,0.36)",
+          "0 0 24px rgba(255,82,82,0.98), 0 0 44px rgba(255,64,64,0.64)",
+          "0 0 15px rgba(255,50,50,0.82), 0 0 28px rgba(255,50,50,0.36)",
+        ]
+      : [
+          "0 0 10px rgba(255,42,42,0.62), 0 0 22px rgba(255,42,42,0.24)",
+          "0 0 15px rgba(255,52,52,0.78), 0 0 28px rgba(255,52,52,0.32)",
+          "0 0 10px rgba(255,42,42,0.62), 0 0 22px rgba(255,42,42,0.24)",
+        ];
+
+  return (
+    <motion.div
+      className={`rounded-full flex items-center justify-center relative ${compact ? "h-12 w-12" : "h-14 w-14"}`}
+      animate={{
+        scale: flash ? 1.05 : isTyping ? [1, 1.03, 1] : [1, 1.015, 1],
+        filter: flash
+          ? ["brightness(1.2)", "brightness(1.45)", "brightness(1.1)"]
+          : isTyping
+            ? ["brightness(1)", "brightness(1.16)", "brightness(1)"]
+            : ["brightness(0.98)", "brightness(1.04)", "brightness(0.98)"],
+      }}
+      transition={{
+        duration: flash ? 0.45 : isTyping ? 0.9 : 2.4,
+        repeat: flash ? 1 : Infinity,
+        ease: "easeInOut",
+      }}
+    >
+      <div
+        className="absolute inset-0 rounded-full"
+        style={{
+          background:
+            "radial-gradient(circle at 32% 28%, rgba(255,255,255,0.34), rgba(194,198,205,0.18) 16%, rgba(99,104,112,0.92) 52%, rgba(25,27,31,1) 78%, rgba(8,9,11,1) 100%)",
+          boxShadow: shellShadow,
+        }}
+      />
+
+      <div
+        className={`absolute rounded-full ${compact ? "inset-[5px]" : "inset-[6px]"}`}
+        style={{
+          background:
+            "radial-gradient(circle at 42% 35%, rgba(48,50,56,0.96) 0%, rgba(13,14,18,1) 46%, rgba(0,0,0,1) 100%)",
+          boxShadow:
+            "inset 0 0 10px rgba(255,255,255,0.06), inset 0 0 24px rgba(0,0,0,0.95)",
+        }}
+      />
+
+      <motion.div
+        className={`absolute rounded-full ${compact ? "inset-[12px]" : "inset-[15px]"}`}
+        style={{
+          background:
+            "radial-gradient(circle at 48% 46%, rgba(255,185,185,0.98) 0%, rgba(255,74,74,0.94) 22%, rgba(164,8,8,0.98) 54%, rgba(44,0,0,1) 76%, rgba(0,0,0,1) 100%)",
+        }}
+        animate={{
+          boxShadow: coreShadow,
+          scale: flash ? [1, 1.08, 1] : isTyping ? [1, 1.05, 1] : [1, 1.02, 1],
+        }}
+        transition={{
+          duration: flash ? 0.45 : isTyping ? 0.9 : 2.6,
+          repeat: flash ? 1 : Infinity,
+          ease: "easeInOut",
+        }}
+      />
+
+      <div
+        className={`absolute rounded-full ${compact ? "inset-[19px]" : "inset-[23px]"}`}
+        style={{
+          background:
+            "radial-gradient(circle at 45% 42%, rgba(255,250,250,0.98) 0%, rgba(255,220,220,0.88) 32%, rgba(255,120,120,0.18) 58%, transparent 78%)",
+        }}
+      />
+
+      <div
+        className={`absolute rounded-full rotate-[-28deg] ${compact ? "left-[11px] top-[9px] h-[8px] w-[18px]" : "left-[14px] top-[11px] h-[10px] w-[22px]"}`}
+        style={{
+          background:
+            "linear-gradient(180deg, rgba(255,255,255,0.32), rgba(255,255,255,0.04))",
+          filter: "blur(0.4px)",
+        }}
+      />
+
+      <div
+        className={`absolute rounded-full border ${compact ? "inset-[7px]" : "inset-[9px]"}`}
+        style={{
+          borderColor: "rgba(255,255,255,0.08)",
+        }}
+      />
+    </motion.div>
+  );
+}
+
 export default function AgentDialogue() {
-  const { dialogueMessage, setDialogueMessage, systemState, isPanelExpanded, togglePanel, collapsePanel, expandPanel } = useSystem();
+  const {
+    dialogueMessage,
+    setDialogueMessage,
+    systemState,
+    isPanelExpanded,
+    togglePanel,
+    collapsePanel,
+    expandPanel,
+  } = useSystem();
   const [typingText, setTypingText] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [isFullyTyped, setIsFullyTyped] = useState(false);
   const [userInput, setUserInput] = useState("");
   const [lastMessage, setLastMessage] = useState<typeof dialogueMessage>(null);
   const [isDragging, setIsDragging] = useState(false);
+  const [avatarFlash, setAvatarFlash] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const dragControls = useDragControls();
 
@@ -42,7 +160,7 @@ export default function AgentDialogue() {
     if (typeof window === "undefined") {
       return { x: 0, y: 0 }; // Default for SSR
     }
-    
+
     const padding = 32; // Distance from edge
     const iconSize = 64;
 
@@ -89,7 +207,7 @@ export default function AgentDialogue() {
     if (typeof window === "undefined") {
       return { edge: "right", offset: 50 }; // Default for SSR
     }
-    
+
     const w = window.innerWidth;
     const h = window.innerHeight;
 
@@ -117,7 +235,10 @@ export default function AgentDialogue() {
     return { edge: nearestEdge, offset };
   };
 
-  const handleDragEnd = (event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
+  const handleDragEnd = (
+    event: MouseEvent | TouchEvent | PointerEvent,
+    info: PanInfo
+  ) => {
     setIsDragging(false);
     const x = info.point.x;
     const y = info.point.y;
@@ -127,12 +248,10 @@ export default function AgentDialogue() {
 
   // Typing effect
   useEffect(() => {
-    if (!dialogueMessage || isPanelExpanded) {
-      if (!isPanelExpanded) {
-        setTypingText("");
-        setIsTyping(false);
-        setIsFullyTyped(false);
-      }
+    if (!dialogueMessage) {
+      setTypingText("");
+      setIsTyping(false);
+      setIsFullyTyped(false);
       return;
     }
 
@@ -158,7 +277,7 @@ export default function AgentDialogue() {
     }, 30); // Typing speed: 30ms per character
 
     return () => clearInterval(typingInterval);
-  }, [dialogueMessage, isPanelExpanded]);
+  }, [dialogueMessage]);
 
   // Auto-expand panel when new message arrives
   useEffect(() => {
@@ -166,6 +285,17 @@ export default function AgentDialogue() {
       expandPanel();
     }
   }, [dialogueMessage]);
+
+  useEffect(() => {
+    if (!dialogueMessage) return;
+
+    setAvatarFlash(true);
+    const flashTimer = window.setTimeout(() => {
+      setAvatarFlash(false);
+    }, 280);
+
+    return () => window.clearTimeout(flashTimer);
+  }, [dialogueMessage?.id]);
 
   const handleClose = () => {
     setDialogueMessage(null);
@@ -185,60 +315,103 @@ export default function AgentDialogue() {
     }
   };
 
-  const handleResponseClick = (response: string) => {
+  const requestAgentResponse = async (prompt: string) => {
+    console.log("before fetch", prompt);
+    const response = await fetch("/api/agent", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ message: prompt }),
+    });
+    console.log("after fetch", response.status);
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data?.error || "Agent request failed");
+    }
+
+    return typeof data?.text === "string" && data.text.trim()
+      ? data.text
+      : "I received your message, but I do not have a response yet.";
+  };
+
+  const handleResponseClick = async (response: string) => {
     console.log("User selected:", response);
-    // Simulate agent response
-    if (dialogueMessage) {
+    setIsTyping(true);
+    setIsFullyTyped(false);
+
+    try {
+      const text = await requestAgentResponse(response);
       setDialogueMessage({
-        ...dialogueMessage,
         id: `response-${Date.now()}`,
-        text: `Interesting choice. "${response}" reveals your curiosity about the intersection of technology and creativity. Let me know if you'd like to explore more.`,
+        text,
         timestamp: Date.now(),
-        responses: undefined,
+      });
+    } catch (error) {
+      setDialogueMessage({
+        id: `response-error-${Date.now()}`,
+        text:
+          error instanceof Error
+            ? error.message
+            : "The agent is temporarily unavailable.",
+        timestamp: Date.now(),
       });
     }
   };
 
-  const handleUserSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!userInput.trim() || !dialogueMessage) return;
+  const submitPrompt = async () => {
+    console.log("submitPrompt start", userInput);
+    if (!userInput.trim()) return;
 
-    // Simulate agent response to user input
-    const responses = [
-      `That's a fascinating question about "${userInput}". The answer lies in how we balance structure with chaos—allowing systems to breathe while maintaining coherence.`,
-      `You asked about "${userInput}"—an intriguing topic. In our lab, we believe technology should adapt to human emotion, not the other way around.`,
-      `"${userInput}" touches on something fundamental. We're exploring how interfaces can feel alive, responding to your state rather than just your commands.`,
-      `Great question about "${userInput}". The key is creating systems that feel less like tools and more like collaborative partners in creativity.`,
-    ];
-
-    const randomResponse = responses[Math.floor(Math.random() * responses.length)];
-
-    setDialogueMessage({
-      ...dialogueMessage,
-      id: `user-response-${Date.now()}`,
-      text: randomResponse,
-      timestamp: Date.now(),
-    });
-
+    const prompt = userInput.trim();
     setUserInput("");
+    setIsTyping(true);
+    setIsFullyTyped(false);
+
+    try {
+      const text = await requestAgentResponse(prompt);
+      setDialogueMessage({
+        id: `user-response-${Date.now()}`,
+        text,
+        timestamp: Date.now(),
+      });
+    } catch (error) {
+      setDialogueMessage({
+        id: `user-response-error-${Date.now()}`,
+        text:
+          error instanceof Error
+            ? error.message
+            : "The agent is temporarily unavailable.",
+        timestamp: Date.now(),
+      });
+    }
   };
+
+  const handleUserSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    await submitPrompt();
+  };
+
+  const showAgentControls = Boolean(dialogueMessage) && isPanelExpanded;
 
   // Calculate glow color based on energy balance
   const getGlowColor = () => {
     const redIntensity = systemState.energyBalance / 100;
     const cyanIntensity = 1 - redIntensity;
-    
+
     const red = Math.round(239 * redIntensity + 6 * cyanIntensity);
     const green = Math.round(68 * redIntensity + 182 * cyanIntensity);
     const blue = Math.round(68 * redIntensity + 212 * cyanIntensity);
-    
+
     return `rgba(${red}, ${green}, ${blue}, 0.5)`;
   };
 
   // Collapsed floating icon
   if (!isPanelExpanded && lastMessage) {
     const pixelPos = getPixelPosition(iconPosition);
-    
+
     return (
       <motion.div
         drag
@@ -248,8 +421,8 @@ export default function AgentDialogue() {
         onDragStart={() => setIsDragging(true)}
         onDragEnd={handleDragEnd}
         initial={{ scale: 0, opacity: 0 }}
-        animate={{ 
-          scale: 1, 
+        animate={{
+          scale: 1,
           opacity: 1,
           x: pixelPos.x,
           y: pixelPos.y,
@@ -277,79 +450,9 @@ export default function AgentDialogue() {
           whileHover={{ scale: isDragging ? 1 : 1.1 }}
           whileTap={{ scale: isDragging ? 1 : 0.95 }}
         >
-          {/* Pill-shaped container with gradient */}
-          <motion.div
-            className="absolute inset-0 rounded-full overflow-hidden"
-            style={{
-              background: `linear-gradient(135deg, 
-                rgba(239, 68, 68, ${isDragging ? 0.9 : 0.7}), 
-                rgba(6, 182, 212, ${isDragging ? 0.9 : 0.7})
-              )`,
-              boxShadow: isDragging 
-                ? `0 0 50px ${lastMessage.speakerColor || getGlowColor()}, 0 10px 30px rgba(0,0,0,0.5)`
-                : `0 0 30px ${lastMessage.speakerColor || getGlowColor()}`,
-            }}
-            animate={{
-              rotate: isDragging ? 0 : [0, 360],
-            }}
-            transition={{
-              rotate: {
-                duration: 20,
-                repeat: Infinity,
-                ease: "linear",
-              },
-            }}
-          >
-            {/* Gradient overlay animation */}
-            <motion.div
-              className="absolute inset-0"
-              style={{
-                background: "radial-gradient(circle at 30% 30%, rgba(255,255,255,0.3), transparent 60%)",
-              }}
-              animate={{
-                opacity: [0.3, 0.6, 0.3],
-              }}
-              transition={{
-                duration: 3,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-            />
-          </motion.div>
-
-          {/* Outer glow ring */}
-          <motion.div
-            className="absolute inset-0 rounded-full border-2"
-            style={{
-              borderColor: lastMessage.speakerColor || getGlowColor(),
-            }}
-            animate={{
-              boxShadow: [
-                `0 0 20px ${lastMessage.speakerColor || getGlowColor()}`,
-                `0 0 40px ${lastMessage.speakerColor || getGlowColor()}`,
-                `0 0 20px ${lastMessage.speakerColor || getGlowColor()}`,
-              ],
-              scale: isDragging ? 1.05 : [1, 1.02, 1],
-            }}
-            transition={{ duration: 2, repeat: Infinity }}
-          />
-
-          {/* Center initial */}
           <div className="absolute inset-0 flex items-center justify-center">
-            <span className="text-2xl font-extralight text-white tracking-wider drop-shadow-lg">
-              {lastMessage.speakerInitial || "A"}
-            </span>
+            <AgentEye compact isTyping={isTyping} flash={avatarFlash} />
           </div>
-
-          {/* Pulse indicator */}
-          <motion.div
-            className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-cyan-400 border-2 border-black/50"
-            animate={{
-              scale: [1, 1.3, 1],
-              opacity: [1, 0.7, 1],
-            }}
-            transition={{ duration: 2, repeat: Infinity }}
-          />
 
           {/* Drag hint - appears only on hover when not dragging */}
           {!isDragging && (
@@ -370,7 +473,7 @@ export default function AgentDialogue() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5 }}
-              className="absolute -bottom-16 left-1/2 -translate-x-1/2 whitespace-nowrap"
+              className="absolute -bottom-11 left-1/2 -translate-x-1/2 whitespace-nowrap"
             >
               <div className="flex items-center gap-1.5 text-xs text-cyan-400/60 tracking-wider px-3 py-1.5 bg-black/40 rounded-full backdrop-blur-sm border border-cyan-400/20">
                 <kbd className="px-2 py-0.5 bg-white/10 border border-white/20 rounded text-[10px] font-mono">TAB</kbd>
@@ -438,7 +541,7 @@ export default function AgentDialogue() {
                   <kbd className="px-1.5 py-0.5 bg-white/10 border border-white/20 rounded text-[10px] font-mono">TAB</kbd>
                   <span>COLLAPSE</span>
                 </motion.div>
-                
+
                 <motion.button
                   onClick={handleCollapse}
                   className="text-white/40 hover:text-white transition-colors"
@@ -461,48 +564,7 @@ export default function AgentDialogue() {
 
               {/* Header - Agent icon and name */}
               <div className="flex items-center gap-4 mb-6">
-                {/* Fun Agent Circle - Always consistent */}
-                <motion.div
-                  className="w-14 h-14 rounded-full border-2 flex items-center justify-center flex-shrink-0 relative overflow-hidden"
-                  style={{
-                    borderColor: getGlowColor(),
-                    boxShadow: `0 0 20px ${getGlowColor()}`,
-                  }}
-                  animate={{
-                    boxShadow: [
-                      `0 0 20px ${getGlowColor()}`,
-                      `0 0 35px ${getGlowColor()}`,
-                      `0 0 20px ${getGlowColor()}`,
-                    ],
-                  }}
-                  transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                  }}
-                >
-                  {/* Animated gradient background */}
-                  <motion.div
-                    className="absolute inset-0"
-                    style={{
-                      background: `linear-gradient(135deg, 
-                        rgba(239, 68, 68, 0.3), 
-                        rgba(6, 182, 212, 0.3)
-                      )`,
-                    }}
-                    animate={{
-                      rotate: [0, 360],
-                    }}
-                    transition={{
-                      duration: 10,
-                      repeat: Infinity,
-                      ease: "linear",
-                    }}
-                  />
-                  
-                  <span className="text-xl font-light text-white relative z-10">
-                    ⚡
-                  </span>
-                </motion.div>
+                <AgentEye isTyping={isTyping} flash={avatarFlash} />
 
                 {/* Fun Agent info */}
                 <div className="flex-1">
@@ -551,7 +613,7 @@ export default function AgentDialogue() {
               </div>
 
               {/* Optional response buttons */}
-              {isFullyTyped && dialogueMessage.responses && dialogueMessage.responses.length > 0 && (
+              {showAgentControls && dialogueMessage.responses && dialogueMessage.responses.length > 0 && (
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -576,25 +638,32 @@ export default function AgentDialogue() {
               )}
 
               {/* User input box */}
-              {isFullyTyped && (
+              {showAgentControls && (
                 <motion.form
                   onSubmit={handleUserSubmit}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.5 }}
-                  className="relative mb-4"
+                  className="relative z-20 pointer-events-auto mb-4"
                 >
                   <input
                     ref={inputRef}
                     type="text"
                     value={userInput}
                     onChange={(e) => setUserInput(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" && !e.shiftKey) {
+                        e.preventDefault();
+                        void submitPrompt();
+                      }
+                    }}
                     placeholder="Ask the agent something..."
                     className="w-full bg-white/5 border border-white/20 rounded-2xl px-5 py-3 text-white/90 placeholder:text-white/30 focus:outline-none focus:border-cyan-400/50 focus:bg-white/10 transition-all text-sm"
                   />
                   <motion.button
-                    type="submit"
-                    disabled={!userInput.trim()}
+                    type="button"
+                    onClick={() => void submitPrompt()}
+                    disabled={false}
                     className={`absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-xl transition-all ${
                       userInput.trim()
                         ? "text-cyan-400 hover:bg-cyan-400/10"
@@ -610,7 +679,7 @@ export default function AgentDialogue() {
             </div>
 
             {/* REDESIGNED: Integrated Energy Core Glow - Bottom Edge */}
-            <div className="absolute bottom-0 left-0 right-0 h-20 pointer-events-none overflow-hidden rounded-b-3xl">
+            <div className="absolute bottom-0 left-0 right-0 z-0 h-20 pointer-events-none overflow-hidden rounded-b-3xl">
               {/* Inner glow - fades upward into panel */}
               <motion.div
                 className="absolute inset-0"

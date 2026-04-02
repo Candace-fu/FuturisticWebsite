@@ -183,7 +183,6 @@ export default function OrganicAgent({
                 0.6 * (0.6 + redStrength * 0.4),
                 0.4 * (0.6 + redStrength * 0.4),
               ],
-              scale: [1, 1.2 * activityMultiplier, 1.05, 1.15 * activityMultiplier, 1],
             }}
             transition={{
               duration: orbitSpeed,
@@ -192,14 +191,49 @@ export default function OrganicAgent({
               delay: particle.baseDelay,
             }}
           >
-            <div
-              className="w-6 h-6 rounded-full"
-              style={{
-                backgroundColor: redColor,
-                filter: `blur(${6 * (glowIntensity / 100)}px)`,
-                boxShadow: `0 0 ${20 * (glowIntensity / 100)}px ${redGlow}, 0 0 ${40 * (glowIntensity / 100)}px ${redGlow}`,
-              }}
-            />
+            <div className="relative w-8 h-8">
+              <motion.div
+                className="absolute inset-[-12px] rounded-full"
+                style={{
+                  backgroundColor: redColor,
+                  filter: `blur(${11 * (glowIntensity / 100)}px)`,
+                  opacity: 0.24 + redStrength * 0.16,
+                  boxShadow: `0 0 ${12 * (glowIntensity / 100)}px ${redGlow}`,
+                }}
+                animate={{
+                  opacity: [
+                    0.22 + redStrength * 0.12,
+                    0.3 + redStrength * 0.16,
+                    0.25 + redStrength * 0.13,
+                    0.28 + redStrength * 0.15,
+                    0.22 + redStrength * 0.12,
+                  ],
+                }}
+                transition={{
+                  duration: orbitSpeed,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                  delay: particle.baseDelay,
+                }}
+              />
+              <motion.div
+                className="absolute inset-[6px] rounded-full"
+                style={{
+                  backgroundColor: redColor,
+                  boxShadow: `0 0 ${8 * (glowIntensity / 100)}px ${redGlow}`,
+                }}
+                animate={{
+                  scale: [1, 1.04 + activityLevel * 0.0015, 1.01, 1.03 + activityLevel * 0.0012, 1],
+                  opacity: [0.9, 1, 0.94, 0.98, 0.9],
+                }}
+                transition={{
+                  duration: orbitSpeed,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                  delay: particle.baseDelay,
+                }}
+              />
+            </div>
           </motion.div>
         );
       })}
@@ -241,7 +275,6 @@ export default function OrganicAgent({
                 0.55 * (0.5 + cyanStrength * 0.5),
                 0.35 * (0.5 + cyanStrength * 0.5),
               ],
-              scale: [0.9, 1.15 * activityMultiplier, 1, 1.1 * activityMultiplier, 0.9],
             }}
             transition={{
               duration: orbitSpeed,
@@ -250,14 +283,49 @@ export default function OrganicAgent({
               delay: particle.baseDelay,
             }}
           >
-            <div
-              className="w-5 h-5 rounded-full"
-              style={{
-                backgroundColor: cyanColor,
-                filter: `blur(${5 * (glowIntensity / 100)}px)`,
-                boxShadow: `0 0 ${16 * (glowIntensity / 100)}px ${cyanGlow}, 0 0 ${32 * (glowIntensity / 100)}px ${cyanGlow}`,
-              }}
-            />
+            <div className="relative w-7 h-7">
+              <motion.div
+                className="absolute inset-[-11px] rounded-full"
+                style={{
+                  backgroundColor: cyanColor,
+                  filter: `blur(${10 * (glowIntensity / 100)}px)`,
+                  opacity: 0.22 + cyanStrength * 0.14,
+                  boxShadow: `0 0 ${10 * (glowIntensity / 100)}px ${cyanGlow}`,
+                }}
+                animate={{
+                  opacity: [
+                    0.2 + cyanStrength * 0.1,
+                    0.28 + cyanStrength * 0.15,
+                    0.23 + cyanStrength * 0.12,
+                    0.26 + cyanStrength * 0.14,
+                    0.2 + cyanStrength * 0.1,
+                  ],
+                }}
+                transition={{
+                  duration: orbitSpeed,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                  delay: particle.baseDelay,
+                }}
+              />
+              <motion.div
+                className="absolute inset-[5px] rounded-full"
+                style={{
+                  backgroundColor: cyanColor,
+                  boxShadow: `0 0 ${7 * (glowIntensity / 100)}px ${cyanGlow}`,
+                }}
+                animate={{
+                  scale: [0.99, 1.035 + activityLevel * 0.0013, 1, 1.025 + activityLevel * 0.001, 0.99],
+                  opacity: [0.88, 0.98, 0.92, 0.96, 0.88],
+                }}
+                transition={{
+                  duration: orbitSpeed,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                  delay: particle.baseDelay,
+                }}
+              />
+            </div>
           </motion.div>
         );
       })}

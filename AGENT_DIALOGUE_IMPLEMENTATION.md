@@ -1,5 +1,5 @@
 # Agent Dialogue System - Implementation Summary
-
+import React from 'react'
 ## ✅ All Requirements Implemented
 
 ### 1. Agent is Always the Main Subject

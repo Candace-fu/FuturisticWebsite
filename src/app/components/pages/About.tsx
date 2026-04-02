@@ -232,7 +232,6 @@ export default function About() {
                     const isHovered = hoveredKey === letter.toLowerCase();
                     const isCurrentActive = activeKey === letter.toLowerCase();
                     const popupPosition = getPopupPosition(letter, rowIndex, keyIndex, row.length);
-
                     return (
                       <motion.div
                         key={`${letter}-${keyIndex}`}
@@ -242,7 +241,7 @@ export default function About() {
                           duration: 0.5,
                           delay: 0.5 + rowIndex * 0.1 + keyIndex * 0.02,
                         }}
-                        className="flex flex-col items-center"
+                        className="relative flex flex-col items-center"
                       >
                         {/* Individual Key */}
                         <motion.button
