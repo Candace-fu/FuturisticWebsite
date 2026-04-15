@@ -16,16 +16,16 @@ export default function Contact() {
       color: "from-cyan-400 to-cyan-600",
     },
     {
-      id: "twitter",
-      label: "TWITTER",
-      value: "@pills_fun",
-      color: "from-blue-400 to-blue-600",
+      id: "xiaohongshu",
+      label: "XIAOHONGSHU",
+      value: "pills.fun",
+      color: "from-red-400 to-pink-500",
     },
     {
-      id: "instagram",
-      label: "INSTAGRAM",
-      value: "@pills.fun",
-      color: "from-pink-400 to-purple-600",
+      id: "nest2050",
+      label: "2050 NEST",
+      value: "2050.org/#/nest/85",
+      color: "from-orange-400 to-red-500",
     },
   ];
 
@@ -81,9 +81,9 @@ export default function Contact() {
                 href={
                   method.id === "email"
                     ? `mailto:${method.value}`
-                    : method.id === "twitter"
-                    ? `https://twitter.com/${method.value.replace("@", "")}`
-                    : `https://instagram.com/${method.value.replace("@", "")}`
+                    : method.id === "nest2050"
+                    ? "https://2050.org/#/nest/85"
+                    : `https://www.xiaohongshu.com/search_result?keyword=${encodeURIComponent(method.value)}`
                 }
                 className="block relative border border-white/10 rounded-2xl p-8 overflow-hidden group"
                 whileHover={{ scale: 1.02 }}
