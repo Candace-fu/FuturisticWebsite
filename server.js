@@ -58,7 +58,7 @@ app.post("/api/agent", async (req, res) => {
           Authorization: `Bearer ${apiKey}`,
         },
         body: JSON.stringify({
-          model: "Qwen/Qwen3.5-35B-A3B",
+          model: "Qwen/Qwen2.5-7B-Instruct",
           messages: [
             {
               role: "system",
@@ -100,6 +100,26 @@ app.post("/api/agent", async (req, res) => {
   }
 });
 
-app.listen(PORT, "127.0.0.1", () => {
+const server = app.listen(PORT, "127.0.0.1", () => {
   console.log(`Agent API listening on http://127.0.0.1:${PORT}`);
 });
+
+server.ref();
+
+server.on("close", () => {
+  console.log("Agent API server closed");
+});
+
+server.on("error", (error) => {
+  console.error("Agent API server error:", error);
+});
+
+const shutdown = (signal) => {
+  console.log(`Received ${signal}, shutting down agent API`);
+  server.close(() => {
+    process.exit(0);
+  });
+};
+
+process.on("SIGINT", () => shutdown("SIGINT"));
+process.on("SIGTERM", () => shutdown("SIGTERM"));
