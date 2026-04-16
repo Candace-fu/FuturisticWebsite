@@ -297,6 +297,12 @@ export default function AgentDialogue() {
     return () => window.clearTimeout(flashTimer);
   }, [dialogueMessage?.id]);
 
+  useEffect(() => {
+    if (isPanelExpanded && !dialogueMessage && lastMessage) {
+      setDialogueMessage(lastMessage);
+    }
+  }, [isPanelExpanded, dialogueMessage, lastMessage, setDialogueMessage]);
+
   const handleClose = () => {
     setDialogueMessage(null);
     collapsePanel();
