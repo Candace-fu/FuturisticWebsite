@@ -126,7 +126,7 @@ function agentProxyPlugin(apiKey: string | undefined): Plugin {
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
 
-  console.log("SILICONFLOW_API_KEY:", env.SILICONFLOW_API_KEY)
+// console.log("SILICONFLOW_API_KEY:", env.SILICONFLOW_API_KEY)
 
 
   return {
