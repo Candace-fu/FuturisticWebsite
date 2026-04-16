@@ -338,15 +338,18 @@ export default function OrganicAgent({
           top: "calc(50% - 5px)",
         }}
         animate={{
-          scale: [1, 1.08 * activityMultiplier, 0.96, 1.05 * activityMultiplier, 1],
           rotate: [0, 3, -2, 4, 0],
         }}
         transition={{
-          scale: { duration: breathSpeed * 1.5, repeat: Infinity, ease: "easeInOut" },
           rotate: { duration: breathSpeed * 2.2, repeat: Infinity, ease: "easeInOut" },
         }}
       >
-        <svg width="240" height="240" viewBox="0 0 240 240">
+        <svg
+          width="320"
+          height="320"
+          viewBox="-40 -40 320 320"
+          style={{ overflow: "visible" }}
+        >
           <defs>
             {/* Red-dominant core gradient */}
             <radialGradient id="coreGradient" cx="45%" cy="42%">
@@ -364,7 +367,14 @@ export default function OrganicAgent({
               <stop offset="70%" stopColor="transparent" stopOpacity={0} />
             </radialGradient>
 
-            <filter id="coreGlow">
+            <filter
+              id="coreGlow"
+              x="-60"
+              y="-60"
+              width="360"
+              height="360"
+              filterUnits="userSpaceOnUse"
+            >
               <feGaussianBlur stdDeviation={18 * (glowIntensity / 100)} result="coloredBlur" />
               <feMerge>
                 <feMergeNode in="coloredBlur" />
