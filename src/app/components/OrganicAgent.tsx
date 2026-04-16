@@ -343,58 +343,24 @@ export default function OrganicAgent({
         transition={{
           rotate: { duration: breathSpeed * 2.2, repeat: Infinity, ease: "easeInOut" },
         }}
-      >
-        <svg
-          width="320"
-          height="320"
-          viewBox="-40 -40 320 320"
-          style={{ overflow: "visible" }}
         >
-          <defs>
-            {/* Red-dominant core gradient */}
-            <radialGradient id="coreGradient" cx="45%" cy="42%">
-              <stop offset="0%" stopColor={redColor} stopOpacity={0.5 + redStrength * 0.5} />
-              <stop offset="35%" stopColor={redColor} stopOpacity={0.4 + redStrength * 0.55} />
-              <stop offset="60%" stopColor={redGlow} stopOpacity={0.7} />
-              <stop offset="85%" stopColor={redGlow} stopOpacity={0.3} />
-              <stop offset="100%" stopColor="transparent" stopOpacity={0} />
-            </radialGradient>
-
-            {/* Cyan intrusion gradient */}
-            <radialGradient id="cyanIntrusionGradient" cx="65%" cy="58%">
-              <stop offset="0%" stopColor={cyanColor} stopOpacity={0.3 + cyanStrength * 0.4} />
-              <stop offset="40%" stopColor={cyanGlow} stopOpacity={0.2 + cyanStrength * 0.2} />
-              <stop offset="70%" stopColor="transparent" stopOpacity={0} />
-            </radialGradient>
-
-            <filter
-              id="coreGlow"
-              x="-60"
-              y="-60"
-              width="360"
-              height="360"
-              filterUnits="userSpaceOnUse"
-            >
-              <feGaussianBlur stdDeviation={18 * (glowIntensity / 100)} result="coloredBlur" />
-              <feMerge>
-                <feMergeNode in="coloredBlur" />
-                <feMergeNode in="coloredBlur" />
-                <feMergeNode in="SourceGraphic" />
-              </feMerge>
-            </filter>
-          </defs>
-
-          {/* Main red core */}
-          <motion.path
-            d="M120,50 C145,52 165,70 175,95 C185,120 180,145 165,165 C150,185 125,190 100,185 C75,180 55,165 48,140 C40,115 50,85 75,65 C90,55 105,48 120,50 Z"
-            fill="url(#coreGradient)"
-            filter="url(#coreGlow)"
+        <div className="relative w-[240px] h-[240px]">
+          <motion.div
+            className="absolute inset-[-14px] rounded-[58%_42%_63%_37%/47%_53%_52%_48%]"
+            style={{
+              background: `radial-gradient(circle at 46% 44%, rgba(255, 118, 132, ${0.15 + redStrength * 0.06}) 0%, rgba(255, 70, 90, ${0.09 + redStrength * 0.08}) 18%, rgba(255, 70, 90, ${0.05 + redStrength * 0.04}) 36%, rgba(255, 70, 90, ${0.025 + redStrength * 0.02}) 56%, transparent 88%)`,
+              filter: `blur(${56 + glowIntensity * 0.4}px)`,
+              opacity: 0.66,
+            }}
             animate={{
-              d: [
-                "M120,50 C145,52 165,70 175,95 C185,120 180,145 165,165 C150,185 125,190 100,185 C75,180 55,165 48,140 C40,115 50,85 75,65 C90,55 105,48 120,50 Z",
-                "M120,45 C150,50 170,72 178,98 C186,124 178,148 162,168 C146,188 120,192 96,186 C72,180 52,162 46,136 C39,110 52,82 78,62 C94,52 108,43 120,45 Z",
-                "M120,48 C147,51 168,71 176,96 C184,121 179,146 164,166 C149,186 123,191 99,186 C74,181 54,164 47,139 C40,114 51,84 76,64 C91,54 106,46 120,48 Z",
-                "M120,50 C145,52 165,70 175,95 C185,120 180,145 165,165 C150,185 125,190 100,185 C75,180 55,165 48,140 C40,115 50,85 75,65 C90,55 105,48 120,50 Z",
+              scale: [1, 1.04, 0.988, 1.028, 1],
+              opacity: [0.6, 0.72, 0.64, 0.7, 0.6],
+              borderRadius: [
+                "58% 42% 63% 37% / 47% 53% 52% 48%",
+                "61% 39% 59% 41% / 44% 56% 49% 51%",
+                "56% 44% 62% 38% / 49% 51% 54% 46%",
+                "60% 40% 58% 42% / 46% 54% 50% 50%",
+                "58% 42% 63% 37% / 47% 53% 52% 48%",
               ],
             }}
             transition={{
@@ -404,20 +370,22 @@ export default function OrganicAgent({
             }}
           />
 
-          {/* Cyan intrusion */}
-          <motion.ellipse
-            cx="145"
-            cy="135"
-            rx="35"
-            ry="38"
-            fill="url(#cyanIntrusionGradient)"
-            filter="url(#coreGlow)"
-            opacity={0.5 + cyanStrength * 0.3}
+          <motion.div
+            className="absolute rounded-full"
+            style={{
+              left: "58%",
+              top: "58%",
+              width: "68px",
+              height: "72px",
+              background: `radial-gradient(circle at 40% 40%, rgba(80, 240, 255, ${0.16 + cyanStrength * 0.14}) 0%, rgba(80, 240, 255, ${0.1 + cyanStrength * 0.1}) 32%, transparent 72%)`,
+              filter: `blur(${20 + glowIntensity * 0.18}px)`,
+              opacity: 0.48 + cyanStrength * 0.16,
+              transform: "translate(-50%, -50%)",
+            }}
             animate={{
-              rx: [35, 40, 32, 38, 35],
-              ry: [38, 42, 35, 40, 38],
-              cx: [145, 148, 143, 147, 145],
-              cy: [135, 138, 133, 136, 135],
+              x: [0, 4, -3, 2, 0],
+              y: [0, 3, -2, 2, 0],
+              scale: [1, 1.08, 0.96, 1.04, 1],
             }}
             transition={{
               duration: breathSpeed * 1.6,
@@ -427,16 +395,51 @@ export default function OrganicAgent({
             }}
           />
 
-          {/* Bright core center - softer */}
-          <motion.circle
-            cx="115"
-            cy="110"
-            r="28"
-            fill={redColor}
-            filter="url(#coreGlow)"
-            opacity={0.6 + redStrength * 0.25}
+          <motion.div
+            className="absolute rounded-full"
+            style={{
+              left: "50%",
+              top: "50%",
+              width: "132px",
+              height: "132px",
+              background: `radial-gradient(circle at 46% 44%, rgba(255, 130, 142, ${0.68 - redStrength * 0.03}) 0%, rgba(255, 70, 90, ${0.56 + redStrength * 0.05}) 22%, rgba(255, 70, 90, ${0.26 + redStrength * 0.08}) 48%, rgba(255, 70, 90, ${0.1 + redStrength * 0.05}) 68%, rgba(255, 70, 90, ${0.03 + redStrength * 0.02}) 84%, transparent 100%)`,
+              boxShadow: `0 0 ${42 + glowIntensity * 0.34}px rgba(255, 70, 90, ${0.08 + redStrength * 0.04})`,
+              filter: "blur(3px)",
+              transform: "translate(-50%, -50%)",
+            }}
             animate={{
-              r: [28, 32, 26, 30, 28],
+              width: ["132px", "140px", "126px", "136px", "132px"],
+              height: ["132px", "140px", "126px", "136px", "132px"],
+              borderRadius: [
+                "50%",
+                "53% 47% 49% 51% / 48% 52% 50% 50%",
+                "49% 51% 53% 47% / 52% 48% 49% 51%",
+                "52% 48% 50% 50% / 47% 53% 51% 49%",
+                "50%",
+              ],
+            }}
+            transition={{
+              duration: breathSpeed * 1.45,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          />
+
+          <motion.div
+            className="absolute rounded-full"
+            style={{
+              left: "50%",
+              top: "50%",
+              width: "58px",
+              height: "58px",
+              background: "radial-gradient(circle at 42% 40%, rgba(255, 145, 156, 0.72) 0%, rgba(255, 98, 114, 0.46) 42%, rgba(255, 92, 108, 0.14) 78%, transparent 100%)",
+              filter: "blur(4px)",
+              transform: "translate(-50%, -50%)",
+            }}
+            animate={{
+              width: ["58px", "64px", "54px", "61px", "58px"],
+              height: ["58px", "64px", "54px", "61px", "58px"],
+              opacity: [0.62, 0.76, 0.58, 0.7, 0.62],
             }}
             transition={{
               duration: breathSpeed * 1.2,
@@ -445,24 +448,30 @@ export default function OrganicAgent({
             }}
           />
 
-          {/* Soft highlight - reduced contrast */}
-          <motion.circle
-            cx="110"
-            cy="105"
-            r="14"
-            fill="rgba(255, 150, 160, 0.5)"
-            filter="url(#coreGlow)"
+          <motion.div
+            className="absolute rounded-full"
+            style={{
+              left: "46%",
+              top: "45%",
+              width: "24px",
+              height: "24px",
+              background: "radial-gradient(circle, rgba(255, 190, 196, 0.9) 0%, rgba(255, 160, 170, 0.3) 68%, transparent 100%)",
+              filter: "blur(2px)",
+              transform: "translate(-50%, -50%)",
+            }}
             animate={{
-              r: [14, 16, 12, 15, 14],
-              opacity: [0.5, 0.65, 0.45, 0.6, 0.5],
+              x: [0, 2, -1, 1, 0],
+              y: [0, 1, -2, 1, 0],
+              opacity: [0.58, 0.76, 0.52, 0.7, 0.58],
+              scale: [1, 1.08, 0.94, 1.03, 1],
             }}
             transition={{
-              duration: breathSpeed * 1.1,
+              duration: breathSpeed * 1.05,
               repeat: Infinity,
               ease: "easeInOut",
             }}
           />
-        </svg>
+        </div>
       </motion.div>
     </motion.div>
   );
