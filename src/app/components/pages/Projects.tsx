@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "motion/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ChevronDown, Play } from "lucide-react";
 import { projects, type ProjectEntry } from "@/app/data/projects";
 import OrganicAgent from "../OrganicAgent";
@@ -37,9 +37,22 @@ const trackThemeMap: Record<
 };
 
 export default function Projects() {
-  const { systemState, setDialogueMessage, setEnergyBalance, setActivityLevel, setCoherence } = useSystem();
+  const {
+    systemState,
+    setDialogueMessage,
+    setEnergyBalance,
+    setActivityLevel,
+    setCoherence,
+    isPanelExpanded,
+    collapsePanel,
+  } = useSystem();
   const [hoveredProject, setHoveredProject] = useState<string | null>(null);
   const [expandedProject, setExpandedProject] = useState<string | null>(null);
+
+  useEffect(() => {
+    collapsePanel();
+    setDialogueMessage(null);
+  }, []);
 
   const handleProjectClick = (project: ProjectEntry) => {
     if (expandedProject === project.slug) {
@@ -53,6 +66,10 @@ export default function Projects() {
     setEnergyBalance(theme.energy);
     setActivityLevel(theme.activity);
     setCoherence(theme.coherence);
+
+    if (!isPanelExpanded) {
+      return;
+    }
 
     setDialogueMessage({
       id: `fun-agent-project-${project.slug}-${Date.now()}`,

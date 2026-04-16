@@ -18,7 +18,7 @@ export default function SystemStatus() {
       initial={{ opacity: 0, x: 20 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 1, delay: 0.3 }}
-      className="fixed top-24 right-8 z-20 text-right space-y-1"
+      className="fixed top-20 right-8 z-20 text-right space-y-1"
     >
       <div className="text-[10px] text-white/30 tracking-widest font-light">
         SYSTEM_STATUS

@@ -2,9 +2,10 @@ import { motion } from "motion/react";
 
 interface PillLogoProps {
   size?: "small" | "medium" | "large";
+  isOn?: boolean;
 }
 
-export default function PillLogo({ size = "medium" }: PillLogoProps) {
+export default function PillLogo({ size = "medium", isOn = true }: PillLogoProps) {
   // Size configurations
   const sizeConfig = {
     small: { width: 32, height: 18 },
@@ -14,6 +15,9 @@ export default function PillLogo({ size = "medium" }: PillLogoProps) {
 
   const { width, height } = sizeConfig[size];
   const pillRadius = height / 2;
+  const ballSize = Math.max(10, height - 8);
+  const ballOffset = 4;
+  const ballX = isOn ? ballOffset : width - ballOffset - ballSize;
 
   return (
     <div
@@ -96,13 +100,15 @@ export default function PillLogo({ size = "medium" }: PillLogoProps) {
         </defs>
 
         {/* Pill shape */}
-        <g filter="url(#pillLogoGlow)">
+        <g filter={isOn ? "url(#pillLogoGlow)" : undefined}>
           {/* Left cap */}
           <circle
             cx={pillRadius}
             cy={pillRadius}
             r={pillRadius}
-            fill="url(#pillGradient)"
+            fill={isOn ? "url(#pillGradient)" : "rgba(0, 0, 0, 0.7)"}
+            stroke={isOn ? "transparent" : "rgba(255, 255, 255, 0.18)"}
+            strokeWidth={isOn ? 0 : 0.8}
           />
           {/* Center rectangle */}
           <rect
@@ -110,17 +116,52 @@ export default function PillLogo({ size = "medium" }: PillLogoProps) {
             y={0}
             width={width - height}
             height={height}
-            fill="url(#pillGradient)"
+            fill={isOn ? "url(#pillGradient)" : "rgba(0, 0, 0, 0.7)"}
+            stroke={isOn ? "transparent" : "rgba(255, 255, 255, 0.18)"}
+            strokeWidth={isOn ? 0 : 0.8}
           />
           {/* Right cap */}
           <circle
             cx={width - pillRadius}
             cy={pillRadius}
             r={pillRadius}
-            fill="url(#pillGradient)"
+            fill={isOn ? "url(#pillGradient)" : "rgba(0, 0, 0, 0.7)"}
+            stroke={isOn ? "transparent" : "rgba(255, 255, 255, 0.18)"}
+            strokeWidth={isOn ? 0 : 0.8}
           />
         </g>
       </svg>
+
+      <motion.div
+        className="absolute rounded-full"
+        animate={{
+          x: ballX,
+          boxShadow: isOn
+            ? [
+                "0 0 6px rgba(255,255,255,0.65), 0 0 12px rgba(255,80,100,0.25)",
+                "0 0 10px rgba(255,255,255,0.85), 0 0 18px rgba(255,80,100,0.4)",
+                "0 0 6px rgba(255,255,255,0.65), 0 0 12px rgba(255,80,100,0.25)",
+              ]
+            : "0 0 6px rgba(255,255,255,0.22)",
+          opacity: isOn ? 1 : 0.92,
+        }}
+        transition={{
+          x: { duration: 0.32, ease: [0.16, 1, 0.3, 1] },
+          boxShadow: {
+            duration: isOn ? 1.4 : 0.2,
+            repeat: isOn ? Infinity : 0,
+            ease: "easeInOut",
+          },
+        }}
+        style={{
+          left: 0,
+          top: (height - ballSize) / 2,
+          width: ballSize,
+          height: ballSize,
+          background:
+            "radial-gradient(circle at 35% 35%, rgba(255,255,255,0.98) 0%, rgba(255,255,255,0.92) 45%, rgba(225,225,235,0.84) 70%, rgba(180,184,196,0.72) 100%)",
+        }}
+      />
     </div>
   );
 }

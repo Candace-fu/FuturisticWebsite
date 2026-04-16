@@ -37,7 +37,7 @@ export default function Root() {
         <AgentDialogue />
 
         {/* Footer signature */}
-        <footer className="fixed bottom-8 left-8 z-10 text-white/30 text-sm font-light tracking-wider">
+        <footer className="fixed bottom-6 left-8 z-10 text-white/30 text-sm font-light tracking-wider">
           PILLS.FUN © 2026
         </footer>
       </div>

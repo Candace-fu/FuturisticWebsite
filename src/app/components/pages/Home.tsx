@@ -8,6 +8,7 @@ import { useSystem } from "../../context/SystemContext";
 export default function Home() {
   const {
     systemState,
+    isPanelExpanded,
     setEnergyBalance,
     setActivityLevel,
     setCoherence,
@@ -42,8 +43,21 @@ export default function Home() {
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 1, delay: 0.3 }}
-        className="fixed top-24 left-8 z-20 space-y-1"
+        className="fixed top-20 left-8 z-20 space-y-2"
       >
+        <div className="flex items-center gap-2 text-[10px] font-light tracking-widest">
+          <span className="text-white/30">FUN_AGENT</span>
+          <span className="text-white/22 normal-case tracking-normal">is</span>
+          <motion.span
+            className={`transition-colors duration-300 ${
+              isPanelExpanded ? "text-cyan-300/90" : "text-white/24"
+            }`}
+            animate={{ opacity: isPanelExpanded ? 1 : 0.78 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+          >
+            {isPanelExpanded ? "ON" : "OFF"}
+          </motion.span>
+        </div>
         <div className="text-[10px] text-white/30 tracking-widest font-light">
           CREATIVE TECHNOLOGY LAB
         </div>

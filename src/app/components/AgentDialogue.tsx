@@ -1,7 +1,7 @@
 import { motion, AnimatePresence, useDragControls, PanInfo } from "motion/react";
 import { useState, useEffect, useRef } from "react";
 import { useSystem } from "../context/SystemContext";
-import { Sparkles, X, Minimize2, Send } from "lucide-react";
+import { Sparkles, X, Send } from "lucide-react";
 
 interface IconPosition {
   edge: "top" | "right" | "bottom" | "left";
@@ -408,84 +408,6 @@ export default function AgentDialogue() {
     return `rgba(${red}, ${green}, ${blue}, 0.5)`;
   };
 
-  // Collapsed floating icon
-  if (!isPanelExpanded && lastMessage) {
-    const pixelPos = getPixelPosition(iconPosition);
-
-    return (
-      <motion.div
-        drag
-        dragControls={dragControls}
-        dragMomentum={false}
-        dragElastic={0.1}
-        onDragStart={() => setIsDragging(true)}
-        onDragEnd={handleDragEnd}
-        initial={{ scale: 0, opacity: 0 }}
-        animate={{
-          scale: 1,
-          opacity: 1,
-          x: pixelPos.x,
-          y: pixelPos.y,
-        }}
-        exit={{ scale: 0, opacity: 0 }}
-        transition={{
-          type: "spring",
-          stiffness: 300,
-          damping: 30,
-        }}
-        className="fixed top-0 left-0 z-50 cursor-pointer"
-        style={{
-          width: "64px",
-          height: "64px",
-        }}
-      >
-        <motion.button
-          onClick={(e) => {
-            e.stopPropagation();
-            if (!isDragging) {
-              handleExpand();
-            }
-          }}
-          className="relative w-full h-full"
-          whileHover={{ scale: isDragging ? 1 : 1.1 }}
-          whileTap={{ scale: isDragging ? 1 : 0.95 }}
-        >
-          <div className="absolute inset-0 flex items-center justify-center">
-            <AgentEye compact isTyping={isTyping} flash={avatarFlash} />
-          </div>
-
-          {/* Drag hint - appears only on hover when not dragging */}
-          {!isDragging && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              whileHover={{ opacity: 1, scale: 1 }}
-              className="absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap"
-            >
-              <div className="text-xs text-white/40 tracking-wider px-3 py-1 bg-black/60 rounded-full backdrop-blur-sm">
-                DRAG TO REPOSITION
-              </div>
-            </motion.div>
-          )}
-
-          {/* Tab key hint - always visible when not dragging */}
-          {!isDragging && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
-              className="absolute -bottom-11 left-1/2 -translate-x-1/2 whitespace-nowrap"
-            >
-              <div className="flex items-center gap-1.5 text-xs text-cyan-400/60 tracking-wider px-3 py-1.5 bg-black/40 rounded-full backdrop-blur-sm border border-cyan-400/20">
-                <kbd className="px-2 py-0.5 bg-white/10 border border-white/20 rounded text-[10px] font-mono">TAB</kbd>
-                <span>TO EXPAND</span>
-              </div>
-            </motion.div>
-          )}
-        </motion.button>
-      </motion.div>
-    );
-  }
-
   return (
     <AnimatePresence>
       {dialogueMessage && isPanelExpanded && (
@@ -539,18 +461,9 @@ export default function AgentDialogue() {
                   className="flex items-center gap-1.5 text-xs text-white/40 tracking-wider px-2 py-1 bg-white/5 rounded-lg mr-2"
                 >
                   <kbd className="px-1.5 py-0.5 bg-white/10 border border-white/20 rounded text-[10px] font-mono">TAB</kbd>
-                  <span>COLLAPSE</span>
+                  <span>HIDE</span>
                 </motion.div>
 
-                <motion.button
-                  onClick={handleCollapse}
-                  className="text-white/40 hover:text-white transition-colors"
-                  whileHover={{ scale: 1.1 }}
-                  transition={{ duration: 0.2 }}
-                  title="Minimize"
-                >
-                  <Minimize2 size={20} strokeWidth={1.5} />
-                </motion.button>
                 <motion.button
                   onClick={handleClose}
                   className="text-white/40 hover:text-white transition-colors"
@@ -748,22 +661,6 @@ export default function AgentDialogue() {
                   }}
                 />
 
-                {/* Energy balance marker */}
-                <motion.div
-                  className="absolute top-0 bottom-0 w-1"
-                  style={{
-                    background: "rgba(255, 255, 255, 0.9)",
-                    boxShadow: "0 0 10px rgba(255, 255, 255, 0.8)",
-                    left: `${systemState.energyBalance}%`,
-                  }}
-                  animate={{
-                    left: `${systemState.energyBalance}%`,
-                  }}
-                  transition={{
-                    duration: 1,
-                    ease: "easeInOut",
-                  }}
-                />
               </motion.div>
 
               {/* Outer glow - extends below panel */}
