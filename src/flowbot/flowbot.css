@@ -1,0 +1,377 @@
+:root {
+  color-scheme: dark;
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    sans-serif;
+  background: #05070a;
+  color: rgba(245, 247, 250, 0.96);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#flowbot-root {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background: #05070a;
+}
+
+button,
+textarea {
+  font: inherit;
+}
+
+.flowbot-shell {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 24% 18%, rgba(255, 72, 105, 0.11), transparent 28%),
+    radial-gradient(circle at 78% 76%, rgba(53, 215, 255, 0.09), transparent 22%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent 20%),
+    #04070a;
+}
+
+.flowbot-backdrop {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 54px 54px;
+  mask-image: radial-gradient(circle at center, black 38%, transparent 100%);
+  opacity: 0.17;
+}
+
+.flowbot-topbar {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 18px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(7, 10, 14, 0.82);
+  backdrop-filter: blur(18px);
+}
+
+.flowbot-brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.flowbot-brand-mark {
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 38% 38%, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.08) 28%, transparent 52%),
+    linear-gradient(135deg, rgba(255, 73, 101, 0.92), rgba(57, 221, 255, 0.88));
+  box-shadow:
+    0 0 24px rgba(255, 72, 105, 0.24),
+    0 0 34px rgba(53, 215, 255, 0.18);
+}
+
+.flowbot-layout {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) 400px;
+  gap: 20px;
+  min-height: calc(100vh - 79px);
+  padding: 22px 24px 24px;
+}
+
+.flowbot-stage-panel,
+.flowbot-side-panel {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 28px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.015)),
+    rgba(8, 11, 15, 0.82);
+  box-shadow:
+    0 18px 70px rgba(0, 0, 0, 0.34),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(18px);
+}
+
+.flowbot-stage-panel {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  min-height: 720px;
+  overflow: hidden;
+}
+
+.flowbot-side-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 18px;
+  min-height: 720px;
+}
+
+.flowbot-panel-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px 18px 12px;
+}
+
+.flowbot-side-panel .flowbot-panel-head {
+  padding: 0;
+}
+
+.flowbot-kicker {
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 11px;
+  color: rgba(219, 227, 233, 0.46);
+}
+
+.flowbot-room-label,
+.flowbot-title {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 500;
+  color: rgba(248, 250, 252, 0.96);
+}
+
+.flowbot-title--small {
+  font-size: 20px;
+}
+
+.flowbot-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 32px;
+  padding: 0 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(116, 229, 255, 0.88);
+  white-space: nowrap;
+}
+
+.flowbot-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.flowbot-button,
+.flowbot-link,
+.flowbot-chip,
+.flowbot-submit {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(244, 247, 250, 0.95);
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background 160ms ease,
+    border-color 160ms ease;
+}
+
+.flowbot-button,
+.flowbot-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  padding: 0 14px;
+  border-radius: 999px;
+}
+
+.flowbot-button:hover,
+.flowbot-link:hover,
+.flowbot-chip:hover,
+.flowbot-submit:hover {
+  border-color: rgba(83, 219, 255, 0.28);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.flowbot-canvas-wrap {
+  position: relative;
+  min-height: 0;
+  margin: 0 14px 14px;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background:
+    radial-gradient(circle at 50% 18%, rgba(255, 79, 113, 0.08), transparent 30%),
+    linear-gradient(180deg, rgba(9, 12, 16, 0.9), rgba(7, 10, 13, 0.98));
+}
+
+.flowbot-scene-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.flowbot-overlay-card {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(8, 11, 15, 0.7);
+  backdrop-filter: blur(14px);
+}
+
+.flowbot-status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: #ff4c68;
+  box-shadow: 0 0 14px rgba(255, 76, 104, 0.58);
+}
+
+.flowbot-overlay-title {
+  font-size: 16px;
+  color: rgba(244, 247, 250, 0.96);
+}
+
+.flowbot-status-card {
+  padding: 14px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.03);
+  color: rgba(222, 229, 234, 0.76);
+  line-height: 1.7;
+}
+
+.flowbot-status-label,
+.flowbot-message-role {
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 11px;
+  color: rgba(214, 223, 229, 0.45);
+}
+
+.flowbot-log {
+  display: flex;
+  flex: 1;
+  min-height: 220px;
+  flex-direction: column;
+  gap: 12px;
+  padding-right: 4px;
+  overflow: auto;
+}
+
+.flowbot-message {
+  padding: 12px 14px;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  line-height: 1.65;
+}
+
+.flowbot-message--agent {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.flowbot-message--user {
+  align-self: flex-end;
+  max-width: 88%;
+  background: rgba(67, 215, 255, 0.08);
+  border-color: rgba(67, 215, 255, 0.14);
+}
+
+.flowbot-message-text {
+  margin-top: 6px;
+  white-space: pre-wrap;
+}
+
+.flowbot-quick-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.flowbot-chip {
+  min-height: 34px;
+  padding: 0 12px;
+  border-radius: 999px;
+}
+
+.flowbot-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.flowbot-input {
+  width: 100%;
+  min-height: 104px;
+  resize: vertical;
+  padding: 14px 16px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(244, 247, 250, 0.95);
+  outline: none;
+}
+
+.flowbot-input:focus {
+  border-color: rgba(67, 215, 255, 0.28);
+}
+
+.flowbot-submit {
+  min-height: 42px;
+  border-radius: 999px;
+}
+
+.flowbot-submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@media (max-width: 1180px) {
+  .flowbot-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .flowbot-stage-panel,
+  .flowbot-side-panel {
+    min-height: 0;
+  }
+
+  .flowbot-stage-panel {
+    min-height: 620px;
+  }
+}
+
+@media (max-width: 760px) {
+  .flowbot-topbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .flowbot-actions {
+    flex-wrap: wrap;
+  }
+
+  .flowbot-layout {
+    padding: 16px;
+  }
+
+  .flowbot-room-label,
+  .flowbot-title {
+    font-size: 22px;
+  }
+}

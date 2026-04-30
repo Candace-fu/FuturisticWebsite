@@ -140,6 +140,15 @@ export default defineConfig(({ mode }) => {
         '@': path.resolve(__dirname, './src'),
       },
     },
+    build: {
+      rollupOptions: {
+        input: {
+          main: path.resolve(__dirname, 'index.html'),
+          play: path.resolve(__dirname, 'play.html'),
+          flowbot: path.resolve(__dirname, 'flowbot.html'),
+        },
+      },
+    },
     assetsInclude: ['**/*.svg', '**/*.csv'],
   }
 })

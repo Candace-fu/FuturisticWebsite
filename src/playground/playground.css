@@ -1,0 +1,400 @@
+:root {
+  color-scheme: dark;
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  background:
+    radial-gradient(circle at top, rgba(139, 31, 41, 0.18), transparent 28%),
+    radial-gradient(circle at bottom left, rgba(0, 173, 181, 0.12), transparent 35%),
+    #060809;
+  color: rgba(243, 246, 248, 0.95);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#play-root {
+  width: 100%;
+  height: 100%;
+  min-height: 100%;
+  margin: 0;
+}
+
+body {
+  background: transparent;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+.playground-shell {
+  position: relative;
+  height: 100vh;
+  min-height: 760px;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 35% 45%, rgba(162, 44, 61, 0.1), transparent 28%),
+    radial-gradient(circle at 78% 72%, rgba(53, 137, 160, 0.08), transparent 18%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent 25%),
+    #050709;
+}
+
+.playground-grid-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  mask-image: radial-gradient(circle at center, black 30%, transparent 100%);
+  opacity: 0.18;
+}
+
+.playground-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(6, 9, 13, 0.82);
+  backdrop-filter: blur(18px);
+}
+
+.topbar-room {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.topbar-eyebrow,
+.panel-kicker,
+.side-section-title,
+.panel-meta {
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 11px;
+  color: rgba(215, 224, 230, 0.48);
+}
+
+.topbar-title,
+.panel-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 500;
+  color: rgba(247, 249, 251, 0.96);
+}
+
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.playground-button,
+.room-link-preview {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(244, 247, 250, 0.92);
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    border-color 160ms ease,
+    background 160ms ease,
+    color 160ms ease;
+}
+
+.playground-button:hover,
+.room-link-preview:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(107, 229, 255, 0.26);
+}
+
+.playground-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.room-link-preview {
+  color: rgba(107, 229, 255, 0.85);
+}
+
+.collaboration-layout {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 380px;
+  gap: 18px;
+  height: calc(100% - 75px);
+  min-height: 0;
+  padding: 18px 24px 24px;
+}
+
+.collaboration-layout--meeting-expanded {
+  grid-template-columns: minmax(0, 1fr) 480px;
+}
+
+.board-column,
+.right-column {
+  height: 100%;
+  min-height: 0;
+}
+
+.right-column {
+  display: grid;
+  grid-template-rows: 320px minmax(0, 1fr);
+  gap: 18px;
+}
+
+.panel {
+  position: relative;
+  min-height: 0;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.02)),
+    rgba(9, 11, 15, 0.78);
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.34),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    0 0 0 1px rgba(94, 190, 222, 0.02);
+  backdrop-filter: blur(18px);
+  overflow: hidden;
+}
+
+.panel--board {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  height: 100%;
+}
+
+.panel--meeting {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+}
+
+.panel--meeting-expanded {
+  min-height: 420px;
+}
+
+.panel--side {
+  padding: 18px;
+  overflow: auto;
+}
+
+.panel-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px 18px 12px;
+}
+
+.board-frame {
+  position: relative;
+  width: calc(100% - 24px);
+  height: calc(100% - 12px);
+  min-height: 0;
+  margin: 0 12px 12px;
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.board-frame > .tl-container,
+.board-frame > div {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.board-frame .tl-container {
+  background: linear-gradient(180deg, rgba(9, 12, 16, 0.9), rgba(8, 10, 14, 0.98));
+}
+
+.meeting-frame {
+  position: relative;
+  min-height: 0;
+  margin: 0 12px 12px;
+  border-radius: 18px;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at top, rgba(91, 179, 201, 0.14), transparent 35%),
+    rgba(4, 6, 9, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.meeting-embed {
+  width: 100%;
+  height: 100%;
+  min-height: 220px;
+}
+
+.meeting-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-align: center;
+  background:
+    linear-gradient(180deg, rgba(6, 10, 14, 0.7), rgba(6, 10, 14, 0.92)),
+    rgba(0, 0, 0, 0.5);
+}
+
+.meeting-status {
+  font-size: 15px;
+  color: rgba(244, 247, 250, 0.95);
+}
+
+.meeting-substatus,
+.side-copy {
+  line-height: 1.6;
+  font-size: 13px;
+  color: rgba(220, 227, 233, 0.72);
+}
+
+.side-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 16px;
+  margin-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.side-section:first-of-type {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
+}
+
+.checklist {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.checklist-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: rgba(232, 238, 243, 0.78);
+}
+
+.checklist-mark {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: transparent;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.04);
+}
+
+.checklist-mark--done {
+  border-color: rgba(98, 221, 255, 0.45);
+  background: rgba(98, 221, 255, 0.92);
+  box-shadow: 0 0 14px rgba(98, 221, 255, 0.28);
+}
+
+.agent-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 14px;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.agent-status-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.agent-status-label {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(219, 225, 230, 0.45);
+}
+
+.agent-status-pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: rgba(107, 229, 255, 0.08);
+  border: 1px solid rgba(107, 229, 255, 0.18);
+  color: rgba(150, 237, 255, 0.9);
+  font-size: 12px;
+}
+
+@media (max-width: 1180px) {
+  .collaboration-layout,
+  .collaboration-layout--meeting-expanded {
+    grid-template-columns: 1fr;
+  }
+
+  .right-column {
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(280px, 40vh) minmax(300px, auto);
+  }
+}
+
+@media (max-width: 760px) {
+  .playground-topbar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .topbar-actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .collaboration-layout {
+    padding: 14px;
+    height: calc(100% - 145px);
+  }
+
+  .panel-header {
+    padding: 14px 14px 10px;
+  }
+
+  .board-frame,
+  .meeting-frame {
+    margin: 0 10px 10px;
+  }
+}
