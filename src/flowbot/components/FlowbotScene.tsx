@@ -181,7 +181,7 @@ function So101Robot({ motion }: { motion: MotionId }) {
 
         loadedRobot.rotation.x = -Math.PI / 2
         loadedRobot.rotation.z = -0.08
-        loadedRobot.position.set(1.42, 0.93, 0.74)
+        loadedRobot.position.set(2.18, 0.79, 0.86)
         loadedRobot.scale.setScalar(3.42)
         setRobot(loadedRobot)
       },
@@ -287,8 +287,6 @@ function HomeDeskSet({ lighting }: { lighting: RoomLighting }) {
       ))}
 
       <DeskMonitor position={[0.38, 0.73, 0.06]} rotation={[0, -0.1, 0]} />
-      <DeskMonitor position={[1.12, 0.73, -0.08]} rotation={[0, 0.05, 0]} />
-      <DeskLamp />
 
       <mesh castShadow receiveShadow position={[-0.02, 0.785, 0.62]} rotation={[0, -0.02, 0]}>
         <boxGeometry args={[0.8, 0.02, 0.28]} />
