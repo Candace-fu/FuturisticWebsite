@@ -13,9 +13,9 @@ export type FlowbotModelAdapter = {
 }
 
 export const defaultModelAdapter: FlowbotModelAdapter = {
-  base: 'base',
-  shoulder: 'shoulder',
-  elbow: 'elbow',
-  wrist: 'wrist',
+  base: 'shoulder_pan',
+  shoulder: 'shoulder_lift',
+  elbow: 'elbow_flex',
+  wrist: 'wrist_flex',
   gripper: 'gripper',
 }

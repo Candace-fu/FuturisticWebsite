@@ -59,7 +59,7 @@ export function FlowbotAgentPanel({
       </div>
 
       <div className="flowbot-quick-actions">
-        {['wave', 'point', 'greet', 'bow'].map((action) => (
+        {['wave', 'point', 'greet', 'bow', 'high five'].map((action) => (
           <button
             key={action}
             className="flowbot-chip"
