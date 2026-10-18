@@ -458,6 +458,7 @@ body.framed .stage{border-radius:34px;box-shadow:0 0 0 1px rgba(74,51,36,.18),0 
 .ch-avd .ava{width:34px;height:34px}
 .ch-stk{padding:2px!important;background:transparent!important;border:0!important}
 .ch-stk svg{width:88px;height:88px;display:block}
+#lapScreen .blueprint *{fill:none!important;stroke:#5E8C88!important}
 @keyframes spin{to{transform:rotate(360deg)}}
 @keyframes glow{0%,100%{opacity:.35}50%{opacity:1}}
 @keyframes breathe{0%,100%{opacity:1}50%{opacity:.5}}
@@ -626,10 +627,12 @@ body.framed .stage{border-radius:34px;box-shadow:0 0 0 1px rgba(74,51,36,.18),0 
             <polygon points="473,219 599,219 602,295 470,295" fill="#F8F2E6"></polygon>
             <polygon points="473,219 486,219 485,295 470,295" fill="#EDE3D0" stroke="none"></polygon>
             <path d="M476 228 h6 M476 236 h6 M476 244 h6 M490 226 H598" stroke-width=".6" stroke-opacity=".6" fill="none"></path>
+            <g id="lapScreen">
             <rect x="524" y="234" width="22" height="52" rx="3" fill="#FFFFFF" fill-opacity=".6" stroke="#5E8C88" stroke-width="1.2"></rect>
             <circle cx="535" cy="242" r="2.6" fill="none" stroke="#5E8C88" stroke-width="1"></circle>
             <path d="M528 270 Q535 260 542 270 M528 278 q3.5 -2 7 0 q3.5 2 7 0" stroke="#5E8C88" stroke-width="1" fill="none"></path>
             <path d="M556 234 v52 M553 234 h6 M553 286 h6 M524 292 h22" stroke="#C47A57" stroke-width=".8" fill="none"></path>
+            </g>
             <polygon points="464,300 608,300 628,334 444,334" fill="#CBC3B6"></polygon>
             <polygon points="474,304 598,304 608,320 464,320" fill="#B4AB9E" stroke-width=".9"></polygon>
             <path d="M471 309.5 H601 M468 315 H604 M500 304 L497 320 M530 304 L529 320 M560 304 L561 320 M585 304 L588 320" stroke-width=".5" stroke-opacity=".5" fill="none"></path>
@@ -856,7 +859,7 @@ body.framed .stage{border-radius:34px;box-shadow:0 0 0 1px rgba(74,51,36,.18),0 
       <div class="journal" id="journalBody"></div>
       <div class="row">
         <button type="button" class="primary" id="againBtn">再过一遍这一天</button>
-        <button type="button" class="primary" id="nextDayBtn">第二天：刮刀</button>
+        <button type="button" class="primary" id="nextDayBtn">第二天</button>
       </div>
     </div>
   </div>
@@ -1494,10 +1497,19 @@ function setGrow(p) {
   const h = p * 96;
   G.clip.setAttribute('y', (310 - h).toFixed(2)); G.clip.setAttribute('height', (h + .5).toFixed(2));
 }
+/* The laptop shows the drawing of the most recent print, as a blueprint. */
+let LAP0 = null;
+function setLaptop(k) {
+  const g = $('#lapScreen'); if (LAP0 == null) LAP0 = g.innerHTML;
+  if (!k) { g.innerHTML = LAP0; return; }
+  const lines = S[k].replace(/<ellipse[^>]*fill-opacity="\.1\d"[^>]*\/>/g, '');
+  g.innerHTML = '<path d="M490 236 H598 M490 252 H598 M490 268 H598 M490 284 H598 M506 226 V293 M530 226 V293 M554 226 V293 M578 226 V293" stroke="#C3D5D0" stroke-width=".5" fill="none"></path>' +
+    '<g class="blueprint" transform="translate(514 226) scale(1.38)" stroke="#5E8C88" stroke-width="1" fill="none">' + lines + '</g>';
+}
 function startPrint() {
   const o = curOrder();
   st.slots = { idea: null, fil: null }; st.printer = 'printing'; st.pending = o.product; st.pProg = 0; st.pLeft = o.secs;
-  G.spr.innerHTML = S[o.product]; setGrow(0);
+  G.spr.innerHTML = S[o.product]; setGrow(0); setLaptop(o.product);
   $('#spoolRing').setAttribute('fill', o.color);
   $('#scene').classList.add('printing');
   sfx.chime();
@@ -2223,15 +2235,15 @@ function openStow() {
 
 /* ---------- day 2: messaging D ---------- */
 /* Real: D only messages first when she has an order. When asked, she replies much later, as if she just woke up, and sends dinosaur stickers. */
-const DINO = '<svg viewBox="0 0 84 84" aria-label="恐龙表情包"><g stroke="#6E4A31" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round">' +
-  '<path d="M24 66 q-12 0 -16 6 q10 3 20 -1 Z" fill="#9DB089"></path>' +
-  '<path d="M38 41 l2 -7 l4 5 M45 36 l3 -7 l3 6 M33 48 l-1 -7 l5 3" fill="#C6D3B3"></path>' +
-  '<path d="M22 72 q-2 -24 16 -31 q6 -14 20 -15 q16 0 16 13 q0 11 -13 12 q-3 6 -3 10 q5 7 2 11 Z" fill="#9DB089"></path>' +
-  '<path d="M30 72 v6 h8 v-6 M46 72 v6 h8 v-6" fill="#9DB089"></path>' +
-  '<path d="M48 52 q5 3 8 -1" fill="none"></path>' +
-  '<path d="M60 32 q2 -2 4 0" fill="none"></path><path d="M66 31 q2 -2 4 0" fill="none"></path>' +
-  '<ellipse cx="68" cy="38" rx="3.2" ry="1.7" fill="#E7A3B3" stroke="none"></ellipse>' +
-  '<path d="M64 20 l3 -4 M69 21 l4 -3" stroke-width="1.2"></path></g></svg>';
+const DINO = '<svg viewBox="0 0 84 84" aria-label="粉色恐龙表情包"><g stroke="#6E4A31" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round">' +
+  '<text x="8" y="16" font-size="12" fill="#4A3324" stroke="none" font-family="Noto Sans SC, sans-serif">yuh.</text>' +
+  '<path d="M16 80 q-4 -22 6 -36 q-4 -18 12 -24 q12 -4 24 2 q14 6 12 20 q-2 10 -10 13 q10 10 6 25 Z" fill="#F4A6D7"></path>' +
+  '<path d="M28 42 q14 6 28 0" fill="none"></path>' +
+  '<ellipse cx="34" cy="30" rx="5.5" ry="6.5" fill="#FFFDF6"></ellipse><ellipse cx="52" cy="30" rx="5.5" ry="6.5" fill="#FFFDF6"></ellipse>' +
+  '<circle cx="35" cy="31" r="2.4" fill="#4A3324" stroke="none"></circle><circle cx="51" cy="31" r="2.4" fill="#4A3324" stroke="none"></circle>' +
+  '<path d="M28 24 l-3 -3 M30 22.5 l-1.5 -3.5 M56 22.5 l1.5 -3.5 M58 24 l3 -3" stroke-width="1.1"></path>' +
+  '<path d="M22 66 q-2 -10 6 -14 q4 4 2 9 M62 66 q2 -10 -6 -14 q-4 4 -2 9" fill="#F4A6D7"></path>' +
+  '<ellipse cx="27" cy="39" rx="3" ry="1.6" fill="#E77AB8" stroke="none"></ellipse><ellipse cx="59" cy="39" rx="3" ry="1.6" fill="#E77AB8" stroke="none"></ellipse></g></svg>';
 const D_AFTER = [
   { s: 'n', t: '过了好久，她才回。像是刚起床。' },
   { s: 'n', t: 'D 很内向。平时不会主动发消息，只有要做东西的时候，才会来找我。' },
@@ -2429,7 +2441,7 @@ function openJournal() {
   $('#journalBody').innerHTML = items.map(x => '<div class="jitem">' + spr(x.spr) + '<span>' + x.t + '</span></div>').join('') +
     (st.day === 1 && st.room.tidy ? '<p class="jnote">明天：抽空搞一把刮刀。</p>' : '');
   const nb = $('#nextDayBtn');
-  nb.textContent = st.day === 1 ? '第二天：刮刀' : '第三天（制作中）'; nb.disabled = st.day !== 1;
+  nb.textContent = st.day === 1 ? '第二天' : '第三天（制作中）'; nb.disabled = st.day !== 1;
   $('#journalModal').hidden = false; updateGuide();
 }
 $('#againBtn').addEventListener('click', () => { $('#journalModal').hidden = true; start(st.day); });
@@ -2470,6 +2482,7 @@ function start(day, coins) {
   ORDERS = day === 2 ? ORDERS2 : ORDERS1; POST = day === 2 ? POST2 : POST1; ORDERS2[1] = null;
   st = freshDay(day, coins); renderDeskPhone(); renderRoom(); SV.x = 320; SV.y = 210; SV.z = 1; applyView(); Q = [];
   $('#dayText').textContent = '杭州 · ' + DAYNAME[day];
+  setLaptop(day === 2 ? 'org_full' : null);
   $('#dayBtn').textContent = day === 1 ? '去第二天' : '回到第一天';
   $('#coinText').textContent = st.coins;
   setGrow(0); setHead(0, 0); G.glow.setAttribute('opacity', '0'); G.lcd.textContent = '待命';
