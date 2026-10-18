@@ -313,6 +313,12 @@ body.framed .stage{border-radius:34px;box-shadow:0 0 0 1px rgba(74,51,36,.18),0 
 .knock b{font-family:var(--f-display);font-weight:400;font-size:46px;letter-spacing:6px;animation:knockin .9s ease both}
 .knock span{font-size:15px;color:#F2E6D4;margin-bottom:18px;animation:fadein .6s .5s ease both}
 .knock .primary{width:200px;animation:fadein .6s .8s ease both}
+.modal.leavemodal{background:rgba(38,25,15,0);transition:background .5s ease;cursor:pointer}
+.modal.leavemodal.on{background:rgba(38,25,15,.86)}
+.leavemodal .knock b{animation:knockin .9s .35s ease both}
+.leavemodal .knock span{animation:fadein .6s .9s ease both;margin-bottom:0}
+.binlist{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.binlist .dritem{cursor:default}
 @keyframes knockin{0%{opacity:0;transform:scale(.9)}20%{opacity:1;transform:scale(1.06) translateX(-3px)}35%{transform:scale(1) translateX(3px)}50%{transform:translateX(-2px)}65%{transform:translateX(0)}100%{opacity:1;transform:none}}
 
 /* name card */
@@ -783,6 +789,7 @@ body.framed .stage{border-radius:34px;box-shadow:0 0 0 1px rgba(74,51,36,.18),0 
               <path d="M751 472 L789 472 M752 483 L788 483 M753 494 L787 494" stroke="#94826A" stroke-width=".8" fill="none"></path>
               <path d="M758 464 L760 509 M770 464 L770 509 M782 464 L780 509" stroke="#94826A" stroke-width=".7" fill="none"></path>
               <ellipse cx="770" cy="462" rx="24" ry="4.6" fill="#A2906F"></ellipse>
+              <g id="binFill"></g>
             </g>
 
             <!-- printer -->
@@ -933,6 +940,23 @@ body.framed .stage{border-radius:34px;box-shadow:0 0 0 1px rgba(74,51,36,.18),0 
       <b id="knockTxt">咚，咚。</b>
       <span>有人在敲门。</span>
       <button type="button" class="primary" id="knockBtn">去开门</button>
+    </div>
+  </div>
+
+  <div class="modal leavemodal" id="leaveModal" hidden>
+    <div class="knock" role="dialog" aria-modal="true" aria-labelledby="leaveTxt">
+      <b id="leaveTxt">咔哒。</b>
+      <span id="leaveSub">门关上了。</span>
+    </div>
+  </div>
+
+  <div class="modal" id="binModal" hidden>
+    <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="binTitle">
+      <span class="eyebrow">垃圾桶</span>
+      <h2 id="binTitle">里面有什么</h2>
+      <div class="binlist" id="binList"></div>
+      <p class="calcap" id="binCap"></p>
+      <div class="liftpick"><button type="button" class="primary alt" id="binEmpty">倒掉</button><button type="button" class="primary" id="binClose">盖上</button></div>
     </div>
   </div>
 
@@ -1296,6 +1320,7 @@ const INTRO = [
   { s: 'n', t: '杭州，工作室。' },
   { do: 'oldmsg' },
   { do: 'knock' },
+  { do: 'arrive', who: 'D' },
   { s: 'n', t: '门口站着一个粉色头发的女生，手里拿着一张草图。', pic: 'D_sketch' },
   { s: 'D', t: '你好……我是 D。是朋友介绍我来的。', pic: 'D_sketch' },
   { s: 'me', t: '我知道，进来吧。' },
@@ -1322,6 +1347,7 @@ const POST1 = [
     { s: 'me', t: '小问题，可以修。' },
     { s: 'D', t: '那我先带回去，再想想。谢谢你。', pic: 'D_bookmark' },
     { s: 'n', t: 'D 收下了第一枚书签。之后她还会常来，我们会一起把它慢慢改好。', pic: 'D_bookmark' },
+    { do: 'leave', who: 'D' },
     { do: 'time', v: 'afternoon' },
     { s: 'n', t: '打印机附带的零零碎碎还散在桌上。我决定给它们打一个桌面工具收纳。' },
     { do: 'order', i: 1 }
@@ -1432,6 +1458,7 @@ const sfx = (() => {
     chime() { [659, 784, 988].forEach((f, i) => tone(f, .45, 'sine', .05, null, i * .09)); },
     soft() { tone(520, .12, 'sine', .03); },
     buzz() { [0, .2].forEach(d => { tone(62, .14, 'sawtooth', .05, null, d); tone(124, .14, 'square', .012, null, d); }); },
+    door() { tone(95, .28, 'sine', .26, 42); tone(60, .35, 'sine', .14, 35, .02); tone(1900, .025, 'square', .03, 900, .2); tone(1300, .03, 'triangle', .025, 700, .24); },
     knock() { tone(150, .16, 'sine', .22, 70); tone(900, .03, 'triangle', .02); tone(150, .16, 'sine', .22, 70, .32); tone(900, .03, 'triangle', .02, .32); },
     humStart() {
       const a = ctx(); if (!a || muted || hum) return;
@@ -1458,7 +1485,7 @@ function fresh(day) {
   b[2] = { k: 'idea', lv: 1 }; b[7] = { k: 'idea', lv: 1 }; b[10] = { k: 'fil', lv: 1 };
   return { board: b, gens: { gen_idea: { c: 6, t: 0 }, gen_fil: { c: 6, t: 0 } }, coins: 120, order: -1, printed: {}, done: [],
     time: 'morning', notif: false, tidy: null, met: {}, saved: {}, pendingCard: null, phoneNew: false, room: { org: false, tidy: false }, sel: -1, slots: { idea: null, fil: null }, printer: 'idle', pLeft: 0, pProg: 0, pending: null, tut: true,
-    day: 1, jr: [], choice: null, maint: { plate: 0, poop: 0 }, drawer: [], desk: [], rel: { D: 20, J: 60 }, here: [] };
+    day: 1, jr: [], choice: null, maint: { plate: 0, poop: 0 }, drawer: [], desk: [], rel: { D: 20, J: 60 }, here: [], trash: [] };
 }
 function freshDay(day, coins) {
   const s = fresh();
@@ -1799,7 +1826,7 @@ const LOOKS = [
   { r: [436, 30, 622, 192], t: () => st.room.tidy ? '洞洞板。工具都收进收纳架了，空出一大片。' : '洞洞板。打印用的工具都挂在这里。' },
   { r: [40, 200, 112, 306], t: () => '一盆绿植。' },
   { r: [14, 20, 176, 216], t: () => '窗外是杭州。' },
-  { r: [740, 455, 800, 515], t: () => st.room.binPoop ? '垃圾桶。里面是清出来的竹屎。' : '垃圾桶。' }
+  { r: [740, 455, 800, 515], bin: true, t: () => '垃圾桶。' }
 ];
 function scenePoint(e) {
   const m = sceneSvg.getScreenCTM(); if (!m) return null;
@@ -1813,6 +1840,7 @@ $('#scene').addEventListener('click', e => {
   const pt = scenePoint(e);
   const l = pt && LOOKS.find(x => pt.x >= x.r[0] && pt.x <= x.r[2] && pt.y >= x.r[1] && pt.y <= x.r[3] && (!x.on || x.on()));
   if (l && l.printer && st.printer === 'ready') { openLift(); return; }
+  if (l && l.bin) { openBin(); return; }
   if (l) { const t = l.t(); if (t) { sfx.soft(); hint(t, 2600); } return; }
   if (st.printer === 'ready') openLift();
 });
@@ -1869,7 +1897,7 @@ function afterPop() {
   $('#liftHint').textContent = L.mode === 'scrape' ? '刮刀斜着推进去，它一下翘了起来。' : '啪的一声，它松开了。';
   const tx = $('#liftText'); tx.textContent = o.lift; tx.hidden = false;
   // someone in the room: hand it over or leave it on the desk; alone: desk only
-  const who = o.who === '我' ? [] : present();
+  const who = o.who === '我' && KEEP_IN_ROOM[o.product] ? [] : present();
   $('#liftGive').innerHTML = who.map(w => '<button type="button" class="primary" data-w="' + w + '">给 ' + (NAMES[w] || w) + '</button>').join('');
   $('#liftGive').hidden = !who.length;
   const pb = $('#placeBtn'); pb.hidden = false; pb.classList.toggle('alt', who.length > 0);
@@ -1926,7 +1954,7 @@ function renderOrders() {
     '<div class="otext"><div class="oname">' + (me ? '我自己' : o.who) + '<span class="otag">' + o.tag + '</span></div>' +
     (onBoard ? '<div class="readynote">' + SINGLE[o.product].name + '做好了。</div>' : '<div class="oask">' + o.ask + '</div><div class="recipe">' + chip('idea') + '<span>+</span>' + chip('fil') + '</div>') + '</div>' +
     '<div class="owant"><div class="wantimg' + (onBoard ? '' : ' missing') + '">' + spr(SINGLE[o.product].spr) + '</div>' +
-    '<button type="button" class="deliver" id="deliverBtn"' + (onBoard ? '' : ' disabled') + '>' + (me ? '收好' : '交给 ' + o.who) + '</button></div></article>';
+    '<button type="button" class="deliver" id="deliverBtn"' + (onBoard && (me || present().includes(o.who)) ? '' : ' disabled') + '>' + (me ? '收好' : '交给 ' + o.who) + '</button></div></article>';
   $('#deliverBtn').addEventListener('click', deliver);
   if (storyWait) { el.insertAdjacentHTML('beforeend', '<button type="button" class="storypill" id="storyBtn">继续剧情</button>'); $('#storyBtn').addEventListener('click', resumeStory); }
 }
@@ -2024,7 +2052,7 @@ function deskXf(k) {
   const pd = printData(k), mm = pd && pd.real ? parseFloat(pd.real.h) : 40;
   const sc = mm * MM / b.h; return { sx: sc, sy: sc, b };
 }
-function present() { const o = curOrder(), r = (st.here || []).slice(); if (o && o.who !== '我' && !r.includes(o.who)) r.push(o.who); return r; }
+function present() { return (st.here || []).slice(); }
 function accepts(who, k) {
   if (who === 'D') { const t = GIFT_TAG[k]; return t === '好看' || t === '好玩' || (st.rel.D >= 60 && Math.random() < .3); }
   return true;
@@ -2088,7 +2116,7 @@ $('#dmBtns').addEventListener('click', e => {
   const i = +$('#dmBtns').dataset.i, d = st.desk[i];
   $('#deskModal').hidden = true;
   if (!d || b.dataset.act === 'keep') { updateGuide(); return; }
-  if (b.dataset.act === 'bin') { st.desk.splice(i, 1); renderDesk(); sfx.pop(); hint('丢进了垃圾桶。', 2200); updateGuide(); return; }
+  if (b.dataset.act === 'bin') { st.trash.push(d.k); st.desk.splice(i, 1); renderDesk(); renderBin(); sfx.pop(); hint('丢进了垃圾桶。', 2200); updateGuide(); return; }
   giveTo(b.dataset.w, d.k, i);
 });
 // deskIdx: index in st.desk when the gift comes from the desk, null when straight off the plate
@@ -2122,11 +2150,30 @@ function giveTo(who, k, deskIdx) {
   }, reduced ? 100 : ok ? 720 : 560);
 }
 
+function renderBin() {
+  const g = $('#binFill'); if (!g || !st) return;
+  const n = st.trash.length + (+st.room.binPoop || 0);
+  const bits = [[760, 461, '#EDE6D8'], [776, 459, '#D9CDB4'], [768, 456, '#F4EFE4'], [783, 462, '#8C6A4F']];
+  g.innerHTML = bits.slice(0, Math.min(4, n)).map(([x, y, c]) => '<path d="M' + (x - 6) + ' ' + y + ' q2 -6 6 -5 q5 -2 6 4 q-6 3 -12 1 Z" fill="' + c + '" stroke-width=".8"></path>').join('');
+}
+function openBin() {
+  const g = {}; st.trash.forEach(k => { g[k] = (g[k] || 0) + 1; });
+  const poop = +st.room.binPoop || 0;
+  const items = Object.keys(g).map(k => '<div class="dritem">' + spr(SINGLE[k].spr) + SINGLE[k].name + (g[k] > 1 ? '<em>×' + g[k] + '</em>' : '') + '</div>');
+  $('#binList').innerHTML = items.join('');
+  $('#binList').hidden = !items.length;
+  $('#binCap').textContent = !items.length && !poop ? '空的。' : poop ? '还有清出来的竹屎' + (poop > 1 ? '，倒过 ' + poop + ' 次。' : '。') : '';
+  $('#binEmpty').disabled = !items.length && !poop;
+  sfx.soft(); $('#binModal').hidden = false; updateGuide();
+}
+$('#binEmpty').addEventListener('click', () => { st.trash = []; st.room.binPoop = 0; sfx.pop(); renderBin(); renderScene(); $('#binModal').hidden = true; hint('垃圾倒掉了。', 2000); updateGuide(); });
+$('#binClose').addEventListener('click', () => { $('#binModal').hidden = true; updateGuide(); });
+
 /* ---------- story dialogue ---------- */
 const NAMES = { D: 'D', me: '我', mom: '妈妈' };
 // Story waits for the player: new beats become a card in the orders area
 // and only play when tapped. auto = play now (day intro).
-const STORY_PEEK = { unpack: '快递到了', ams: '装 AMS', site: '挑模型', dchat: '给 D 发消息', journal: '写今天的手账', stow: '收好刮刀', knock: '有人敲门', oldmsg: '有新消息', meet: '有人来了', card: '收到一张卡片', tidy: '收拾桌子' };
+const STORY_PEEK = { leave: 'D 要走了', unpack: '快递到了', ams: '装 AMS', site: '挑模型', dchat: '给 D 发消息', journal: '写今天的手账', stow: '收好刮刀', knock: '有人敲门', oldmsg: '有新消息', meet: '有人来了', card: '收到一张卡片', tidy: '收拾桌子' };
 let storyOn = false, storyWait = false, storyFresh = false, curLine = null, foldView = null;
 function queue(arr, auto) {
   if (!arr || !arr.length) { if (dlg.hidden && !storyWait) step(); return; }
@@ -2160,6 +2207,7 @@ function storyLater(e) {
 }
 function doAction(a) {
   if (a.do === 'order') { st.order = a.i; renderBoard(); }
+  else if (a.do === 'arrive') { if (!st.here.includes(a.who)) st.here.push(a.who); }
   else if (a.do === 'time') setTime(a.v);
   else if (a.do === 'journal') setTimeout(openJournal, reduced ? 100 : 700);
 }
@@ -2170,6 +2218,7 @@ function step() {
     if (Q[0].do === 'tidy') { Q.shift(); dlg.hidden = true; $('#standee').hidden = true; $('#standee').dataset.who = ''; openTidy(); return; }
     if (Q[0].do === 'oldmsg') { Q.shift(); dlg.hidden = true; openOldMsg(); return; }
     if (Q[0].do === 'knock') { Q.shift(); dlg.hidden = true; openKnock(); return; }
+    if (Q[0].do === 'leave') { const a = Q.shift(); dlg.hidden = true; $('#standee').hidden = true; $('#standee').dataset.who = ''; openLeave(a.who); return; }
     if (STORY_DO[Q[0].do]) { const a = Q.shift(); dlg.hidden = true; $('#standee').hidden = true; $('#standee').dataset.who = ''; STORY_DO[a.do](a); return; }
     if (Q[0].do === 'card') { const a = Q.shift(); dlg.hidden = true; $('#standee').hidden = true; $('#standee').dataset.who = ''; openCard(a.who, true); return; }
     doAction(Q.shift());
@@ -2458,6 +2507,16 @@ function openKnock() {
   setTimeout(() => sfx.knock(), 250);
 }
 $('#knockBtn').addEventListener('click', () => { sfx.wake(); $('#knockModal').hidden = true; sfx.soft(); step(); });
+// someone leaves: the door closes, answering the knock that brought them in
+function openLeave(who) {
+  st.here = st.here.filter(x => x !== who);
+  const m = $('#leaveModal'); m.classList.remove('on'); m.hidden = false; updateGuide();
+  requestAnimationFrame(() => m.classList.add('on'));
+  setTimeout(() => sfx.door(), reduced ? 0 : 420);
+  let done = false;
+  const go = () => { if (done) return; done = true; m.onclick = null; m.classList.remove('on'); setTimeout(() => { m.hidden = true; step(); }, reduced ? 0 : 450); };
+  m.onclick = go; setTimeout(go, reduced ? 600 : 2200);
+}
 
 /* ---------- hand-drawn name card ---------- */
 let cardWho = null, cardFromStory = false, cardDrag = null;
@@ -2752,7 +2811,7 @@ function openPrinter() {
     '<button type="button" class="sbtn" id="carePoop"' + (m.poop ? '' : ' disabled') + '>清理竹屎</button></div>' +
     (needsCare() ? '<p class="pwarn">不保养的话，可能会引发打印故障。</p>' : '');
   $('#careWash').addEventListener('click', () => { m.plate = 0; sfx.place(); hint('打印板取下来洗干净，擦干，装回去了。', 2800); renderScene(); openPrinter(); });
-  $('#carePoop').addEventListener('click', () => { m.poop = 0; st.room.binPoop = true; sfx.place(); hint('把竹屎倒进了垃圾桶。', 2600); renderScene(); openPrinter(); });
+  $('#carePoop').addEventListener('click', () => { m.poop = 0; st.room.binPoop = (+st.room.binPoop || 0) + 1; sfx.place(); hint('把竹屎倒进了垃圾桶。', 2600); renderScene(); renderBin(); openPrinter(); });
   sfx.soft(); $('#printerModal').hidden = false; updateGuide();
 }
 $('#prClose').addEventListener('click', () => { $('#printerModal').hidden = true; updateGuide(); });
@@ -2909,7 +2968,7 @@ function openPeople() { openPhone(); }
 
 /* ---------- things kept in the room ---------- */
 function renderRoom(fx) {
-  renderRack(); renderAmsRoom(); renderDesk();
+  renderRack(); renderAmsRoom(); renderDesk(); renderBin();
   const g = $('#roomOrg'), v = st.room.scraper ? 'org_full2' : st.room.tidy ? 'org_full' : 'org';
   if (g.dataset.v !== v) { g.dataset.v = v; g.innerHTML = '<g class="roomitem" transform="translate(672 204) scale(3.6)"><g stroke="#6E4A31" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round" fill="none">' + S[v] + '</g></g>'; }
   document.querySelectorAll('#pegTools [class^="pt-"]').forEach(el => { const k = 't_' + el.getAttribute('class').slice(3); if (!el.firstChild) el.innerHTML = S[k]; });
@@ -3063,7 +3122,7 @@ function openCal(sel) {
 }
 $('#calClose').addEventListener('click', () => { $('#calModal').hidden = true; updateGuide(); });
 $('#againBtn').addEventListener('click', () => { $('#journalModal').hidden = true; start(st.day); });
-$('#nextDayBtn').addEventListener('click', () => { if (st.day !== 1) return; $('#journalModal').hidden = true; start(2, st.coins, { drawer: st.drawer, desk: st.desk, rel: st.rel }); showInRoom(600); setTimeout(() => renderCal(true), 500); });
+$('#nextDayBtn').addEventListener('click', () => { if (st.day !== 1) return; $('#journalModal').hidden = true; start(2, st.coins, { drawer: st.drawer, desk: st.desk, rel: st.rel, trash: st.trash }); showInRoom(600); setTimeout(() => renderCal(true), 500); });
 
 /* ---------- menu ---------- */
 const menu = $('#menu'), menuBtn = $('#menuBtn');
@@ -3098,7 +3157,7 @@ function start(day, coins, keep) {
   cancelAnimationFrame(printRaf); cancelAnimationFrame(L.raf); sfx.humStop();
   document.querySelectorAll('.modal').forEach(m => { m.hidden = true; }); $('#notif').hidden = true; $('#notifDim').hidden = true; phoneStory = false;
   ORDERS = day === 2 ? ORDERS2 : ORDERS1; POST = day === 2 ? POST2 : POST1; ORDERS2[1] = null;
-  st = freshDay(day, coins); keep = keep || {}; st.drawer = (keep.drawer || []).slice(); st.desk = (keep.desk || []).map(d => Object.assign({}, d)); if (keep.rel) st.rel = Object.assign({}, keep.rel); storyOn = storyWait = false; curLine = null; foldView = null; setFold(!st.tut, true); renderDeskPhone(); renderRoom(); SV.x = st.tut ? 320 : 400; SV.y = st.tut ? 210 : 265; SV.z = 1; applyView(); Q = [];
+  st = freshDay(day, coins); keep = keep || {}; st.drawer = (keep.drawer || []).slice(); st.desk = (keep.desk || []).map(d => Object.assign({}, d)); if (keep.rel) st.rel = Object.assign({}, keep.rel); st.trash = (keep.trash || []).slice(); storyOn = storyWait = false; curLine = null; foldView = null; setFold(!st.tut, true); renderDeskPhone(); renderRoom(); SV.x = st.tut ? 320 : 400; SV.y = st.tut ? 210 : 265; SV.z = 1; applyView(); Q = [];
   $('#dayText').textContent = '杭州 · ' + DAYNAME[day];
   setLaptop(day === 2 ? 'org_full' : null); renderCal();
   $('#dayBtn').textContent = day === 1 ? '去第二天' : '回到第一天';
