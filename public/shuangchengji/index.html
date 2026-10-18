@@ -42,7 +42,7 @@ body.framed .stage{border-radius:34px;box-shadow:0 0 0 1px rgba(74,51,36,.18),0 
 .brand{display:flex;align-items:baseline;gap:8px;margin-right:auto;min-width:0}
 .brand b{font-family:var(--f-display);font-weight:400;font-size:24px;letter-spacing:3px}
 .brand span{font-size:12px;letter-spacing:1px;color:var(--ink2);white-space:nowrap}
-.when{font-family:var(--f-ui);font-size:12px;color:var(--ink2);padding:3px 9px;border:1px solid var(--line);border-radius:999px;background:var(--card)}
+.when{font-family:var(--f-ui);font-size:13px;font-weight:500;font-variant-numeric:tabular-nums;color:var(--ink2);padding:3px 9px;border:1px solid var(--line);border-radius:999px;background:var(--card)}
 .coins{display:flex;align-items:center;gap:5px;padding:3px 10px 3px 4px;border:1px solid #DCC8A6;border-radius:999px;background:#FFFBF3;font-family:var(--f-ui);font-size:13px;font-weight:500;font-variant-numeric:tabular-nums}
 .coins.bump{animation:bump .5s ease}
 .iconbtn{width:44px;height:44px;margin-right:-6px;border:0;background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:50%}
@@ -617,6 +617,7 @@ body.framed .stage{border-radius:34px;box-shadow:0 0 0 1px rgba(74,51,36,.18),0 
             <linearGradient id="skyG" x1="0" y1="0" x2="0" y2="1"><stop id="sk1" offset="0" stop-color="#E2ECEC"></stop><stop id="sk2" offset="1" stop-color="#F3EAD5"></stop></linearGradient>
             <linearGradient id="beamG" x1="0" y1="0" x2="1" y2=".45"><stop offset="0" stop-color="#FFF3D4" stop-opacity=".9"></stop><stop offset="1" stop-color="#FFF3D4" stop-opacity=".05"></stop></linearGradient>
             <pattern id="holes" width="12" height="12" patternUnits="userSpaceOnUse"><circle cx="6" cy="6" r="1.2" fill="#A97C4E"></circle></pattern>
+            <clipPath id="winClip"><rect x="33" y="37" width="118" height="162"></rect></clipPath>
             <clipPath id="printClip"><rect id="clipRect" x="180" y="310" width="200" height="0"></rect></clipPath>
             <radialGradient id="bedWarm"><stop offset="0" stop-color="#F2A65A" stop-opacity=".6"></stop><stop offset="1" stop-color="#F2A65A" stop-opacity="0"></stop></radialGradient>
           </defs>
@@ -629,7 +630,8 @@ body.framed .stage{border-radius:34px;box-shadow:0 0 0 1px rgba(74,51,36,.18),0 
             <circle cx="15" cy="24" r="2.4" fill="#C99A5E"></circle><circle cx="173" cy="24" r="2.4" fill="#C99A5E"></circle>
             <rect x="26" y="30" width="132" height="176" rx="3" fill="#6F9893"></rect>
             <rect x="33" y="37" width="118" height="162" fill="url(#skyG)" stroke="none"></rect>
-            <g fill="#C7D1CB" stroke="none">
+            <g clip-path="url(#winClip)"><circle id="sun" cx="120" cy="-30" r="11" fill="#FFF1C9" stroke="none"></circle></g>
+            <g id="cityB" fill="#C7D1CB" stroke="none">
               <rect x="36" y="118" width="12" height="50"></rect><rect x="50" y="98" width="10" height="70"></rect><rect x="62" y="124" width="14" height="44"></rect>
               <rect x="97" y="90" width="11" height="78"></rect><rect x="110" y="110" width="13" height="58"></rect><rect x="125" y="102" width="9" height="66"></rect><rect x="136" y="126" width="14" height="42"></rect>
             </g>
@@ -637,9 +639,9 @@ body.framed .stage{border-radius:34px;box-shadow:0 0 0 1px rgba(74,51,36,.18),0 
               <rect x="39" y="124" width="2" height="2"></rect><rect x="44" y="132" width="2" height="2"></rect><rect x="53" y="106" width="2" height="2"></rect><rect x="56" y="118" width="2" height="2"></rect><rect x="66" y="130" width="2" height="2"></rect><rect x="71" y="138" width="2" height="2"></rect>
               <rect x="100" y="98" width="2" height="2"></rect><rect x="104" y="112" width="2" height="2"></rect><rect x="114" y="118" width="2" height="2"></rect><rect x="118" y="130" width="2" height="2"></rect><rect x="128" y="110" width="2" height="2"></rect><rect x="140" y="134" width="2" height="2"></rect>
             </g>
-            <path d="M33 168 Q58 148 84 158 Q112 142 151 154 L151 199 L33 199 Z" fill="#A9B993" stroke="none"></path>
+            <path id="cityHill" d="M33 168 Q58 148 84 158 Q112 142 151 154 L151 199 L33 199 Z" fill="#A9B993" stroke="none"></path>
             <path d="M60 158 V139 M57.4 147 H62.6 M57.9 152.5 H62.1 M58.6 143 H61.4" stroke="#6F7E63" stroke-width="1" fill="none"></path>
-            <rect x="33" y="182" width="118" height="17" fill="#D3DFD5" stroke="none"></rect>
+            <rect id="cityWater" x="33" y="182" width="118" height="17" fill="#D3DFD5" stroke="none"></rect>
             <path d="M98 182 Q112 172 126 182" stroke="#7F8E72" stroke-width="1" fill="none"></path>
             <path d="M40 189 h14 M70 193 h16 M110 190 h12 M128 195 h12" stroke="#A7BDB3" stroke-width=".8" fill="none"></path>
             <path d="M40 46 L58 46 L44 74" stroke="#FFFFFF" stroke-opacity=".7" stroke-width="1.6" fill="none"></path>
@@ -651,6 +653,15 @@ body.framed .stage{border-radius:34px;box-shadow:0 0 0 1px rgba(74,51,36,.18),0 
             <path d="M29 34 Q33 90 28 150 Q26 186 30 210" stroke-opacity=".4" stroke-width=".8" fill="none"></path>
 
             <polygon id="beam" points="160,58 330,96 336,300 166,262" fill="url(#beamG)" stroke="none" opacity=".5"></polygon>
+
+            <!-- wall clock -->
+            <g id="wallClock" transform="translate(413 62)">
+              <circle r="19" fill="#FFFDF6" stroke-width="2.2"></circle>
+              <path d="M0 -15 v3 M15 0 h-3 M0 15 v-3 M-15 0 h3" stroke-width="1.4"></path>
+              <path id="wcH" d="M0 0 V-8" stroke-width="2.4"></path>
+              <path id="wcM" d="M0 0 V-13" stroke-width="1.5"></path>
+              <circle r="1.8" fill="#6E4A31" stroke="none"></circle>
+            </g>
 
             <!-- pegboard -->
             <rect x="446" y="34" width="174" height="156" rx="3" fill="#D9AE72"></rect>
@@ -1439,12 +1450,6 @@ const JOURNAL2 = {
   stand: '打了一个温湿度计支架，以后能看湿度了。',
   boat: '打了一艘经典的测试小船。'
 };
-const TIMES = {
-  morning: { label: '上午', s1: '#E2ECEC', s2: '#F3EAD5', tint: 'rgba(255,250,235,0)', beam: '160,58 330,96 336,300 166,262', bo: .5, lights: 0 },
-  afternoon: { label: '下午', s1: '#ECE8D6', s2: '#F8E1B6', tint: 'rgba(255,205,140,.12)', beam: '160,70 370,138 384,300 166,292', bo: .75, lights: 0 },
-  dusk: { label: '傍晚', s1: '#B7AEC6', s2: '#F2BE8F', tint: 'rgba(150,92,80,.17)', beam: '160,130 430,214 440,300 166,300', bo: .2, lights: 1 }
-};
-
 const JOURNAL = {
   bm1: 'D 来工作室，把她手绘的画打印成了一枚书签。',
   org: '给自己打了一个桌面工具收纳，把洞洞板上的工具都收了进去。'
@@ -1508,7 +1513,7 @@ function fresh(day) {
   b[2] = { k: 'idea', lv: 1 }; b[7] = { k: 'idea', lv: 1 }; b[10] = { k: 'fil', lv: 1 };
   return { board: b, gens: { gen_idea: { c: 6, t: 0 }, gen_fil: { c: 6, t: 0 } }, coins: 120, order: -1, printed: {}, done: [],
     time: 'morning', notif: false, tidy: null, met: {}, saved: {}, pendingCard: null, phoneNew: false, room: { org: false, tidy: false }, sel: -1, slots: { idea: null, fil: null }, printer: 'idle', pLeft: 0, pProg: 0, pending: null, tut: true,
-    day: 1, jr: [], choice: null, maint: { plate: 0, poop: 0 }, drawer: [], desk: [], rel: { D: 20, J: 60 }, here: [], trash: [] };
+    day: 1, jr: [], choice: null, maint: { plate: 0, poop: 0 }, drawer: [], desk: [], rel: { D: 20, J: 60 }, here: [], trash: [], min: 600 };
 }
 function freshDay(day, coins) {
   const s = fresh();
@@ -1790,6 +1795,7 @@ function startPrint() {
 }
 function runPrint(o) {
   const home = reduced ? 100 : 350, dur = o.secs * 1000 * (reduced ? .4 : 1), total = home + dur;
+  const m0 = st.min, mDur = o.real ? realMinutes(o.real.time) : 10;
   const t0 = performance.now(); let lastTick = 0, lastCx = 0;
   sfx.humStart();
   function f(now) {
@@ -1803,6 +1809,7 @@ function runPrint(o) {
       const p = Math.min(1, (e - home) / dur);
       const cx = Math.sin(now / 150) * 40 * (0.65 + 0.35 * Math.sin(now / 900));
       setHead(46 - p * 78, cx); setGrow(p);
+      st.min = Math.min(CLOSE, m0 + mDur * p); applyClock();
       sfx.humSet(70 + Math.abs(cx - lastCx) * 9); lastCx = cx;
       if (now - lastTick > 120) { sfx.tick(); lastTick = now; }
       G.lcd.textContent = Math.round(p * 100) + '%';
@@ -1948,7 +1955,7 @@ $('#liftPick').addEventListener('click', e => {
 $('#placeBtn').addEventListener('click', () => finishLift(null));
 $('#liftGive').addEventListener('click', e => { const b = e.target.closest('[data-w]'); if (b) finishLift(b.dataset.w); });
 function finishLift(to) {
-  const k = st.pending, o = curOrder();
+  const k = st.pending, o = curOrder(); passTime(3);
   st.printed[st.order] = true; st.pending = null; st.printer = 'idle'; st.sel = -1;
   st.maint.plate++; st.maint.poop++;
   if (needsCare()) setTimeout(() => hint(st.maint.poop >= POOP_MAX ? '竹屎堆满了，点打印机清理一下。' : '打印板该洗了，点打印机看看。', 3400), 1200);
@@ -2347,12 +2354,12 @@ function step() {
     if (Q[0].do === 'oldmsg') { Q.shift(); dlg.hidden = true; openOldMsg(); return; }
     if (Q[0].do === 'knock') { Q.shift(); dlg.hidden = true; openKnock(); return; }
     if (Q[0].do === 'leave') { const a = Q.shift(); dlg.hidden = true; $('#standee').hidden = true; $('#standee').dataset.who = ''; openLeave(a.who); return; }
-    if (STORY_DO[Q[0].do]) { const a = Q.shift(); dlg.hidden = true; $('#standee').hidden = true; $('#standee').dataset.who = ''; STORY_DO[a.do](a); return; }
+    if (STORY_DO[Q[0].do]) { passTime(5); const a = Q.shift(); dlg.hidden = true; $('#standee').hidden = true; $('#standee').dataset.who = ''; STORY_DO[a.do](a); return; }
     if (Q[0].do === 'card') { const a = Q.shift(); dlg.hidden = true; $('#standee').hidden = true; $('#standee').dataset.who = ''; openCard(a.who, true); return; }
     doAction(Q.shift());
   }
   if (!Q.length) { storyOn = false; dlg.hidden = true; $('#standee').hidden = true; $('#standee').dataset.who = ''; renderOrders(); updateGuide(); return; }
-  const l = Q.shift(); curLine = l;
+  const l = Q.shift(); curLine = l; passTime(1);
   const narr = l.s === 'n';
   dlg.classList.toggle('narr', narr);
   $('#dlgWho').innerHTML = narr ? '' : '<span class="av' + (l.s === 'me' ? ' me' : PORTRAIT[l.s] ? ' pic' : '') + '" aria-hidden="true">' + (l.s === 'me' ? '我' : PORTRAIT[l.s] || (l.s === 'mom' ? '妈' : l.s)) + '</span>' + NAMES[l.s];
@@ -2371,13 +2378,52 @@ dlg.addEventListener('click', () => { sfx.wake(); sfx.soft(); step(); });
 $('#dlgLater').addEventListener('click', storyLater);
 
 /* ---------- time of day ---------- */
+// The studio is open 10:00–22:00. Time moves with what happens: prints take their real
+// slicer time (fast-forwarded), story beats a few minutes. Light follows the clock;
+// Hangzhou in October: sunset about 17:30, then blue hour, then night.
+const OPEN = 600, CLOSE = 1320;
+const SKY = [ // minute, sky top, sky bottom, room tint rgba, sun beam polygon, beam opacity, city lights, sun [x, y, r,g,b]
+  [600, '#E2ECEC', '#F3EAD5', [255, 250, 235, 0], [160, 58, 330, 96, 336, 300, 166, 262], .5, 0, [112, -30, 255, 241, 201]],
+  [780, '#E4EEEC', '#F6EDD6', [255, 246, 225, .03], [160, 62, 350, 114, 358, 300, 166, 278], .6, 0, [118, 10, 255, 241, 201]],
+  [930, '#ECE8D6', '#F8E1B6', [255, 205, 140, .12], [160, 70, 370, 138, 384, 300, 166, 292], .75, 0, [126, 70, 255, 226, 170]],
+  [1035, '#E6B08A', '#F6A15F', [240, 140, 80, .2], [160, 118, 418, 202, 430, 300, 166, 300], .62, 0, [128, 84, 242, 138, 75]],
+  [1055, '#A692B6', '#EB9C78', [160, 92, 110, .2], [160, 130, 430, 214, 440, 300, 166, 300], .18, .35, [128, 125, 230, 110, 70]],
+  [1078, '#3E5A8E', '#7189B9', [40, 60, 120, .26], [160, 130, 430, 214, 440, 300, 166, 300], 0, .9, [128, 215, 230, 110, 70]],
+  [1110, '#1D2640', '#33405F', [20, 25, 50, .36], [160, 130, 430, 214, 440, 300, 166, 300], 0, 1, [128, 215, 230, 110, 70]]
+];
+const hexRgb = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));
+const mixN = (a, b, k) => a + (b - a) * k;
+const mixHex = (a, b, k) => { const x = hexRgb(a), y = hexRgb(b); return 'rgb(' + x.map((v, i) => Math.round(mixN(v, y[i], k))).join(',') + ')'; };
+const fmtClock = m => { m = Math.floor(m); return String(Math.floor(m / 60) % 24).padStart(2, '0') + ':' + String(m % 60).padStart(2, '0'); };
+const dayPart = m => m < 720 ? '上午' : m < 1050 ? '下午' : m < 1110 ? '傍晚' : '晚上';
+function applyClock() {
+  const m = clampN(st.min, OPEN, CLOSE);
+  let i = 0; while (i < SKY.length - 2 && m >= SKY[i + 1][0]) i++;
+  const A = SKY[i], B = SKY[i + 1], k = clampN((m - A[0]) / (B[0] - A[0]), 0, 1);
+  $('#sk1').setAttribute('stop-color', mixHex(A[1], B[1], k)); $('#sk2').setAttribute('stop-color', mixHex(A[2], B[2], k));
+  const t = A[3].map((v, j) => mixN(v, B[3][j], k));
+  $('#tint').style.background = 'rgba(' + t.slice(0, 3).map(Math.round).join(',') + ',' + t[3].toFixed(3) + ')';
+  const bp = A[4].map((v, j) => mixN(v, B[4][j], k).toFixed(1));
+  $('#beam').setAttribute('points', bp[0] + ',' + bp[1] + ' ' + bp[2] + ',' + bp[3] + ' ' + bp[4] + ',' + bp[5] + ' ' + bp[6] + ',' + bp[7]);
+  $('#beam').setAttribute('opacity', mixN(A[5], B[5], k).toFixed(2));
+  $('#cityLights').setAttribute('opacity', mixN(A[6], B[6], k).toFixed(2));
+  const su = A[7].map((v, j) => mixN(v, B[7][j], k));
+  const sun = $('#sun'); sun.setAttribute('cx', su[0].toFixed(1)); sun.setAttribute('cy', su[1].toFixed(1)); sun.setAttribute('fill', 'rgb(' + su.slice(2).map(Math.round).join(',') + ')');
+  // the city outside goes from day colours through dusk to night silhouettes
+  const dark = clampN((m - 1030) / 80, 0, 1);
+  $('#cityB').setAttribute('fill', dark < .5 ? mixHex('#C7D1CB', '#B39AA6', dark * 2) : mixHex('#B39AA6', '#2C3550', dark * 2 - 1));
+  $('#cityHill').setAttribute('fill', mixHex('#A9B993', '#2E3A3A', dark));
+  $('#cityWater').setAttribute('fill', mixHex('#D3DFD5', '#3A4868', dark));
+  $('#clockText').textContent = fmtClock(m);
+  $('#wcH').setAttribute('transform', 'rotate(' + ((m / 60) % 12 * 30).toFixed(1) + ')');
+  $('#wcM').setAttribute('transform', 'rotate(' + (m % 60 * 6).toFixed(1) + ')');
+  st.time = m < 840 ? 'morning' : m < 1050 ? 'afternoon' : 'dusk';
+}
+function passTime(min) { st.min = Math.min(CLOSE, st.min + min); applyClock(); }
+// story beats still name a part of the day; the clock never runs backwards
 function setTime(v) {
-  st.time = v; const T = TIMES[v];
-  $('#clockText').textContent = T.label;
-  $('#sk1').setAttribute('stop-color', T.s1); $('#sk2').setAttribute('stop-color', T.s2);
-  $('#tint').style.background = T.tint;
-  $('#beam').setAttribute('points', T.beam); $('#beam').setAttribute('opacity', T.bo);
-  $('#cityLights').setAttribute('opacity', T.lights);
+  const at = { morning: OPEN, afternoon: 840, dusk: 1065 }[v];
+  st.min = v === 'morning' ? OPEN : Math.max(st.min || OPEN, at); applyClock();
 }
 
 function hint(t, ms) {
@@ -2605,7 +2651,7 @@ function openOldMsg() {
 function openChat() {
   if (!st.notif) return;
   st.notif = false; $('#notif').hidden = true; $('#notifDim').hidden = true; $('#deskPhone').classList.remove('buzz'); renderDeskPhone();
-  $('#ipTime').textContent = IPTIME[st.time] || '10:12';
+  $('#ipTime').textContent = fmtClock(st.min);
   $('#ipScreen').classList.remove('poster-on');
   $('#ipPage').innerHTML = '<div class="ch-nav"><span class="ch-back" aria-hidden="true">‹</span><span class="ch-who"><i class="ch-av">?</i><b>？？？</b></span><span></span></div>' +
     '<div class="ip-scroll ch-body" id="chBody"><p class="ch-time">刚刚</p>' +
@@ -2649,7 +2695,7 @@ function openLeave(who) {
 /* ---------- hand-drawn name card ---------- */
 let cardWho = null, cardFromStory = false, cardDrag = null;
 function mpIdle() {
-  $('#mpScreen').innerHTML = '<div class="mp-lock"><b>' + (IPTIME[st.time] || '10:12') + '</b><span>把名片放进来</span><i class="mp-drop"></i></div>';
+  $('#mpScreen').innerHTML = '<div class="mp-lock"><b>' + (fmtClock(st.min)) + '</b><span>把名片放进来</span><i class="mp-drop"></i></div>';
 }
 function openCard(who, fromStory) {
   cardWho = who; cardFromStory = fromStory;
@@ -2978,7 +3024,7 @@ const D_CHAT = [
 ];
 function openDChat() {
   phoneStory = true;
-  $('#ipTime').textContent = IPTIME[st.time] || '18:10';
+  $('#ipTime').textContent = fmtClock(st.min);
   $('#ipScreen').classList.remove('poster-on');
   const page = $('#ipPage'); delete page.dataset.busy;
   page.innerHTML = '<div class="ch-nav"><span class="ch-back" aria-hidden="true">‹</span><span class="ch-who"><i class="ch-av ch-avd">' + avatarHTML('D') + '</i><b>D</b></span><span></span></div>' +
@@ -3038,7 +3084,6 @@ function renderDeskPhone() {
   $('#phScreen').setAttribute('fill', on ? '#CFE3DE' : '#48615F');
   $('#deskPhone').classList.toggle('ping-on', !!(st && st.pendingCard));
 }
-const IPTIME = { morning: '10:12', afternoon: '15:40', dusk: '18:10' };
 const SEARCH_SVG = '<svg viewBox="0 0 14 14" aria-hidden="true"><circle cx="6" cy="6" r="4.6" fill="none" stroke="currentColor" stroke-width="1.6"></circle><path d="M9.5 9.5 L13 13" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path></svg>';
 const ACTS = [
   ['信息', '<path d="M3 4.5 h18 a2 2 0 0 1 2 2 v9 a2 2 0 0 1 -2 2 h-11 l-5 4 v-4 h-2 a2 2 0 0 1 -2 -2 v-9 a2 2 0 0 1 2 -2 Z"></path>'],
@@ -3047,7 +3092,7 @@ const ACTS = [
   ['邮件', '<rect x="2" y="5" width="20" height="14" rx="2.5"></rect><path d="M3 6.5 l9 6.5 9 -6.5" fill="none"></path>']
 ];
 function openPhone(id) {
-  $('#ipTime').textContent = IPTIME[st.time] || '10:12';
+  $('#ipTime').textContent = fmtClock(st.min);
   renderPhone(id || null);
   $('#phoneModal').hidden = false;
   st.phoneNew = false; renderDeskPhone(); sfx.soft(); updateGuide();
@@ -3341,7 +3386,7 @@ $('#drGrid').addEventListener('click', e => {
 });
 $('#drClose').addEventListener('click', () => { $('#drawerModal').hidden = true; updateGuide(); });
 start(location.hash === '#day2' ? 2 : 1);
-if (/[?&]debug\b/.test(location.search)) window.__dbg = { st: () => st, giveTo, putOnDesk, renderBoard, openWash };
+if (/[?&]debug\b/.test(location.search)) window.__dbg = { st: () => st, giveTo, putOnDesk, renderBoard, openWash, applyClock };
 })();
 </script>
 
