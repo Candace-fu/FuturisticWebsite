@@ -192,7 +192,18 @@ body.framed .stage{border-radius:34px;box-shadow:0 0 0 1px rgba(74,51,36,.18),0 
 .scene.grabbing{cursor:grabbing}
 .panhint{position:absolute;left:8px;bottom:8px;font-family:var(--f-ui);font-size:11px;padding:3px 9px;border-radius:999px;background:rgba(74,51,36,.62);color:#FBF6EC;pointer-events:none;transition:opacity .5s}
 .panhint.gone{opacity:0}
-#deskPhone{cursor:pointer}
+#deskPhone,#wallCal{cursor:pointer}
+.amsin{animation:fadein .7s ease both}
+.calmark{stroke-dasharray:60;stroke-dashoffset:0}
+.calmark.draw{animation:caldraw 1s .3s ease both}
+@keyframes caldraw{from{stroke-dashoffset:60}to{stroke-dashoffset:0}}
+.calgrid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}
+.cday{position:relative;height:44px;border:1px solid var(--line);border-radius:8px;background:#FFFCF5;font-family:var(--f-ui);font-size:14px;color:var(--ink2);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0}
+.cday:disabled{color:#C9BCA6;background:transparent;cursor:default}
+.cday.on{border-color:var(--tealD);box-shadow:0 0 0 2px rgba(63,108,104,.25)}
+.cday svg{position:absolute;inset:3px;width:calc(100% - 6px);height:calc(100% - 6px);pointer-events:none}
+.cday small{position:absolute;bottom:1px;left:0;right:0;font-size:9px;color:var(--clay)}
+.calcap{margin:0;font-family:var(--f-ui);font-size:13px;color:var(--ink2)}
 .roomitem.appear{animation:roomin .6s cubic-bezier(.3,1.5,.5,1)}
 @keyframes roomin{0%{opacity:0;transform:translate(656px,180px) scale(3.3)}100%{opacity:1;transform:translate(656px,204px) scale(3.6)}}
 #deskPhone .ping{opacity:0;transform-box:fill-box;transform-origin:center}
@@ -561,6 +572,18 @@ body.framed .stage{border-radius:34px;box-shadow:0 0 0 1px rgba(74,51,36,.18),0 
             </g>
             <g transform="rotate(4 596 158)"><rect x="580" y="142" width="32" height="30" fill="#F2E0A8"></rect><path d="M585 151 h22 M585 157 h16 M585 163 h19" stroke-width=".7" stroke-opacity=".7" fill="none"></path></g>
 
+            <!-- wall calendar -->
+            <g id="wallCal" aria-label="墙上的日历">
+              <path d="M416 100 v-4" stroke="#8A847C" stroke-width="1.6"></path><circle cx="416" cy="95" r="1.6" fill="#8A847C" stroke="none"></circle>
+              <rect x="394" y="104" width="46" height="56" rx="2" fill="#FFFDF6"></rect>
+              <rect x="394" y="104" width="46" height="11" rx="2" fill="#C47A57"></rect>
+              <path d="M402 102 v5 M416 102 v5 M430 102 v5" stroke-width="1.3"></path>
+              <text x="417" y="112.4" font-size="6.2" text-anchor="middle" fill="#FBF6EC" stroke="none" font-family="Noto Sans SC, sans-serif">日 历</text>
+              <text x="399" y="129" font-size="5.6" text-anchor="middle" fill="#6E5038" stroke="none" font-family="Noto Sans SC, sans-serif">1</text><text x="410" y="129" font-size="5.6" text-anchor="middle" fill="#6E5038" stroke="none" font-family="Noto Sans SC, sans-serif">2</text><text x="421" y="129" font-size="5.6" text-anchor="middle" fill="#6E5038" stroke="none" font-family="Noto Sans SC, sans-serif">3</text><text x="432" y="129" font-size="5.6" text-anchor="middle" fill="#6E5038" stroke="none" font-family="Noto Sans SC, sans-serif">4</text><text x="399" y="141" font-size="5.6" text-anchor="middle" fill="#6E5038" stroke="none" font-family="Noto Sans SC, sans-serif">5</text><text x="410" y="141" font-size="5.6" text-anchor="middle" fill="#6E5038" stroke="none" font-family="Noto Sans SC, sans-serif">6</text><text x="421" y="141" font-size="5.6" text-anchor="middle" fill="#6E5038" stroke="none" font-family="Noto Sans SC, sans-serif">7</text><text x="432" y="141" font-size="5.6" text-anchor="middle" fill="#6E5038" stroke="none" font-family="Noto Sans SC, sans-serif">8</text><text x="399" y="153" font-size="5.6" text-anchor="middle" fill="#6E5038" stroke="none" font-family="Noto Sans SC, sans-serif">9</text><text x="410" y="153" font-size="5.6" text-anchor="middle" fill="#6E5038" stroke="none" font-family="Noto Sans SC, sans-serif">10</text><text x="421" y="153" font-size="5.6" text-anchor="middle" fill="#6E5038" stroke="none" font-family="Noto Sans SC, sans-serif">11</text><text x="432" y="153" font-size="5.6" text-anchor="middle" fill="#6E5038" stroke="none" font-family="Noto Sans SC, sans-serif">12</text>
+              <g id="calMarks"></g>
+              <rect x="388" y="94" width="58" height="70" fill="transparent" stroke="none"></rect>
+            </g>
+
             <!-- filament rack -->
             <g id="rack" transform="translate(0 -36)">
               <path d="M700 62 q6 -2 12 0 M820 280 q6 -2 11 0" stroke="#CDB894" stroke-width=".8" fill="none"></path>
@@ -640,6 +663,7 @@ body.framed .stage{border-radius:34px;box-shadow:0 0 0 1px rgba(74,51,36,.18),0 
 
             <!-- things kept in the room -->
             <g id="roomOrg" opacity="0"></g>
+            <g id="roomAms"></g>
 
             <!-- phone -->
             <g id="deskPhone" aria-label="手机">
@@ -678,12 +702,14 @@ body.framed .stage{border-radius:34px;box-shadow:0 0 0 1px rgba(74,51,36,.18),0 
             <path d="M200 76 V300 M350 76 V300" stroke-width="1" stroke-dasharray="2 2" fill="none"></path>
             <rect x="170" y="58" width="210" height="15" rx="3" fill="#8B827A"></rect>
             <rect x="272" y="44" width="7" height="16" fill="#6F665E"></rect>
+            <g id="topSpool">
             <ellipse cx="281" cy="32" rx="23" ry="26" fill="#E2D2B5"></ellipse>
             <circle cx="275" cy="32" r="26" fill="#ECDFC6"></circle>
             <circle id="spoolRing" cx="275" cy="32" r="19.5" fill="#9DB089"></circle>
             <path d="M258 26 A17 17 0 0 1 269 15" stroke="#C6D3B3" stroke-width="2.4" fill="none"></path>
             <circle cx="275" cy="32" r="8" fill="#ECDFC6"></circle>
             <circle cx="275" cy="32" r="3" fill="#6E4A31" stroke="none" fill-opacity=".7"></circle>
+            </g>
             <path id="filPathO" d="M292 50 C 318 90 300 150 275 196" stroke="#6E4A31" stroke-width="3.6" fill="none"></path>
             <path id="filPath" d="M292 50 C 318 90 300 150 275 196" stroke="#9DB089" stroke-width="2" fill="none"></path>
             <rect x="158" y="316" width="234" height="38" rx="4" fill="#8B827A"></rect>
@@ -893,6 +919,17 @@ body.framed .stage{border-radius:34px;box-shadow:0 0 0 1px rgba(74,51,36,.18),0 
       <h2 id="siteTitle">挑一个模型</h2>
       <div class="s-url" id="siteUrl"></div>
       <div class="plist" id="siteList"></div>
+    </div>
+  </div>
+
+  <div class="modal" id="calModal" hidden>
+    <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="calTitle">
+      <span class="eyebrow">日历</span>
+      <h2 id="calTitle">在杭州的日子</h2>
+      <div class="calgrid" id="calGrid"></div>
+      <p class="calcap" id="calCap"></p>
+      <div class="journal" id="calDiary"></div>
+      <button type="button" class="primary" id="calClose">挂回墙上</button>
     </div>
   </div>
 
@@ -1566,6 +1603,7 @@ function renderScene() {
 $('#scene').addEventListener('click', e => {
   if (panMoved) return;
   const hit = document.elementFromPoint(e.clientX, e.clientY);
+  if (hit && hit.closest && hit.closest('#wallCal')) { openCal(); return; }
   if (hit && hit.closest && hit.closest('#deskPhone')) { if (st.notif) { openChat(); return; } if (st.pendingCard) openCard(st.pendingCard, false); else openPhone(); return; }
   if (st.printer === 'ready') openLift();
 });
@@ -2193,6 +2231,7 @@ $('#amsTest').addEventListener('click', () => {
 $('#amsDone').addEventListener('click', () => {
   const m = st.ams.mistake;
   $('#amsModal').hidden = true;
+  st.room.ams = true; renderAmsRoom(true); showInRoom(250); sfx.chime();
   st.jr.push({ spr: 'ams', t: m ? '装好了 AMS lite。一长一短两根特氟龙管接反了，送料总拉不动，重新检查才解决。' : '装好了 AMS lite。四根特氟龙管长短不一，都接对了。' });
   Q.unshift(m ? { s: 'me', t: '原来是长短两根管子接反了。难怪总拉不动。' } : { s: 'me', t: '四根管子都接对了。' });
   step();
@@ -2354,13 +2393,28 @@ function openPeople() { openPhone(); }
 
 /* ---------- things kept in the room ---------- */
 function renderRoom(fx) {
-  renderRack();
+  renderRack(); renderAmsRoom();
   const g = $('#roomOrg'), v = st.room.scraper ? 'org_full2' : st.room.tidy ? 'org_full' : 'org';
   if (g.dataset.v !== v) { g.dataset.v = v; g.innerHTML = '<g class="roomitem" transform="translate(656 204) scale(3.6)"><g stroke="#6E4A31" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round" fill="none">' + S[v] + '</g></g>'; }
   document.querySelectorAll('#pegTools [class^="pt-"]').forEach(el => { const k = 't_' + el.getAttribute('class').slice(3); if (!el.firstChild) el.innerHTML = S[k]; });
   $('#pegTools').setAttribute('opacity', st.room.tidy ? 0 : 1);
   g.setAttribute('opacity', st.room.org ? 1 : 0);
   if (fx === 'org' && !reduced) { const it = g.firstChild; it.classList.remove('appear'); void it.getBoundingClientRect(); it.classList.add('appear'); }
+}
+/* AMS lite on the desk left of the printer, four colours, tube up into the printer */
+function renderAmsRoom(fx) {
+  const g = $('#roomAms'), on = !!(st && st.room.ams);
+  $('#topSpool').setAttribute('opacity', on ? 0 : 1);
+  if (!on) { g.innerHTML = ''; return; }
+  const sp = (cx, cy, s) => '<ellipse cx="' + (cx + 3) + '" cy="' + cy + '" rx="9" ry="12" fill="#E2D2B5"></ellipse><circle cx="' + cx + '" cy="' + cy + '" r="12" fill="#ECDFC6"></circle>' +
+    '<circle cx="' + cx + '" cy="' + cy + '" r="8.6" fill="' + s.c + '"' + (s.clear ? ' fill-opacity=".55"' : '') + '></circle><circle cx="' + cx + '" cy="' + cy + '" r="3.2" fill="#ECDFC6"></circle>';
+  g.innerHTML = '<g class="' + (fx ? 'amsin' : '') + '">' +
+    '<path d="M130 236 C 128 150, 210 40, 292 50" stroke="#6E4A31" stroke-width="3.6" fill="none"></path><path d="M130 236 C 128 150, 210 40, 292 50" stroke="#FFFDF6" stroke-width="2" fill="none"></path>' +
+    '<ellipse cx="130" cy="303" rx="30" ry="3" fill="#6E4A31" fill-opacity=".14" stroke="none"></ellipse>' +
+    '<rect x="106" y="290" width="48" height="11" rx="3" fill="#CBC6B8"></rect><rect x="127" y="238" width="6" height="53" fill="#B9B3A5"></rect>' +
+    '<path d="M112 250 L148 250 M112 276 L148 276" stroke-width="2.2"></path>' +
+    sp(116, 250, SPOOLS[0]) + sp(144, 250, SPOOLS[1]) + sp(116, 276, SPOOLS[2]) + sp(144, 276, SPOOLS[3]) +
+    '<rect x="124" y="232" width="12" height="8" rx="2" fill="#8B827A"></rect></g>';
 }
 function showInRoom(x) { SV.z = 1; SV.x = x; SV.y = 210; applyView(); }
 
@@ -2435,8 +2489,12 @@ function openMeet(who) {
 $('#meetOk').addEventListener('click', () => { $('#meetModal').hidden = true; step(); });
 $('#peopleClose').addEventListener('click', () => { $('#peopleModal').hidden = true; updateGuide(); });
 /* ---------- journal ---------- */
+function journalItems() {
+  return st.day === 2 ? st.jr : st.done.map(k => ({ spr: k === 'org' && st.room.tidy ? 'org_full' : k, t: JOURNAL[k] }));
+}
 function openJournal() {
-  const items = st.day === 2 ? st.jr : st.done.map(k => ({ spr: k === 'org' && st.room.tidy ? 'org_full' : k, t: JOURNAL[k] }));
+  const items = journalItems();
+  st.dayDone = true; saveDiary(); renderCal(true);
   $('#jTitle').textContent = '杭州 · ' + DAYNAME[st.day];
   $('#journalBody').innerHTML = items.map(x => '<div class="jitem">' + spr(x.spr) + '<span>' + x.t + '</span></div>').join('') +
     (st.day === 1 && st.room.tidy ? '<p class="jnote">明天：抽空搞一把刮刀。</p>' : '');
@@ -2444,6 +2502,43 @@ function openJournal() {
   nb.textContent = st.day === 1 ? '第二天' : '第三天（制作中）'; nb.disabled = st.day !== 1;
   $('#journalModal').hidden = false; updateGuide();
 }
+/* ---------- wall calendar: a circle for each finished day, tap a day to read its diary ---------- */
+const DIARY_KEY = 'shuangchengji-diary-';
+const DIARY_DEFAULT = { 1: [{ spr: 'bm1', t: JOURNAL.bm1 }, { spr: 'org_full', t: JOURNAL.org }] };
+const CIRCLE = (cx, cy, rx, ry) => '<path d="M' + (cx - rx) + ' ' + (cy + 1) + ' A' + rx + ' ' + ry + ' 0 1 1 ' + (cx - rx + 2) + ' ' + (cy + ry * .8) + '" class="calmark" fill="none" stroke="#B9694C" stroke-width="1.1" pathLength="60"></path>';
+function saveDiary() { try { localStorage.setItem(DIARY_KEY + st.day, JSON.stringify(journalItems())); } catch (e) {} }
+function diaryOf(d) {
+  if (d === st.day) return journalItems();
+  try { const v = JSON.parse(localStorage.getItem(DIARY_KEY + d)); if (v && v.length) return v; } catch (e) {}
+  return DIARY_DEFAULT[d] || [];
+}
+const dayDone = d => d < st.day || (d === st.day && st.dayDone);
+function renderCal(anim) {
+  let h = '';
+  for (let d = 1; d <= 12; d++) {
+    const x = 399 + (d - 1) % 4 * 11, y = 127 + Math.floor((d - 1) / 4) * 12;
+    if (dayDone(d)) h += CIRCLE(x, y, 4.6, 4.2).replace('class="calmark"', 'class="calmark' + (anim && d === st.day ? ' draw' : '') + '"');
+    else if (d === st.day) h += '<rect x="' + (x - 4.4) + '" y="' + (y - 4.6) + '" width="8.8" height="8.4" rx="1.5" fill="none" stroke="#5E8C88" stroke-width=".9" stroke-dasharray="1.6 1.2"></rect>';
+  }
+  $('#calMarks').innerHTML = h;
+}
+function openCal(sel) {
+  sel = sel || st.day;
+  let g = '';
+  for (let d = 1; d <= 14; d++) {
+    const can = d <= st.day;
+    g += '<button type="button" class="cday' + (d === sel ? ' on' : '') + '" data-d="' + d + '"' + (can ? '' : ' disabled') + '>' + d +
+      (dayDone(d) ? '<svg viewBox="0 0 40 40" aria-hidden="true"><path d="M6 22 A14 13 0 1 1 10 30" fill="none" stroke="#B9694C" stroke-width="2" stroke-linecap="round"></path></svg>' : '') +
+      (d === st.day ? '<small>今天</small>' : '') + '</button>';
+  }
+  $('#calGrid').innerHTML = g;
+  const items = diaryOf(sel);
+  $('#calCap').textContent = DAYNAME[sel] ? '杭州 · ' + DAYNAME[sel] : '第 ' + sel + ' 天';
+  $('#calDiary').innerHTML = items.length ? items.map(x => '<div class="jitem">' + spr(x.spr) + '<span>' + x.t + '</span></div>').join('') : '<div class="jitem"><span>' + (sel === st.day ? '今天还没有记下什么。' : '这一天的日记还空着。') + '</span></div>';
+  $('#calGrid').querySelectorAll('.cday:not([disabled])').forEach(b => b.addEventListener('click', () => { sfx.soft(); openCal(+b.dataset.d); }));
+  $('#calModal').hidden = false; updateGuide();
+}
+$('#calClose').addEventListener('click', () => { $('#calModal').hidden = true; updateGuide(); });
 $('#againBtn').addEventListener('click', () => { $('#journalModal').hidden = true; start(st.day); });
 $('#nextDayBtn').addEventListener('click', () => { if (st.day !== 1) return; $('#journalModal').hidden = true; start(2, st.coins); });
 
@@ -2482,7 +2577,7 @@ function start(day, coins) {
   ORDERS = day === 2 ? ORDERS2 : ORDERS1; POST = day === 2 ? POST2 : POST1; ORDERS2[1] = null;
   st = freshDay(day, coins); renderDeskPhone(); renderRoom(); SV.x = 320; SV.y = 210; SV.z = 1; applyView(); Q = [];
   $('#dayText').textContent = '杭州 · ' + DAYNAME[day];
-  setLaptop(day === 2 ? 'org_full' : null);
+  setLaptop(day === 2 ? 'org_full' : null); renderCal();
   $('#dayBtn').textContent = day === 1 ? '去第二天' : '回到第一天';
   $('#coinText').textContent = st.coins;
   setGrow(0); setHead(0, 0); G.glow.setAttribute('opacity', '0'); G.lcd.textContent = '待命';
