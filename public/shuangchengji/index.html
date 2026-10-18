@@ -64,7 +64,22 @@ body.framed .stage{border-radius:34px;box-shadow:0 0 0 1px rgba(74,51,36,.18),0 
 .scene.ready #bedGlow{animation:glow 1.6s ease-in-out infinite}
 
 /* order */
-.orders{flex:none;height:78px}
+.orders{flex:none;height:78px;position:relative}
+.order.story{background:#FFF8EA;border-color:#E3C79A}
+.order.story .av.narr{background:#C9A878}
+.order.story.new{animation:fadein .4s ease both,storyin 1.4s ease-in-out 2}
+@keyframes storyin{0%,100%{box-shadow:0 0 0 0 rgba(198,110,72,0)}50%{box-shadow:0 0 0 4px rgba(198,110,72,.28)}}
+.storypill{position:absolute;right:6px;top:-9px;z-index:3;font-family:var(--f-ui);font-size:11.5px;font-weight:500;height:26px;padding:0 10px;border-radius:999px;border:0;background:var(--clay);color:#FBF6EC;cursor:pointer;box-shadow:0 2px 6px rgba(74,51,36,.2);animation:bob 1.4s ease-in-out infinite}
+.bhandle{flex:none;height:24px;margin:-8px 0;display:flex;align-items:center;justify-content:center;gap:6px;border:0;background:transparent;font-family:var(--f-ui);font-size:11px;color:var(--mute);cursor:pointer;-webkit-tap-highlight-color:transparent}
+.bhandle i{width:34px;height:4px;border-radius:2px;background:#CDB995}
+.stage.folded .boardwrap,.stage.folded .info{display:none}
+.stage.folded .bhandle{margin:-4px 0 -6px;color:var(--ink2)}
+.drgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;max-height:46vh;overflow:auto}
+.dritem{position:relative;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 2px 7px;border:1px solid var(--line);border-radius:10px;background:var(--cell);cursor:pointer;font-family:var(--f-ui);font-size:11px;color:var(--ink2);line-height:1.3}
+.dritem .spr{width:44px;height:44px}
+.dritem em{position:absolute;right:4px;top:3px;font-style:normal;font-size:10.5px;font-weight:500;color:var(--tealD)}
+.drempty{margin:0;font-size:13px;color:var(--mute)}
+.dlgfoot .later{margin-right:auto;font-family:var(--f-ui);font-size:13px;background:transparent;border:0;color:var(--mute);height:44px;padding:0 6px;cursor:pointer}
 .order{height:100%;box-sizing:border-box;display:flex;gap:10px;align-items:center;padding:8px 10px;background:var(--card);border:1px solid var(--line);border-radius:12px;animation:fadein .4s ease both}
 .order.ready{border-color:var(--tealD);box-shadow:0 0 0 2px rgba(63,108,104,.22);background:#F4F7EF}
 .order.over{background:#E4EEE6;border-color:var(--tealD)}
@@ -791,6 +806,7 @@ body.framed .stage{border-radius:34px;box-shadow:0 0 0 1px rgba(74,51,36,.18),0 
   </div>
 
   <div class="orders" id="orders"></div>
+  <button type="button" class="bhandle" id="bHandle" aria-expanded="true"><i aria-hidden="true"></i><span>收起合成桌</span></button>
 
   <div class="boardwrap">
     <div class="toast" id="toast" role="status"></div>
@@ -804,7 +820,7 @@ body.framed .stage{border-radius:34px;box-shadow:0 0 0 1px rgba(74,51,36,.18),0 
     <div class="dlgcard" role="dialog" aria-live="polite">
       <div class="dlgwho" id="dlgWho"></div>
       <p class="dlgtext" id="dlgText"></p>
-      <div class="dlgfoot"><button type="button" class="next" id="nextBtn">继续</button></div>
+      <div class="dlgfoot"><button type="button" class="later" id="dlgLater">稍后再说</button><button type="button" class="next" id="nextBtn">继续</button></div>
     </div>
   </div>
 
@@ -977,6 +993,16 @@ body.framed .stage{border-radius:34px;box-shadow:0 0 0 1px rgba(74,51,36,.18),0 
       <h2 id="prTitle">打印机状态</h2>
       <div id="prBody"></div>
       <button type="button" class="primary" id="prClose">好</button>
+    </div>
+  </div>
+
+  <div class="modal" id="drawerModal" hidden>
+    <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="drTitle">
+      <span class="eyebrow">抽屉</span>
+      <h2 id="drTitle">收起来的东西</h2>
+      <p class="calcap">点一下，拿回桌上。抽屉里的东西第二天也还在。</p>
+      <div class="drgrid" id="drGrid"></div>
+      <button type="button" class="primary" id="drClose">关上抽屉</button>
     </div>
   </div>
 
@@ -1388,7 +1414,7 @@ function fresh(day) {
   b[2] = { k: 'idea', lv: 1 }; b[7] = { k: 'idea', lv: 1 }; b[10] = { k: 'fil', lv: 1 };
   return { board: b, gens: { gen_idea: { c: 6, t: 0 }, gen_fil: { c: 6, t: 0 } }, coins: 120, order: -1, printed: {}, done: [],
     time: 'morning', notif: false, tidy: null, met: {}, saved: {}, pendingCard: null, phoneNew: false, room: { org: false, tidy: false }, sel: -1, slots: { idea: null, fil: null }, printer: 'idle', pLeft: 0, pProg: 0, pending: null, tut: true,
-    day: 1, jr: [], choice: null, maint: { plate: 0, poop: 0 } };
+    day: 1, jr: [], choice: null, maint: { plate: 0, poop: 0 }, drawer: [] };
 }
 function freshDay(day, coins) {
   const s = fresh();
@@ -1834,7 +1860,8 @@ $('#placeBtn').addEventListener('click', () => {
 /* ---------- orders ---------- */
 function renderOrders() {
   const el = $('#orders'), o = curOrder();
-  if (!o) { el.innerHTML = '<div class="orderwait">' + (st.done.length >= ORDERS.length ? '今天的事都做完了。' : '还没有新的事情。') + '</div>'; return; }
+  if (!o && storyWait) { el.innerHTML = storyCardHTML(); $('#storyBtn').addEventListener('click', resumeStory); return; }
+  if (!o) { el.innerHTML = '<div class="orderwait">' + (st.done.length >= ORDERS.length ? '今天的事都做完了。' : '还没有新的事情。先随便合成一些吧。') + '</div>'; return; }
   const onBoard = st.board.some(x => x && x.k === o.product);
   const have = (k, lv) => st.board.some(x => x && x.k === k && x.lv === lv) || (st.slots[k] && st.slots[k].lv === lv) || !!st.printed[st.order] || (st.printer !== 'idle');
   const chip = k => { const lv = o.need[k]; const ok = have(k, lv); return '<span class="chip' + (ok ? ' ok' : '') + '">' + spr(CHAINS[k].spr[lv - 1]) + CHAINS[k].names[lv - 1] + '</span>'; };
@@ -1846,6 +1873,7 @@ function renderOrders() {
     '<div class="owant"><div class="wantimg' + (onBoard ? '' : ' missing') + '">' + spr(SINGLE[o.product].spr) + '</div>' +
     '<button type="button" class="deliver" id="deliverBtn"' + (onBoard ? '' : ' disabled') + '>' + (me ? '收好' : '交给 ' + o.who) + '</button></div></article>';
   $('#deliverBtn').addEventListener('click', deliver);
+  if (storyWait) { el.insertAdjacentHTML('beforeend', '<button type="button" class="storypill" id="storyBtn">继续剧情</button>'); $('#storyBtn').addEventListener('click', resumeStory); }
 }
 function deliver() {
   const o = curOrder(); if (!o) return;
@@ -1871,7 +1899,12 @@ function addCoins(n) {
 /* ---------- item bar ---------- */
 function renderInfo() {
   const el = $('#info'); const it = st.sel >= 0 ? st.board[st.sel] : null;
-  if (!it) { el.innerHTML = '<div class="empty">点一下桌上的东西，看看它是什么。</div>'; return; }
+  if (!it) {
+    const n = st.drawer.length;
+    el.innerHTML = '<div class="empty" style="flex:1">点一下桌上的东西，看看它是什么。</div>' + (n ? '<button type="button" class="sbtn" id="ibDrawer">抽屉 · ' + n + '</button>' : '');
+    if (n) $('#ibDrawer').addEventListener('click', openDrawer);
+    return;
+  }
   const d = describe(it), o = curOrder();
   let desc = d.desc, btns = '';
   if (isStation(it)) {
@@ -1892,19 +1925,53 @@ function renderInfo() {
   el.innerHTML = '<div class="thumb">' + spr(d.spr) + '</div><div class="itxt"><div class="iname">' + d.name + '<span class="ilv">' + d.lv + '</span></div><div class="idesc">' + desc + '</div></div>' + btns;
   const on = (id, fn) => { const b = $(id); if (b) b.addEventListener('click', fn); };
   on('#ibLift', openLift); on('#ibSketch', openSketch); on('#ibUnload', unloadPrinter); on('#ibGive', deliver);
-  on('#ibStash', () => { st.board[st.sel] = null; st.sel = -1; sfx.place(); renderBoard(); });
+  on('#ibStash', () => { const x = st.board[st.sel]; st.drawer.push({ k: x.k, lv: x.lv }); st.board[st.sel] = null; st.sel = -1; sfx.place(); renderBoard(); hint('收进抽屉了。不选东西的时候，右下角可以打开抽屉。', 3200); });
   on('#ibLoad', () => loadPrinter(st.sel));
 }
 
 /* ---------- story dialogue ---------- */
 const NAMES = { D: 'D', me: '我', mom: '妈妈' };
-function queue(arr) { Q.push(...arr); if (dlg.hidden) step(); }
+// Story waits for the player: new beats become a card in the orders area
+// and only play when tapped. auto = play now (day intro).
+const STORY_PEEK = { unpack: '快递到了', ams: '装 AMS', site: '挑模型', dchat: '给 D 发消息', journal: '写今天的手账', stow: '收好刮刀', knock: '有人敲门', oldmsg: '有新消息', meet: '有人来了', card: '收到一张卡片', tidy: '收拾桌子' };
+let storyOn = false, storyWait = false, storyFresh = false, curLine = null;
+function queue(arr, auto) {
+  if (!arr || !arr.length) { if (dlg.hidden && !storyWait) step(); return; }
+  Q.push(...arr);
+  if (auto || storyOn) { if (dlg.hidden) step(); return; }
+  storyWait = true; storyFresh = true; renderOrders(); updateGuide();
+}
+function storyPeek() {
+  for (const x of Q) {
+    if (!x.do) return { who: x.s, t: x.t };
+    if (STORY_PEEK[x.do]) return { who: x.who || null, t: STORY_PEEK[x.do] };
+  }
+  return { who: null, t: '接着往下。' };
+}
+function storyCardHTML() {
+  const p = storyPeek(), w = p.who;
+  const av = w === 'me' ? '<div class="av me" aria-hidden="true">我</div>' : w && PORTRAIT[w] ? '<div class="av pic" aria-hidden="true">' + PORTRAIT[w] + '</div>' : '<div class="av narr" aria-hidden="true">…</div>';
+  const cls = storyFresh ? ' new' : ''; storyFresh = false;
+  return '<article class="order story' + cls + '" aria-label="新的事情">' + av +
+    '<div class="otext"><div class="oname">' + (w && NAMES[w] && w !== 'me' ? NAMES[w] : '新的事情') + '<span class="otag">剧情</span></div><div class="oask">' + p.t.replace(/</g, '&lt;') + '</div></div>' +
+    '<button type="button" class="deliver" id="storyBtn">去看看</button></article>';
+}
+function resumeStory() { if (!storyWait) return; storyWait = false; sfx.wake(); sfx.soft(); renderOrders(); step(); }
+function storyLater(e) {
+  e.stopPropagation();
+  if (curLine) Q.unshift(curLine);
+  curLine = null; storyOn = false; storyWait = Q.length > 0;
+  dlg.hidden = true; $('#standee').hidden = true; $('#standee').dataset.who = '';
+  sfx.soft(); renderOrders(); updateGuide();
+  if (storyWait) hint('想接着看的时候，点上面的卡片。', 2600);
+}
 function doAction(a) {
   if (a.do === 'order') { st.order = a.i; renderBoard(); }
   else if (a.do === 'time') setTime(a.v);
   else if (a.do === 'journal') setTimeout(openJournal, reduced ? 100 : 700);
 }
 function step() {
+  storyOn = true; storyWait = false; curLine = null;
   while (Q.length && Q[0].do) {
     if (Q[0].do === 'meet') { const a = Q.shift(); dlg.hidden = true; $('#standee').hidden = true; $('#standee').dataset.who = ''; openMeet(a.who); return; }
     if (Q[0].do === 'tidy') { Q.shift(); dlg.hidden = true; $('#standee').hidden = true; $('#standee').dataset.who = ''; openTidy(); return; }
@@ -1914,8 +1981,8 @@ function step() {
     if (Q[0].do === 'card') { const a = Q.shift(); dlg.hidden = true; $('#standee').hidden = true; $('#standee').dataset.who = ''; openCard(a.who, true); return; }
     doAction(Q.shift());
   }
-  if (!Q.length) { dlg.hidden = true; $('#standee').hidden = true; $('#standee').dataset.who = ''; updateGuide(); return; }
-  const l = Q.shift();
+  if (!Q.length) { storyOn = false; dlg.hidden = true; $('#standee').hidden = true; $('#standee').dataset.who = ''; renderOrders(); updateGuide(); return; }
+  const l = Q.shift(); curLine = l;
   const narr = l.s === 'n';
   dlg.classList.toggle('narr', narr);
   $('#dlgWho').innerHTML = narr ? '' : '<span class="av' + (l.s === 'me' ? ' me' : PORTRAIT[l.s] ? ' pic' : '') + '" aria-hidden="true">' + (l.s === 'me' ? '我' : PORTRAIT[l.s] || (l.s === 'mom' ? '妈' : l.s)) + '</span>' + NAMES[l.s];
@@ -1931,6 +1998,7 @@ function step() {
   updateGuide();
 }
 dlg.addEventListener('click', () => { sfx.wake(); sfx.soft(); step(); });
+$('#dlgLater').addEventListener('click', storyLater);
 
 /* ---------- time of day ---------- */
 function setTime(v) {
@@ -1953,6 +2021,7 @@ function guide() {
   if (!dlg.hidden) return null;
   if (st.notif && !$('#notif').hidden) return { t: [{ el: '#notif' }], text: '有人发来消息，点开看看', sub: '先看消息，再做别的。' };
   const o = curOrder();
+  if (!o && storyWait) return { t: [{ el: '#storyBtn' }], text: '有新的事情，点「去看看」', sub: '不急的话，也可以先在桌上随便合成。' };
   if (!o) return null;
   const pi = printerIdx();
   if (st.printed[st.order]) {
@@ -2679,7 +2748,7 @@ function viewSize() {
   const r = sceneSvg.getBoundingClientRect();
   if (!r.width || !r.height) return null;
   const A = r.width / r.height;
-  let vh = SV.BH / SV.z, vw = vh * A;
+  let vh = ($('#stage').classList.contains('folded') ? SV.H : SV.BH) / SV.z, vw = vh * A;
   if (vw > SV.W) { vw = SV.W; vh = vw / A; }
   return { vw, vh, r };
 }
@@ -2800,7 +2869,7 @@ function openCal(sel) {
 }
 $('#calClose').addEventListener('click', () => { $('#calModal').hidden = true; updateGuide(); });
 $('#againBtn').addEventListener('click', () => { $('#journalModal').hidden = true; start(st.day); });
-$('#nextDayBtn').addEventListener('click', () => { if (st.day !== 1) return; $('#journalModal').hidden = true; start(2, st.coins); showInRoom(600); setTimeout(() => renderCal(true), 500); });
+$('#nextDayBtn').addEventListener('click', () => { if (st.day !== 1) return; $('#journalModal').hidden = true; start(2, st.coins, st.drawer); showInRoom(600); setTimeout(() => renderCal(true), 500); });
 
 /* ---------- menu ---------- */
 const menu = $('#menu'), menuBtn = $('#menuBtn');
@@ -2830,12 +2899,12 @@ setInterval(() => {
   if (ch) { updatePips(); if (st.tut) updateGuide(); }
 }, 250);
 
-function start(day, coins) {
+function start(day, coins, drawer) {
   day = day === 2 ? 2 : 1;
   cancelAnimationFrame(printRaf); cancelAnimationFrame(L.raf); sfx.humStop();
   document.querySelectorAll('.modal').forEach(m => { m.hidden = true; }); $('#notif').hidden = true; $('#notifDim').hidden = true; phoneStory = false;
   ORDERS = day === 2 ? ORDERS2 : ORDERS1; POST = day === 2 ? POST2 : POST1; ORDERS2[1] = null;
-  st = freshDay(day, coins); renderDeskPhone(); renderRoom(); SV.x = 320; SV.y = 210; SV.z = 1; applyView(); Q = [];
+  st = freshDay(day, coins); st.drawer = drawer ? drawer.slice() : []; storyOn = storyWait = false; curLine = null; setFold(false); renderDeskPhone(); renderRoom(); SV.x = 320; SV.y = 210; SV.z = 1; applyView(); Q = [];
   $('#dayText').textContent = '杭州 · ' + DAYNAME[day];
   setLaptop(day === 2 ? 'org_full' : null); renderCal();
   $('#dayBtn').textContent = day === 1 ? '去第二天' : '回到第一天';
@@ -2844,8 +2913,37 @@ function start(day, coins) {
   $('#scene').classList.remove('printing');
   setTime('morning');
   renderBoard();
-  queue(day === 2 ? INTRO2 : INTRO);
+  queue(day === 2 ? INTRO2 : INTRO, true);
 }
+let foldView = null;
+function setFold(v) {
+  const sg = $('#stage'); if (sg.classList.contains('folded') === v) return;
+  if (v) foldView = { x: SV.x, y: SV.y, z: SV.z }; else if (foldView) { Object.assign(SV, foldView); foldView = null; }
+  sg.classList.toggle('folded', v);
+  const b = $('#bHandle'); b.setAttribute('aria-expanded', String(!v)); b.querySelector('span').textContent = v ? '展开合成桌' : '收起合成桌';
+  applyView();
+}
+$('#bHandle').addEventListener('click', () => {
+  if (st.tut) { hint('先跟着教程做完第一件事。', 2400); return; }
+  sfx.soft(); setFold(!$('#stage').classList.contains('folded'));
+});
+function openDrawer() {
+  const g = {}; st.drawer.forEach((x, i) => { const key = x.k + ':' + x.lv; (g[key] = g[key] || { x, idx: [] }).idx.push(i); });
+  const list = Object.values(g).sort((a, b) => a.x.k.localeCompare(b.x.k) || b.x.lv - a.x.lv);
+  $('#drGrid').innerHTML = list.length ? list.map(({ x, idx }) => { const d = describe(x); return '<button type="button" class="dritem" data-k="' + x.k + '" data-lv="' + x.lv + '">' + spr(d.spr) + d.name + (idx.length > 1 ? '<em>×' + idx.length + '</em>' : '') + '</button>'; }).join('') : '<p class="drempty">抽屉是空的。</p>';
+  sfx.soft(); $('#drawerModal').hidden = false; updateGuide();
+}
+$('#drGrid').addEventListener('click', e => {
+  const b = e.target.closest('.dritem'); if (!b) return;
+  const j = emptyCells()[0];
+  if (j == null) { hint('桌上没有空位了。', 2200); return; }
+  const k = b.dataset.k, lv = +b.dataset.lv, i = st.drawer.findIndex(x => x.k === k && x.lv === lv);
+  if (i < 0) return;
+  st.drawer.splice(i, 1); st.board[j] = { k, lv };
+  sfx.place(); renderBoard({ spawn: j });
+  if (st.drawer.length) openDrawer(); else { $('#drawerModal').hidden = true; updateGuide(); }
+});
+$('#drClose').addEventListener('click', () => { $('#drawerModal').hidden = true; updateGuide(); });
 start(location.hash === '#day2' ? 2 : 1);
 })();
 </script>
