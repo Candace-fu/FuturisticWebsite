@@ -192,7 +192,9 @@ body.framed .stage{border-radius:34px;box-shadow:0 0 0 1px rgba(74,51,36,.18),0 
 .scene.grabbing{cursor:grabbing}
 .panhint{position:absolute;left:8px;bottom:8px;font-family:var(--f-ui);font-size:11px;padding:3px 9px;border-radius:999px;background:rgba(74,51,36,.62);color:#FBF6EC;pointer-events:none;transition:opacity .5s}
 .panhint.gone{opacity:0}
-#deskPhone,#wallCal{cursor:pointer}
+#deskPhone,#deskCal{cursor:pointer}
+.tearoff{transform-box:fill-box;transform-origin:10% 0;animation:tearoff 1.1s .35s cubic-bezier(.5,0,.7,1) both}
+@keyframes tearoff{0%{transform:none;opacity:1}30%{transform:rotate(-8deg) translate(-2px,-2px)}100%{transform:rotate(-38deg) translate(-40px,60px);opacity:0}}
 .amsin{animation:fadein .7s ease both}
 .calmark{stroke-dasharray:60;stroke-dashoffset:0}
 .calmark.draw{animation:caldraw 1s .3s ease both}
@@ -469,6 +471,7 @@ body.framed .stage{border-radius:34px;box-shadow:0 0 0 1px rgba(74,51,36,.18),0 
 .ch-avd .ava{width:34px;height:34px}
 .ch-stk{padding:2px!important;background:transparent!important;border:0!important}
 .ch-stk svg{width:88px;height:88px;display:block}
+#chBody{padding-bottom:200px}
 #lapScreen .blueprint *{fill:none!important;stroke:#5E8C88!important}
 @keyframes spin{to{transform:rotate(360deg)}}
 @keyframes glow{0%,100%{opacity:.35}50%{opacity:1}}
@@ -572,18 +575,6 @@ body.framed .stage{border-radius:34px;box-shadow:0 0 0 1px rgba(74,51,36,.18),0 
             </g>
             <g transform="rotate(4 596 158)"><rect x="580" y="142" width="32" height="30" fill="#F2E0A8"></rect><path d="M585 151 h22 M585 157 h16 M585 163 h19" stroke-width=".7" stroke-opacity=".7" fill="none"></path></g>
 
-            <!-- wall calendar -->
-            <g id="wallCal" aria-label="墙上的日历">
-              <path d="M416 100 v-4" stroke="#8A847C" stroke-width="1.6"></path><circle cx="416" cy="95" r="1.6" fill="#8A847C" stroke="none"></circle>
-              <rect x="394" y="104" width="46" height="56" rx="2" fill="#FFFDF6"></rect>
-              <rect x="394" y="104" width="46" height="11" rx="2" fill="#C47A57"></rect>
-              <path d="M402 102 v5 M416 102 v5 M430 102 v5" stroke-width="1.3"></path>
-              <text x="417" y="112.4" font-size="6.2" text-anchor="middle" fill="#FBF6EC" stroke="none" font-family="Noto Sans SC, sans-serif">日 历</text>
-              <text x="399" y="129" font-size="5.6" text-anchor="middle" fill="#6E5038" stroke="none" font-family="Noto Sans SC, sans-serif">1</text><text x="410" y="129" font-size="5.6" text-anchor="middle" fill="#6E5038" stroke="none" font-family="Noto Sans SC, sans-serif">2</text><text x="421" y="129" font-size="5.6" text-anchor="middle" fill="#6E5038" stroke="none" font-family="Noto Sans SC, sans-serif">3</text><text x="432" y="129" font-size="5.6" text-anchor="middle" fill="#6E5038" stroke="none" font-family="Noto Sans SC, sans-serif">4</text><text x="399" y="141" font-size="5.6" text-anchor="middle" fill="#6E5038" stroke="none" font-family="Noto Sans SC, sans-serif">5</text><text x="410" y="141" font-size="5.6" text-anchor="middle" fill="#6E5038" stroke="none" font-family="Noto Sans SC, sans-serif">6</text><text x="421" y="141" font-size="5.6" text-anchor="middle" fill="#6E5038" stroke="none" font-family="Noto Sans SC, sans-serif">7</text><text x="432" y="141" font-size="5.6" text-anchor="middle" fill="#6E5038" stroke="none" font-family="Noto Sans SC, sans-serif">8</text><text x="399" y="153" font-size="5.6" text-anchor="middle" fill="#6E5038" stroke="none" font-family="Noto Sans SC, sans-serif">9</text><text x="410" y="153" font-size="5.6" text-anchor="middle" fill="#6E5038" stroke="none" font-family="Noto Sans SC, sans-serif">10</text><text x="421" y="153" font-size="5.6" text-anchor="middle" fill="#6E5038" stroke="none" font-family="Noto Sans SC, sans-serif">11</text><text x="432" y="153" font-size="5.6" text-anchor="middle" fill="#6E5038" stroke="none" font-family="Noto Sans SC, sans-serif">12</text>
-              <g id="calMarks"></g>
-              <rect x="388" y="94" width="58" height="70" fill="transparent" stroke="none"></rect>
-            </g>
-
             <!-- filament rack -->
             <g id="rack" transform="translate(0 -36)">
               <path d="M700 62 q6 -2 12 0 M820 280 q6 -2 11 0" stroke="#CDB894" stroke-width=".8" fill="none"></path>
@@ -660,6 +651,21 @@ body.framed .stage{border-radius:34px;box-shadow:0 0 0 1px rgba(74,51,36,.18),0 
             <polygon points="474,304 598,304 608,320 464,320" fill="#B4AB9E" stroke-width=".9"></polygon>
             <path d="M471 309.5 H601 M468 315 H604 M500 304 L497 320 M530 304 L529 320 M560 304 L561 320 M585 304 L588 320" stroke-width=".5" stroke-opacity=".5" fill="none"></path>
             <polygon points="518,323 556,323 558,331 516,331" fill="#D8D1C5" stroke-width=".8"></polygon>
+
+            <!-- desk calendar: one page per day -->
+            <g id="deskCal" aria-label="桌上的台历" transform="translate(604 398) scale(1.45) translate(-426 -398)">
+              <ellipse cx="426" cy="397" rx="32" ry="3" fill="#6E4A31" fill-opacity=".14" stroke="none"></ellipse>
+              <polygon points="400,396 452,396 446,342 406,342" fill="#C99A5E"></polygon>
+              <g id="calStubs"></g>
+              <rect x="396" y="346" width="60" height="50" rx="3" fill="#FFFDF6"></rect>
+              <rect x="396" y="346" width="60" height="11" rx="3" fill="#C47A57"></rect>
+              <text x="426" y="354.2" font-size="6.6" text-anchor="middle" fill="#FBF6EC" stroke="none" font-family="Noto Sans SC, sans-serif">杭 州</text>
+              <text id="calNum" x="426" y="383" font-size="25" text-anchor="middle" fill="#4A3324" stroke="none" font-family="ZCOOL XiaoWei, Noto Serif SC, serif">1</text>
+              <text id="calSub" x="426" y="392" font-size="6.4" text-anchor="middle" fill="#8A6A50" stroke="none" font-family="Noto Sans SC, sans-serif">第一天</text>
+              <g id="calTear"></g>
+              <path d="M410 343 v6 M426 343 v6 M442 343 v6" stroke-width="1.4"></path>
+              <rect x="392" y="336" width="68" height="64" fill="transparent" stroke="none"></rect>
+            </g>
 
             <!-- things kept in the room -->
             <g id="roomOrg" opacity="0"></g>
@@ -924,12 +930,12 @@ body.framed .stage{border-radius:34px;box-shadow:0 0 0 1px rgba(74,51,36,.18),0 
 
   <div class="modal" id="calModal" hidden>
     <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="calTitle">
-      <span class="eyebrow">日历</span>
+      <span class="eyebrow">台历</span>
       <h2 id="calTitle">在杭州的日子</h2>
       <div class="calgrid" id="calGrid"></div>
       <p class="calcap" id="calCap"></p>
       <div class="journal" id="calDiary"></div>
-      <button type="button" class="primary" id="calClose">挂回墙上</button>
+      <button type="button" class="primary" id="calClose">放回桌上</button>
     </div>
   </div>
 
@@ -1603,7 +1609,7 @@ function renderScene() {
 $('#scene').addEventListener('click', e => {
   if (panMoved) return;
   const hit = document.elementFromPoint(e.clientX, e.clientY);
-  if (hit && hit.closest && hit.closest('#wallCal')) { openCal(); return; }
+  if (hit && hit.closest && hit.closest('#deskCal')) { openCal(); return; }
   if (hit && hit.closest && hit.closest('#deskPhone')) { if (st.notif) { openChat(); return; } if (st.pendingCard) openCard(st.pendingCard, false); else openPhone(); return; }
   if (st.printer === 'ready') openLift();
 });
@@ -2288,41 +2294,64 @@ const D_AFTER = [
   { s: 'n', t: 'D 很内向。平时不会主动发消息，只有要做东西的时候，才会来找我。' },
   { s: 'n', t: '那个恐龙表情包，大概是社恐的意思。' }
 ];
+/* Hestia's script (2026-10-18): after the sticker, ask about the bookmark, tell her about the new filament and AMS, invite her over. */
+const DINO_FLOWER = DINO.replace('aria-label="粉色恐龙表情包"', 'aria-label="拿着小花的粉色恐龙"').replace('>yuh.<', '>谢谢你<')
+  .replace('</g></svg>', '<path d="M40 50 V40" stroke-width="1.2"></path><g fill="#FFFDF6" stroke-width="1"><circle cx="40" cy="34" r="3"></circle><circle cx="45" cy="37" r="3"></circle><circle cx="43" cy="42" r="3"></circle><circle cx="37" cy="42" r="3"></circle><circle cx="35" cy="37" r="3"></circle></g><circle cx="40" cy="38.5" r="2.2" fill="#E3B969" stroke-width=".8"></circle></g></svg>');
+const D_CHAT = [
+  { me: '那书签怎么样？', d: ['还有点小问题。'] },
+  { me: '我新到了一些耗材，还有了 AMS，可以打多色了。', d: ['哇'] },
+  { me: '那你过来吗？', d: ['今天算了，明天我早点过去。', { stk: DINO_FLOWER }] }
+];
 function openDChat() {
   phoneStory = true;
   $('#ipTime').textContent = IPTIME[st.time] || '18:10';
   $('#ipScreen').classList.remove('poster-on');
   const page = $('#ipPage'); delete page.dataset.busy;
   page.innerHTML = '<div class="ch-nav"><span class="ch-back" aria-hidden="true">‹</span><span class="ch-who"><i class="ch-av ch-avd">' + avatarHTML('D') + '</i><b>D</b></span><span></span></div>' +
-    '<div class="ip-scroll ch-body" id="chBody"><p class="ch-time">今天</p></div>' +
-    '<div class="ch-panel" id="chOpts"><div class="ch-input ch-in-panel"><span>发消息</span></div><small>要问问她吗？</small>' +
-      '<button type="button" class="ch-opt" data-n="0">书签用着怎么样？</button>' +
-      '<button type="button" class="ch-opt" data-n="1">算了，先不打扰她。</button></div>';
+    '<div class="ip-scroll ch-body" id="chBody"><p class="ch-time">今天</p></div>';
+  const body = () => $('#chBody');
+  const add = (cls, html) => { const d = document.createElement('div'); d.className = cls; d.innerHTML = html; body().appendChild(d); body().scrollTop = 1e5; return d; };
+  const wait = ms => reduced ? 150 : ms;
+  const panel = (hint, opts, pick) => {
+    const el = document.createElement('div'); el.className = 'ch-panel'; el.id = 'chOpts';
+    el.innerHTML = '<div class="ch-input ch-in-panel"><span>发消息</span></div><small>' + hint + '</small>' + opts.map((t, n) => '<button type="button" class="ch-opt" data-n="' + n + '">' + t + '</button>').join('');
+    const old = page.querySelector(':scope > .ch-input'); if (old) old.remove();
+    page.appendChild(el); delete page.dataset.busy; body().scrollTop = 1e5;
+    el.querySelectorAll('.ch-opt').forEach(b => b.addEventListener('click', () => { el.remove(); pick(+b.dataset.n); }));
+  };
+  const input = () => { if (!page.querySelector(':scope > .ch-input')) { const i = document.createElement('div'); i.className = 'ch-input'; i.innerHTML = '<span>发消息</span>'; page.appendChild(i); } };
   const done = () => {
     delete page.dataset.busy;
     const d = document.createElement('button'); d.type = 'button'; d.className = 'ip-done ch-done'; d.id = 'ipDone'; d.textContent = '放下手机';
     d.addEventListener('click', closePhone); page.appendChild(d);
   };
-  page.querySelectorAll('.ch-opt').forEach(b => b.addEventListener('click', () => {
-    $('#chOpts').remove();
-    if (b.dataset.n === '1') { sfx.soft(); closePhone(); return; }
-    page.dataset.busy = '1'; sfx.spawn();
-    const body = $('#chBody');
-    const inp = document.createElement('div'); inp.className = 'ch-input'; inp.innerHTML = '<span>发消息</span>'; page.appendChild(inp);
-    const add = (cls, html) => { const d = document.createElement('div'); d.className = cls; d.innerHTML = html; body.appendChild(d); return d; };
-    add('ch-b ch-r', '书签用着怎么样？'); add('ch-read', '已送达');
-    Q.unshift(...D_AFTER);
-    st.jr.push({ spr: 'bm1', t: '问 D 书签用着怎么样。她过了好久才回，还发了一个恐龙表情包。' });
-    const T = reduced ? 150 : 1;
-    setTimeout(() => {
-      add('ch-time', '过了很久');
-      const typing = add('ch-b ch-l ch-typing', '<i></i><i></i><i></i>');
-      setTimeout(() => {
-        typing.remove(); add('ch-b ch-l', '刚起……'); sfx.soft();
-        setTimeout(() => { add('ch-b ch-l ch-stk', DINO); sfx.spawn(); done(); }, T === 1 ? 700 : T);
-      }, T === 1 ? 1400 : T);
-    }, T === 1 ? 1300 : T);
-  }));
+  const dSays = (lines, then) => {
+    const typing = add('ch-b ch-l ch-typing', '<i></i><i></i><i></i>');
+    let n = 0;
+    const next = () => {
+      const l = lines[n++];
+      if (n === 1) typing.remove();
+      if (l.stk) { add('ch-b ch-l ch-stk', l.stk); sfx.spawn(); } else { add('ch-b ch-l', l); sfx.soft(); }
+      if (n < lines.length) setTimeout(next, wait(800)); else setTimeout(then, wait(400));
+    };
+    setTimeout(next, wait(1100));
+  };
+  const talk = i => {
+    if (i >= D_CHAT.length) { done(); return; }
+    panel('回她', [D_CHAT[i].me], () => {
+      page.dataset.busy = '1'; input(); sfx.spawn();
+      add('ch-b ch-r', D_CHAT[i].me);
+      dSays(D_CHAT[i].d, () => talk(i + 1));
+    });
+  };
+  panel('要问问她吗？', ['在忙吗？', '算了，先不打扰她。'], n => {
+    if (n === 1) { sfx.soft(); closePhone(); return; }
+    page.dataset.busy = '1'; input(); sfx.spawn();
+    add('ch-b ch-r', '在忙吗？'); add('ch-read', '已送达');
+    Q.unshift(...D_AFTER); st.dMsg = true;
+    st.jr.push({ spr: 'bm1', t: '问 D 书签怎么样。她过了好久才回，说还有点小问题。约好了明天她早点过来。' });
+    setTimeout(() => { add('ch-time', '过了很久'); dSays(['刚起……', { stk: DINO }], () => talk(0)); }, wait(1300));
+  });
   $('#phoneModal').hidden = false; sfx.soft(); updateGuide();
 }
 
@@ -2494,18 +2523,19 @@ function journalItems() {
 }
 function openJournal() {
   const items = journalItems();
-  st.dayDone = true; saveDiary(); renderCal(true);
+  st.dayDone = true; saveDiary(); renderCal();
   $('#jTitle').textContent = '杭州 · ' + DAYNAME[st.day];
   $('#journalBody').innerHTML = items.map(x => '<div class="jitem">' + spr(x.spr) + '<span>' + x.t + '</span></div>').join('') +
-    (st.day === 1 && st.room.tidy ? '<p class="jnote">明天：抽空搞一把刮刀。</p>' : '');
+    (st.day === 1 && st.room.tidy ? '<p class="jnote">明天：抽空搞一把刮刀。</p>' : '') +
+    (st.day === 2 && st.dMsg ? '<p class="jnote">明天：D 会早点过来。</p>' : '');
   const nb = $('#nextDayBtn');
   nb.textContent = st.day === 1 ? '第二天' : '第三天（制作中）'; nb.disabled = st.day !== 1;
   $('#journalModal').hidden = false; updateGuide();
 }
-/* ---------- wall calendar: a circle for each finished day, tap a day to read its diary ---------- */
+/* ---------- desk calendar: a circle for each finished day, tap a day to read its diary ---------- */
 const DIARY_KEY = 'shuangchengji-diary-';
 const DIARY_DEFAULT = { 1: [{ spr: 'bm1', t: JOURNAL.bm1 }, { spr: 'org_full', t: JOURNAL.org }] };
-const CIRCLE = (cx, cy, rx, ry) => '<path d="M' + (cx - rx) + ' ' + (cy + 1) + ' A' + rx + ' ' + ry + ' 0 1 1 ' + (cx - rx + 2) + ' ' + (cy + ry * .8) + '" class="calmark" fill="none" stroke="#B9694C" stroke-width="1.1" pathLength="60"></path>';
+const CN = ['零', '一', '二', '三', '四', '五', '六', '七', '八', '九', '十', '十一', '十二', '十三', '十四', '十五'];
 function saveDiary() { try { localStorage.setItem(DIARY_KEY + st.day, JSON.stringify(journalItems())); } catch (e) {} }
 function diaryOf(d) {
   if (d === st.day) return journalItems();
@@ -2513,14 +2543,20 @@ function diaryOf(d) {
   return DIARY_DEFAULT[d] || [];
 }
 const dayDone = d => d < st.day || (d === st.day && st.dayDone);
-function renderCal(anim) {
-  let h = '';
-  for (let d = 1; d <= 12; d++) {
-    const x = 399 + (d - 1) % 4 * 11, y = 127 + Math.floor((d - 1) / 4) * 12;
-    if (dayDone(d)) h += CIRCLE(x, y, 4.6, 4.2).replace('class="calmark"', 'class="calmark' + (anim && d === st.day ? ' draw' : '') + '"');
-    else if (d === st.day) h += '<rect x="' + (x - 4.4) + '" y="' + (y - 4.6) + '" width="8.8" height="8.4" rx="1.5" fill="none" stroke="#5E8C88" stroke-width=".9" stroke-dasharray="1.6 1.2"></rect>';
-  }
-  $('#calMarks').innerHTML = h;
+/* The page shows today; when a new day starts yesterday's page is torn off and a stub stays at the binding. */
+function renderCal(tear) {
+  const shown = st.dayDone ? st.day + 1 : st.day, torn = shown - 1;
+  let stubs = '';
+  for (let i = 0; i < torn; i++) { const y = 346 - (i + 1) * 1.3; stubs += '<path d="M397 ' + (y + 2) + ' V' + y + ' H455 V' + (y + 2) + ' l-3 1.2 -3 -1.2 -3 1.4 -3 -1.4 -3 1.2 -3 -1.2 -3 1.3 -3 -1.3 -3 1.2 -3 -1.2 -3 1.4 -3 -1.4 -3 1.2 -3 -1.2 -3 1.3 -3 -1.3 -3 1.2 -3 -1.2 -4 1.2 Z" fill="#F4EEE2" stroke-width=".7"></path>'; }
+  $('#calStubs').innerHTML = stubs;
+  $('#calNum').textContent = shown; $('#calSub').textContent = '第' + (CN[shown] || shown) + '天';
+  const t = $('#calTear');
+  if (tear && !reduced) {
+    t.innerHTML = '<g class="tearoff"><rect x="396" y="357" width="60" height="39" fill="#FFFDF6"></rect>' +
+      '<text x="426" y="383" font-size="25" text-anchor="middle" fill="#4A3324" stroke="none" font-family="ZCOOL XiaoWei, Noto Serif SC, serif">' + torn + '</text>' +
+      '<text x="426" y="392" font-size="6.4" text-anchor="middle" fill="#8A6A50" stroke="none" font-family="Noto Sans SC, sans-serif">第' + CN[torn] + '天</text></g>';
+    setTimeout(() => { t.innerHTML = ''; }, 1600);
+  } else t.innerHTML = '';
 }
 function openCal(sel) {
   sel = sel || st.day;
@@ -2540,7 +2576,7 @@ function openCal(sel) {
 }
 $('#calClose').addEventListener('click', () => { $('#calModal').hidden = true; updateGuide(); });
 $('#againBtn').addEventListener('click', () => { $('#journalModal').hidden = true; start(st.day); });
-$('#nextDayBtn').addEventListener('click', () => { if (st.day !== 1) return; $('#journalModal').hidden = true; start(2, st.coins); });
+$('#nextDayBtn').addEventListener('click', () => { if (st.day !== 1) return; $('#journalModal').hidden = true; start(2, st.coins); showInRoom(560); setTimeout(() => renderCal(true), 500); });
 
 /* ---------- menu ---------- */
 const menu = $('#menu'), menuBtn = $('#menuBtn');
