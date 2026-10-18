@@ -495,6 +495,11 @@ body.framed .stage{border-radius:34px;box-shadow:0 0 0 1px rgba(74,51,36,.18),0 
 .skpage svg{width:86px;height:86px;display:block}
 .skpage b{font-family:var(--f-body);font-size:14px;color:var(--ink)}
 .skpage small{font-family:var(--f-ui);font-size:11px;line-height:1.45;color:var(--mute)}
+.prow{display:flex;justify-content:space-between;gap:10px;padding:7px 2px;border-bottom:1px dashed var(--line);font-family:var(--f-ui);font-size:14px;color:var(--ink2)}
+.prow b{font-weight:500;color:var(--ink);text-align:right}
+.prow b.hot{color:var(--clay)}
+.prow b.dim{color:var(--mute);font-weight:400}
+.psec{margin:10px 0 0;font-family:var(--f-ui);font-size:12px;letter-spacing:2px;color:var(--mute)}
 .skempty{grid-column:1/-1;margin:0;padding:18px 8px;text-align:center;font-family:var(--f-ui);font-size:13px;color:var(--mute)}
 @keyframes spin{to{transform:rotate(360deg)}}
 @keyframes glow{0%,100%{opacity:.35}50%{opacity:1}}
@@ -950,6 +955,15 @@ body.framed .stage{border-radius:34px;box-shadow:0 0 0 1px rgba(74,51,36,.18),0 
       <div class="s-url" id="siteUrl"></div>
       <p class="site-tip" id="siteTip" hidden></p>
       <div class="plist" id="siteList"></div>
+    </div>
+  </div>
+
+  <div class="modal" id="printerModal" hidden>
+    <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="prTitle">
+      <span class="eyebrow">3D 打印机</span>
+      <h2 id="prTitle">打印机状态</h2>
+      <div id="prBody"></div>
+      <button type="button" class="primary" id="prClose">好</button>
     </div>
   </div>
 
@@ -1649,7 +1663,7 @@ const LOOKS = [
   { r: [100, 228, 160, 304], on: () => st.room.ams, t: () => 'AMS lite。四个料位：白、灰、黑、透明。' },
   { r: [690, 225, 830, 335], on: () => st.room.org, t: () => st.room.scraper ? '自己打的桌面收纳。刮刀收在长仓里。' : st.room.tidy ? '自己打的桌面收纳。工具都收进去了。' : '自己打的桌面收纳。' },
   { r: [16, 362, 170, 416], t: () => { openSketch(); return null; } },
-  { r: [158, 0, 392, 356], printer: true, t: () => st.printer === 'printing' ? '正在打印「' + SINGLE[st.pending].name + '」。' : st.printer === 'cooling' ? '刚打完，热床还在降温。' : '3D 打印机，待命中。' },
+  { r: [158, 0, 392, 356], printer: true, t: () => { openPrinter(); return null; } },
   { r: [444, 210, 628, 336], t: () => '电脑上开着 Bambu Studio。' },
   { r: [654, 42, 864, 212], t: () => st.room.spools ? '耗材架。挂着白、灰、黑、透明四卷 PLA。' : '耗材架。' },
   { r: [400, 258, 444, 332], t: () => '一杯热饮，还冒着热气。' },
@@ -2378,6 +2392,35 @@ function openSketch() {
   sfx.soft(); $('#sketchModal').hidden = false; updateGuide();
 }
 $('#skClose').addEventListener('click', () => { $('#sketchModal').hidden = true; updateGuide(); });
+
+/* ---------- printer status: looking after the printer will matter later in the game ---------- */
+/* Temperatures are Bambu's PLA preset on the textured PEI plate (nozzle 220 °C, bed 55 °C).
+   HUMIDITY is a draft value until Hestia gives a real reading from her hygrometer. */
+const HUMIDITY = 65;
+function realMinutes(t) {
+  const h = /(\d+)\s*小时/.exec(t), m = /(\d+)\s*分/.exec(t), sec = /(\d+)\s*秒/.exec(t);
+  return (h ? +h[1] * 60 : 0) + (m ? +m[1] : 0) + (sec ? +sec[1] / 60 : 0);
+}
+const fmtMinutes = n => (n >= 60 ? Math.floor(n / 60) + ' 小时 ' : '') + Math.round(n % 60) + ' 分';
+function openPrinter() {
+  const row = (k, v, c) => '<div class="prow"><span>' + k + '</span><b' + (c ? ' class="' + c + '"' : '') + '>' + v + '</b></div>';
+  const state = { idle: '待命', printing: '正在打印「' + (st.pending ? SINGLE[st.pending].name : '') + '」', cooling: '打完了，降温中', ready: '打印好了，等着取件' }[st.printer] || '待命';
+  const hot = st.printer === 'printing', o = curOrder();
+  const list = sketchList(), mins = list.reduce((a, x) => { const d = printData(x.k); return a + (d.real ? realMinutes(d.real.time) : 0); }, 0);
+  const grams = list.reduce((a, x) => { const d = printData(x.k); return a + (d.real ? parseFloat(d.real.g) : 0); }, 0);
+  $('#prBody').innerHTML =
+    row('状态', state, hot || st.printer === 'ready' ? 'hot' : '') +
+    (hot && o && o.layers ? row('进度', Math.round(st.pProg * o.layers) + ' / ' + o.layers + ' 层') : '') +
+    row('喷嘴', hot ? '220 °C' : st.printer === 'cooling' ? '降温中' : '室温', hot ? 'hot' : 'dim') +
+    row('热床', hot ? '55 °C' : st.printer === 'cooling' || st.printer === 'ready' ? '降温中' : '室温', hot ? 'hot' : 'dim') +
+    row('打印板', 'Bambu 纹理 PEI 板') +
+    row('耗材', st.room.ams ? 'AMS lite：白、灰、黑、透明' : st.room.spools ? '白、灰、黑、透明（挂在耗材架上）' : '顶上挂着一卷 PLA') +
+    row('环境湿度', st.done.includes('stand') || (st.day > 2 && diaryOf(2).some(x => x.spr === 'stand')) ? HUMIDITY + '%' : '不知道（还没有温湿度计）', st.done.includes('stand') ? '' : 'dim') +
+    '<p class="psec">累计</p>' +
+    row('打印次数', list.length + ' 次') + row('打印时长', fmtMinutes(mins)) + row('用掉的耗材', Math.round(grams * 10) / 10 + ' g');
+  sfx.soft(); $('#printerModal').hidden = false; updateGuide();
+}
+$('#prClose').addEventListener('click', () => { $('#printerModal').hidden = true; updateGuide(); });
 
 /* ---------- day 2: put the scraper away ---------- */
 function openStow() {
