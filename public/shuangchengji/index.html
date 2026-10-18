@@ -319,13 +319,15 @@ body.framed .stage{border-radius:34px;box-shadow:0 0 0 1px rgba(74,51,36,.18),0 
 .leavemodal .knock span{animation:fadein .6s .9s ease both;margin-bottom:0}
 .binlist{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
 .binlist .dritem{cursor:default}
-#washSvg{width:100%;height:auto;display:block;border-radius:12px;background:#EFE6D4;touch-action:none;user-select:none;-webkit-user-select:none}
+#washSvg,#poopSvg{width:100%;height:auto;display:block;border-radius:12px;background:#EFE6D4;touch-action:none;user-select:none;-webkit-user-select:none}
 .washbar{height:8px;border-radius:4px;background:#E4D6BD;overflow:hidden}
 .washbar i{display:block;height:100%;width:0;background:var(--tealD);border-radius:4px;transition:width .12s linear}
 .washsteps{display:flex;gap:4px}
 .washsteps i{flex:1;height:4px;border-radius:2px;background:#E4D6BD}
 .washsteps i.on{background:var(--clay)}
-#washSvg .wplate{cursor:grab}
+#washSvg .wplate,#poopSvg .pan{cursor:grab}
+#poopSvg .pin{animation:pin .35s ease-in forwards}
+@keyframes pin{to{opacity:0;transform:translateY(10px) scale(.6)}}
 #washSvg .bub{animation:bub 1.2s ease-out forwards}
 @keyframes bub{0%{opacity:.95}100%{opacity:0;transform:translateY(-14px)}}
 @keyframes knockin{0%{opacity:0;transform:scale(.9)}20%{opacity:1;transform:scale(1.06) translateX(-3px)}35%{transform:scale(1) translateX(3px)}50%{transform:translateX(-2px)}65%{transform:translateX(0)}100%{opacity:1;transform:none}}
@@ -1080,6 +1082,17 @@ body.framed .stage{border-radius:34px;box-shadow:0 0 0 1px rgba(74,51,36,.18),0 
       <div class="washbar" id="washBar"><i id="washFill"></i></div>
       <p class="calcap" id="washHint"></p>
       <div class="liftpick" id="washPick" hidden><button type="button" class="primary alt" data-w="water">清水冲洗</button><button type="button" class="primary" data-w="soap">洗洁精冲洗</button></div>
+    </div>
+  </div>
+
+  <div class="modal" id="poopModal" hidden>
+    <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="poopTitle">
+      <span class="eyebrow">清理竹屎</span>
+      <div class="washsteps" id="poopSteps"><i></i><i></i></div>
+      <h2 id="poopTitle"></h2>
+      <svg id="poopSvg" viewBox="0 0 340 250" role="img" aria-label="清理竹屎"></svg>
+      <div class="washbar"><i id="poopFill"></i></div>
+      <p class="calcap" id="poopHint"></p>
     </div>
   </div>
 
@@ -2336,6 +2349,79 @@ function washDone() {
   hint('打印板洗干净，擦干，吸回去了。', 2800); renderScene(); openPrinter();
 }
 
+/* ---------- purge waste: sweep the 竹屎 into a dustpan with a finger, then tip it into the bin ---------- */
+const P = { step: 0, bits: [], total: 0, last: null, drag: null };
+const poopSvg = $('#poopSvg');
+const PSTEP = [['把竹屎扫进簸箕', '手指在桌上划，像用刷子一样，把竹屎扫进右下角的簸箕。'], ['倒进垃圾桶', '按住簸箕，拖到垃圾桶上面倒掉。']];
+const PCOL = ['#F1ECE2', '#CBC6B8', '#F1ECE2', '#8C6A4F', '#3A3634', '#F1ECE2'];
+const PAN = [236, 186, 314, 236];
+const poopBit = b => '<g transform="translate(' + b.x.toFixed(1) + ' ' + b.y.toFixed(1) + ') rotate(' + b.r + ') scale(' + (b.s || 1) + ')"><path d="M-9 2 q-2 -8 6 -7 q9 -2 11 5 q1 7 -8 7 q-7 1 -9 -5z" fill="' + b.c + '" stroke="#6E4A31" stroke-width="1"></path><path d="M-4 0 q3 -3 7 0" stroke="#6E4A31" stroke-width=".8" fill="none" stroke-opacity=".6"></path></g>';
+const panSvg = (x, y, rot, n) => '<g class="pan" id="pPan" transform="translate(' + x + ' ' + y + ') rotate(' + (rot || 0) + ')">' +
+  '<path d="M-38 -22 L36 -22 L36 22 L-38 22 L-30 -14 Z" fill="#7FA7A0" stroke="#3F6560" stroke-width="1.4" stroke-linejoin="round"></path>' +
+  '<path d="M-38 22 L-30 -14" stroke="#3F6560" stroke-width="2.4"></path><rect x="36" y="-5" width="30" height="10" rx="5" fill="#5E8C88" stroke="#3F6560" stroke-width="1.2"></rect>' +
+  Array.from({ length: n || 0 }, (_, i) => poopBit({ x: -16 + (i % 4) * 12, y: 8 - Math.floor(i / 4) * 8, r: i * 47 % 360, c: PCOL[i % PCOL.length] })).join('') + '</g>';
+const BIN_SVG = '<g id="pBin"><path d="M222 140 h96 l-10 104 h-76 z" fill="#B9A585" stroke="#6E4A31" stroke-width="1.6"></path><ellipse cx="270" cy="140" rx="48" ry="8" fill="#5E5248" stroke="#6E4A31" stroke-width="1.6"></ellipse><path d="M244 160 l4 70 M270 160 v72 M296 160 l-4 70" stroke="#6E4A31" stroke-opacity=".35" stroke-width="1.2"></path></g>';
+function openPoop() {
+  const n = clampN(st.maint.poop * 2 + 2, 4, 12);
+  const bits = Array.from({ length: n }, (_, i) => ({ x: 40 + (i * 53) % 170 + Math.random() * 14, y: 64 + (i * 37) % 96 + Math.random() * 10, r: Math.round(Math.random() * 360), c: PCOL[i % PCOL.length], s: 1.4 }));
+  Object.assign(P, { step: 0, bits, total: n, last: null, drag: null });
+  sfx.soft(); $('#poopModal').hidden = false; poopRender(); updateGuide();
+}
+function poopRender() {
+  const k = P.step;
+  $('#poopTitle').textContent = PSTEP[k][0]; $('#poopHint').textContent = PSTEP[k][1];
+  document.querySelectorAll('#poopSteps i').forEach((el, i) => el.classList.toggle('on', i <= k));
+  if (k === 0) {
+    $('#poopFill').style.width = (1 - P.bits.length / P.total) * 100 + '%';
+    poopSvg.innerHTML = '<rect x="0" y="0" width="340" height="250" fill="#E3C9A0"></rect><path d="M0 40 h340" stroke="#C9AD82" stroke-width="2"></path>' +
+      '<g><rect x="6" y="0" width="70" height="34" rx="4" fill="#8B827A"></rect><rect x="24" y="22" width="34" height="14" rx="3" fill="#2F2B28"></rect></g>' +
+      panSvg(274, 211, 0, P.total - P.bits.length) + '<g id="pBits">' + P.bits.map(poopBit).join('') + '</g>' +
+      '<g id="pBrush" opacity="0"><circle r="16" fill="#FFFDF6" fill-opacity=".35" stroke="#6E4A31" stroke-width="1" stroke-dasharray="3 3"></circle></g>';
+  } else {
+    $('#poopFill').style.width = '100%';
+    poopSvg.innerHTML = '<rect x="0" y="0" width="340" height="250" fill="#E3C9A0"></rect>' + BIN_SVG + panSvg(100, 120, 0, P.total) +
+      '<rect x="222" y="120" width="96" height="30" fill="none" stroke="#C66E48" stroke-width="1.6" stroke-dasharray="5 4" rx="6" id="pTarget"></rect>';
+  }
+}
+const poopPt = e => { const m = poopSvg.getScreenCTM(); return new DOMPoint(e.clientX, e.clientY).matrixTransform(m.inverse()); };
+poopSvg.addEventListener('pointerdown', e => {
+  const pt = poopPt(e); P.last = pt;
+  try { poopSvg.setPointerCapture(e.pointerId); } catch (x) {}
+  if (P.step === 1 && e.target.closest('#pPan')) P.drag = { dx: 100 - pt.x, dy: 120 - pt.y };
+  e.preventDefault();
+});
+poopSvg.addEventListener('pointermove', e => {
+  if (!P.last) return;
+  const pt = poopPt(e), dx = pt.x - P.last.x, dy = pt.y - P.last.y; P.last = pt;
+  if (P.step === 0) {
+    const br = $('#pBrush'); br.setAttribute('opacity', 1); br.setAttribute('transform', 'translate(' + pt.x.toFixed(1) + ' ' + pt.y.toFixed(1) + ')');
+    let moved = false, got = 0;
+    P.bits.forEach(b => { if (Math.hypot(b.x - pt.x, b.y - pt.y) < 24) { b.x = clampN(b.x + dx * 1.1, 8, 332); b.y = clampN(b.y + dy * 1.1, 48, 242); b.r = (b.r + dx * 3) % 360; moved = true; } });
+    if (!moved) return;
+    P.bits = P.bits.filter(b => { const inPan = b.x > PAN[0] && b.x < PAN[2] && b.y > PAN[1] && b.y < PAN[3]; if (inPan) got++; return !inPan; });
+    $('#pBits').innerHTML = P.bits.map(poopBit).join('');
+    if (got) { sfx.place(); $('#pPan').outerHTML = panSvg(274, 211, 0, P.total - P.bits.length); $('#poopFill').style.width = (1 - P.bits.length / P.total) * 100 + '%'; }
+    if (!P.bits.length) { P.last = null; sfx.chime(); P.step = 1; setTimeout(poopRender, 400); }
+  } else if (P.drag) {
+    const x = clampN(pt.x + P.drag.dx, 40, 300), y = clampN(pt.y + P.drag.dy, 30, 200);
+    const over = x > 200 && y < 150;
+    $('#pPan').setAttribute('transform', 'translate(' + x.toFixed(1) + ' ' + y.toFixed(1) + ') rotate(' + (over ? 35 : 0) + ')');
+    if (over) {
+      P.drag = null; P.last = null;
+      const pan = $('#pPan'); pan.setAttribute('transform', 'translate(258 108) rotate(55)');
+      pan.querySelectorAll('g').forEach((g, i) => { setTimeout(() => { g.classList.add('pin'); if (i % 3 === 0) sfx.place(); }, i * 45); });
+      setTimeout(poopDone, 700 + P.total * 45);
+    }
+  }
+});
+const poopUp = () => { if (P.step === 1 && P.drag) poopRender(); if (P.step === 0) { const br = $('#pBrush'); if (br) br.setAttribute('opacity', 0); } P.drag = null; P.last = null; };
+poopSvg.addEventListener('pointerup', poopUp); poopSvg.addEventListener('pointercancel', poopUp);
+function poopDone() {
+  st.maint.poop = 0; st.room.binPoop = (+st.room.binPoop || 0) + 1;
+  $('#poopModal').hidden = true; sfx.chime();
+  hint('竹屎扫干净，倒进了垃圾桶。', 2800); renderScene(); renderBin(); openPrinter();
+}
+
 /* ---------- story dialogue ---------- */
 const NAMES = { D: 'D', me: '我', mom: '妈妈' };
 // Story waits for the player: new beats become a card in the orders area
@@ -3018,7 +3104,7 @@ function openPrinter() {
     '<button type="button" class="sbtn" id="carePoop"' + (m.poop ? '' : ' disabled') + '>清理竹屎</button></div>' +
     (needsCare() ? '<p class="pwarn">不保养的话，可能会引发打印故障。</p>' : '');
   $('#careWash').addEventListener('click', () => { $('#printerModal').hidden = true; openWash(); });
-  $('#carePoop').addEventListener('click', () => { m.poop = 0; st.room.binPoop = (+st.room.binPoop || 0) + 1; sfx.place(); hint('把竹屎倒进了垃圾桶。', 2600); renderScene(); renderBin(); openPrinter(); });
+  $('#carePoop').addEventListener('click', () => { $('#printerModal').hidden = true; openPoop(); });
   sfx.soft(); $('#printerModal').hidden = false; updateGuide();
 }
 $('#prClose').addEventListener('click', () => { $('#printerModal').hidden = true; updateGuide(); });
@@ -3420,7 +3506,7 @@ $('#drGrid').addEventListener('click', e => {
 });
 $('#drClose').addEventListener('click', () => { $('#drawerModal').hidden = true; updateGuide(); });
 start(location.hash === '#day2' ? 2 : 1);
-if (/[?&]debug\b/.test(location.search)) window.__dbg = { st: () => st, giveTo, putOnDesk, renderBoard, openWash, applyClock };
+if (/[?&]debug\b/.test(location.search)) window.__dbg = { st: () => st, giveTo, putOnDesk, renderBoard, openWash, openPoop, applyClock };
 })();
 </script>
 
