@@ -653,7 +653,7 @@ body.framed .stage{border-radius:34px;box-shadow:0 0 0 1px rgba(74,51,36,.18),0 
             <polygon points="518,323 556,323 558,331 516,331" fill="#D8D1C5" stroke-width=".8"></polygon>
 
             <!-- desk calendar: one page per day -->
-            <g id="deskCal" aria-label="桌上的台历" transform="translate(604 398) scale(1.45) translate(-426 -398)">
+            <g id="deskCal" aria-label="桌上的台历" transform="translate(663 332) scale(.9) translate(-426 -397)">
               <ellipse cx="426" cy="397" rx="32" ry="3" fill="#6E4A31" fill-opacity=".14" stroke="none"></ellipse>
               <polygon points="400,396 452,396 446,342 406,342" fill="#C99A5E"></polygon>
               <g id="calStubs"></g>
@@ -2425,7 +2425,7 @@ function openPeople() { openPhone(); }
 function renderRoom(fx) {
   renderRack(); renderAmsRoom();
   const g = $('#roomOrg'), v = st.room.scraper ? 'org_full2' : st.room.tidy ? 'org_full' : 'org';
-  if (g.dataset.v !== v) { g.dataset.v = v; g.innerHTML = '<g class="roomitem" transform="translate(656 204) scale(3.6)"><g stroke="#6E4A31" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round" fill="none">' + S[v] + '</g></g>'; }
+  if (g.dataset.v !== v) { g.dataset.v = v; g.innerHTML = '<g class="roomitem" transform="translate(672 204) scale(3.6)"><g stroke="#6E4A31" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round" fill="none">' + S[v] + '</g></g>'; }
   document.querySelectorAll('#pegTools [class^="pt-"]').forEach(el => { const k = 't_' + el.getAttribute('class').slice(3); if (!el.firstChild) el.innerHTML = S[k]; });
   $('#pegTools').setAttribute('opacity', st.room.tidy ? 0 : 1);
   g.setAttribute('opacity', st.room.org ? 1 : 0);
@@ -2577,7 +2577,7 @@ function openCal(sel) {
 }
 $('#calClose').addEventListener('click', () => { $('#calModal').hidden = true; updateGuide(); });
 $('#againBtn').addEventListener('click', () => { $('#journalModal').hidden = true; start(st.day); });
-$('#nextDayBtn').addEventListener('click', () => { if (st.day !== 1) return; $('#journalModal').hidden = true; start(2, st.coins); showInRoom(560); setTimeout(() => renderCal(true), 500); });
+$('#nextDayBtn').addEventListener('click', () => { if (st.day !== 1) return; $('#journalModal').hidden = true; start(2, st.coins); showInRoom(600); setTimeout(() => renderCal(true), 500); });
 
 /* ---------- menu ---------- */
 const menu = $('#menu'), menuBtn = $('#menuBtn');
