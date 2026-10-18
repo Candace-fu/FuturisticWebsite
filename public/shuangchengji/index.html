@@ -1346,7 +1346,8 @@ const ORDERS1 = [
   { who: 'D', tag: '她的小店', ask: '把我手绘的这幅画，打印成一枚书签。', need: { idea: 3, fil: 2 }, product: 'bm1', reward: 30, layers: 5, secs: 2, real: { h: '1.00 mm', time: '42 分钟', g: '6.6 g' }, color: '#F1ECE2',
     lift: '书签刚从打印板上取下来，还是温的。白色的一枚，D 画的图案镂空在上面。' },
   { who: '我', tag: '给自己', ask: '把打印机的零零碎碎收起来。', need: { idea: 4, fil: 3 }, product: 'org', reward: 20, layers: 777, secs: 36, real: { h: '155.4 mm', time: '12 小时 52 分', g: '544 g' }, color: '#CBC6B8',
-    lift: '收纳架还带着热床的温度。五百多克，拿在手里沉甸甸的。' }
+    lift: '收纳架还带着热床的温度。五百多克，拿在手里沉甸甸的。',
+    liftMorning: '打印板早就凉了。收纳架五百多克，拿在手里沉甸甸的。' }
 ];
 const INTRO = [
   { s: 'n', t: '杭州，工作室。' },
@@ -1383,14 +1384,13 @@ const POST1 = [
     { do: 'time', v: 'afternoon' },
     { s: 'n', t: '打印机附带的零零碎碎还散在桌上。我决定给它们打一个桌面工具收纳。' },
     { do: 'order', i: 1 }
-  ],
-  [
-    { s: 'n', t: '收纳架放好了。洞洞板上的工具，一件件收进去吧。' },
-    { do: 'tidy' },
-    { s: 'me', t: '哎呀，今天太着急了，两个模型都是直接掰下来的。' },
-    { s: 'me', t: '这可不是好习惯……抽空得搞把刮刀了。' },
-    { do: 'journal' }
   ]
+];
+/* the organiser takes 12 h 52 min: at 22:00 it is still printing and stays on overnight (night lines are drafts) */
+const NIGHT1 = [
+  { s: 'n', t: '十点了。收纳架还没打完，还要好几个小时。' },
+  { s: 'me', t: '就让它开着打吧，明天一早来取。' },
+  { do: 'journal' }
 ];
 /* day 2: real data from Hestia (scraper: MakerWorld 1208293, plate 1, white PLA). Items marked todo still need slicer data. */
 const ORDERS2 = [
@@ -1412,6 +1412,14 @@ const ALL_ORDERS = () => ORDERS1.concat(ORDERS2).filter(Boolean);
 const DAYNAME = { 1: '第一天', 2: '第二天' };
 const INTRO2 = [
   { s: 'n', t: '杭州，工作室。第二天。' },
+  { s: 'n', t: '打印机开了一整夜。收纳架打好了，还在打印板上。' }
+];
+/* after the organiser is lifted on day 2 morning */
+const MORNING2 = [
+  { s: 'n', t: '收纳架放好了。洞洞板上的工具，一件件收进去吧。' },
+  { do: 'tidy' },
+  { s: 'me', t: '哎呀，今天太着急了，两个模型都是直接掰下来的。' },
+  { s: 'me', t: '这可不是好习惯……抽空得搞把刮刀了。' },
   { s: 'n', t: '收纳架摆在桌上，长仓还空着。' },
   { s: 'me', t: '今天得把刮刀打出来。' },
   { s: 'n', t: '快递到了。是前几天买的耗材。' },
@@ -1452,7 +1460,8 @@ const JOURNAL2 = {
 };
 const JOURNAL = {
   bm1: 'D 来工作室，把她手绘的画打印成了一枚书签。',
-  org: '给自己打了一个桌面工具收纳，把洞洞板上的工具都收了进去。'
+  org: '给自己打了一个桌面工具收纳，把洞洞板上的工具都收了进去。',
+  org_night: '给自己打一个桌面工具收纳。要打十二个多小时，开着过夜打。'
 };
 
 /* ---------- sound ---------- */
@@ -1518,8 +1527,9 @@ function fresh(day) {
 function freshDay(day, coins) {
   const s = fresh();
   if (day !== 2) return s;
-  return Object.assign(s, { day: 2, tut: false, coins: coins || 170, met: { D: true }, saved: { D: true },
-    room: { org: true, tidy: true, scraper: false, spools: false }, ams: null, unpack: {}, maint: { plate: 2, poop: 2 } });
+  return Object.assign(s, { day: 2, tut: false, coins: coins || 150, met: { D: true }, saved: { D: true },
+    room: { org: false, tidy: false, scraper: false, spools: false }, ams: null, unpack: {}, maint: { plate: 1, poop: 1 },
+    printer: 'ready', pending: 'org' });
 }
 const boardEl = $('#board'), nextBtn = $('#nextBtn'), dlg = $('#dlg');
 const GMAX = 6, GREGEN = 1600;
@@ -1542,7 +1552,7 @@ function stationHTML() {
   } else {
     const C = 106.8;
     h += '<svg class="ring" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="17" class="rbg"></circle><circle cx="20" cy="20" r="17" class="rfg" id="stRing" stroke-dasharray="' + C + '" stroke-dashoffset="' + (C * (1 - st.pProg)).toFixed(1) + '"></circle></svg>';
-    h += '<span class="timer">' + CLOCK + '<b id="stTimer">' + (st.printer === 'cooling' ? '凉' : st.pLeft + 's') + '</b></span>';
+    h += '<span class="timer">' + CLOCK + '<b id="stTimer">' + (st.printer === 'cooling' ? '凉' : st.printer === 'overnight' ? '夜' : st.pLeft + 's') + '</b></span>';
   }
   return h;
 }
@@ -1810,6 +1820,7 @@ function runPrint(o) {
       const cx = Math.sin(now / 150) * 40 * (0.65 + 0.35 * Math.sin(now / 900));
       setHead(46 - p * 78, cx); setGrow(p);
       st.min = Math.min(CLOSE, m0 + mDur * p); applyClock();
+      if (st.day === 1 && m0 + mDur * p >= CLOSE && p < 1) { overnight(o, p); return; }
       sfx.humSet(70 + Math.abs(cx - lastCx) * 9); lastCx = cx;
       if (now - lastTick > 120) { sfx.tick(); lastTick = now; }
       G.lcd.textContent = Math.round(p * 100) + '%';
@@ -1819,6 +1830,14 @@ function runPrint(o) {
     printRaf = requestAnimationFrame(f);
   }
   printRaf = requestAnimationFrame(f);
+}
+function overnight(o, p) {
+  sfx.humStop(); setHead(46 - p * 78, 0);
+  st.printer = 'overnight'; st.pProg = p; st.min = CLOSE; applyClock();
+  G.lcd.textContent = Math.round(p * 100) + '%';
+  st.order = -1; st.night = o.product;
+  renderBoard();
+  queue(NIGHT1, true);
 }
 function cool() {
   st.printer = 'cooling'; renderBoard();
@@ -1840,6 +1859,7 @@ function renderScene() {
   if (st.printer === 'idle') tag.textContent = '打印机 · 待命';
   else if (st.printer === 'cooling') tag.textContent = '降温中';
   else if (st.printer === 'ready') tag.textContent = '打印好了 · 点击取件';
+  else if (st.printer === 'overnight') tag.textContent = '打印中 · 开着过夜';
   if (st.printer === 'idle' && needsCare()) tag.textContent = '打印机 · 该保养了';
   $('#scene').classList.toggle('ready', st.printer === 'ready');
 }
@@ -1885,8 +1905,9 @@ function openLift() {
   const pick = st.day === 2 && !!st.room.scraper;
   $('#liftText').hidden = true; $('#placeBtn').hidden = true; $('#flexBtn').hidden = pick; $('#liftPick').hidden = !pick;
   $('#flexBtn').textContent = '按住，掰弯打印板'; $('#liftScraper').setAttribute('opacity', 0);
-  $('#liftHint').textContent = pick ? '打印板还是温的。这次怎么取？' : '打印板还是温的。按住下面的按钮（或按住图），把它轻轻掰弯。';
-  Object.assign(L, { b: 0, hold: false, popped: false, popT: 0, heat: 1, shown: false, last: performance.now(), mode: pick ? null : 'flex' });
+  const warm = curOrder() ? '打印板还是温的。' : '';
+  $('#liftHint').textContent = pick ? warm + '这次怎么取？' : warm + '按住下面的按钮（或按住图），把打印板轻轻掰弯。';
+  Object.assign(L, { b: 0, hold: false, popped: false, cold: !warm, popT: 0, heat: warm ? 1 : 0, shown: false, last: performance.now(), mode: pick ? null : 'flex' });
   $('#liftModal').hidden = false; updateGuide();
   cancelAnimationFrame(L.raf); L.raf = requestAnimationFrame(liftLoop);
 }
@@ -1899,7 +1920,7 @@ function liftLoop(now) {
   } else {
     L.popT = Math.min(1, L.popT + dt / 650);
     L.b = Math.max(0, L.b - dt / 160);
-    L.heat = Math.max(.22, L.heat - dt / 4200);
+    L.heat = Math.max(L.cold ? 0 : .22, L.heat - dt / 4200);
     if (L.popT >= 1 && !L.shown) { L.shown = true; afterPop(); }
   }
   drawLift();
@@ -1921,11 +1942,12 @@ function drawLift() {
   $('#liftSteam').setAttribute('opacity', (L.heat * .95).toFixed(2));
   $('#liftGlow').setAttribute('opacity', (L.heat * .9).toFixed(2));
 }
+const liftOrder = () => curOrder() || ALL_ORDERS().find(x => x.product === st.pending);
 function afterPop() {
-  const o = ORDERS[st.order];
+  const o = liftOrder(), night = !curOrder();
   $('#flexBtn').hidden = true;
   $('#liftHint').textContent = L.mode === 'scrape' ? '刮刀斜着推进去，它一下翘了起来。' : '啪的一声，它松开了。';
-  const tx = $('#liftText'); tx.textContent = o.lift; tx.hidden = false;
+  const tx = $('#liftText'); tx.textContent = night && o.liftMorning || o.lift; tx.hidden = false;
   // someone in the room: hand it over or leave it on the desk; alone: desk only
   const who = o.who === '我' && KEEP_IN_ROOM[o.product] ? [] : present();
   $('#liftGive').innerHTML = who.map(w => '<button type="button" class="primary" data-w="' + w + '">给 ' + (NAMES[w] || w) + '</button>').join('');
@@ -1956,7 +1978,8 @@ $('#placeBtn').addEventListener('click', () => finishLift(null));
 $('#liftGive').addEventListener('click', e => { const b = e.target.closest('[data-w]'); if (b) finishLift(b.dataset.w); });
 function finishLift(to) {
   const k = st.pending, o = curOrder(); passTime(3);
-  st.printed[st.order] = true; st.pending = null; st.printer = 'idle'; st.sel = -1;
+  if (o) st.printed[st.order] = true;
+  st.pending = null; st.printer = 'idle'; st.sel = -1;
   st.maint.plate++; st.maint.poop++;
   if (needsCare()) setTimeout(() => hint(st.maint.poop >= POOP_MAX ? '竹屎堆满了，点打印机清理一下。' : '打印板该洗了，点打印机看看。', 3400), 1200);
   setGrow(0); G.glow.setAttribute('opacity', '0'); G.lcd.textContent = '待命';
@@ -1964,6 +1987,7 @@ function finishLift(to) {
   if (to) { renderBoard(); giveTo(to, k, null); return; }
   sfx.place();
   if (o && o.who === '我' && KEEP_IN_ROOM[k]) { renderBoard(); completeOrder(); return; }
+  if (!o && k === 'org') { renderBoard(); morningOrg(); return; }
   putOnDesk(k);
   renderBoard();
   if (o && o.who === '我') completeOrder();
@@ -2011,6 +2035,13 @@ function completeOrder(auto) {
   renderBoard();
   queue(typeof POST[idx] === 'function' ? POST[idx]() : POST[idx], auto);
 }
+// day 2 morning: the organiser printed overnight; set it on the desk, then tidy the pegboard
+function morningOrg() {
+  st.room.org = true; showInRoom(720); renderRoom('org'); addCoins(ORDERS1[1].reward); sfx.chime();
+  setTimeout(() => hint('收纳架放在了桌子右边。拖动画面可以看到它。', 4200), 300);
+  st.jr.push({ spr: 'org_full', t: JOURNAL.org });
+  queue(MORNING2, true);
+}
 function addCoins(n) {
   const from = st.coins, to = st.coins + n; st.coins = to;
   const el = $('#coinText'), box = $('#coins'); box.classList.remove('bump'); void box.offsetWidth; box.classList.add('bump');
@@ -2033,6 +2064,7 @@ function renderInfo() {
   if (isStation(it)) {
     if (st.printer === 'printing') { const o = curOrder(); desc = '正在打印「' + SINGLE[st.pending].name + '」' + (o && o.real ? '：' + o.layers + ' 层，现实中约 ' + o.real.time + '。' : o && o.todo ? '：切片数据待补，时长先用 3 秒占位。' : '。'); }
     else if (st.printer === 'cooling') desc = '打完了，正在降温。';
+    else if (st.printer === 'overnight') desc = '「' + SINGLE[st.pending].name + '」还在打，开着过夜。';
     else if (st.printer === 'ready') { desc = '「' + SINGLE[st.pending].name + '」打印好了。'; btns = '<button type="button" class="sbtn p" id="ibLift">取件</button>'; }
     else {
       const loaded = ['idea', 'fil'].filter(k => st.slots[k]).map(k => describe(st.slots[k]).name);
@@ -2438,8 +2470,9 @@ function guide() {
   if (st.notif && !$('#notif').hidden) return { t: [{ el: '#notif' }], text: '有人发来消息，点开看看', sub: '先看消息，再做别的。' };
   const o = curOrder();
   if (!o && storyWait) return { t: [{ el: '#storyBtn' }], text: '有新的事情，点「去看看」', sub: '不急的话，也可以先在桌上随便合成。' };
-  if (!o) return null;
   const pi = printerIdx();
+  if (!o && st.printer === 'ready') return isFolded() ? { t: [{ el: '#toBoard' }], text: '打印好了，点左下角「合成」', sub: '去合成桌上取件。' } : { t: [{ cell: pi }], text: '打印好了！点一下打印机', sub: '把它从打印板上取下来。' };
+  if (!o) return null;
   if (st.printed[st.order]) {
     if (!haveProduct(o.product)) return null;
     return { t: [{ el: '#deliverBtn' }], text: o.who === '我' ? '点这里，收好' : '点这里，交给 ' + o.who, sub: SINGLE[o.product].name + '做好了。' };
@@ -2963,8 +2996,8 @@ function realMinutes(t) {
 const fmtMinutes = n => (n >= 60 ? Math.floor(n / 60) + ' 小时 ' : '') + Math.round(n % 60) + ' 分';
 function openPrinter() {
   const row = (k, v, c) => '<div class="prow"><span>' + k + '</span><b' + (c ? ' class="' + c + '"' : '') + '>' + v + '</b></div>';
-  const state = { idle: '待命', printing: '正在打印「' + (st.pending ? SINGLE[st.pending].name : '') + '」', cooling: '打完了，降温中', ready: '打印好了，等着取件' }[st.printer] || '待命';
-  const hot = st.printer === 'printing', o = curOrder();
+  const state = { idle: '待命', printing: '正在打印「' + (st.pending ? SINGLE[st.pending].name : '') + '」', cooling: '打完了，降温中', ready: '打印好了，等着取件', overnight: '开着过夜，还在打「' + (st.pending ? SINGLE[st.pending].name : '') + '」' }[st.printer] || '待命';
+  const hot = st.printer === 'printing' || st.printer === 'overnight', o = curOrder();
   const list = sketchList(), mins = list.reduce((a, x) => { const d = printData(x.k); return a + (d.real ? realMinutes(d.real.time) : 0); }, 0);
   const grams = list.reduce((a, x) => { const d = printData(x.k); return a + (d.real ? parseFloat(d.real.g) : 0); }, 0);
   const m = st.maint;
@@ -3238,14 +3271,14 @@ $('#meetOk').addEventListener('click', () => { $('#meetModal').hidden = true; st
 $('#peopleClose').addEventListener('click', () => { $('#peopleModal').hidden = true; updateGuide(); });
 /* ---------- journal ---------- */
 function journalItems() {
-  return st.day === 2 ? st.jr : st.done.map(k => ({ spr: k === 'org' && st.room.tidy ? 'org_full' : k, t: JOURNAL[k] }));
+  return st.day === 2 ? st.jr : st.done.map(k => ({ spr: k, t: JOURNAL[k] })).concat(st.night === 'org' ? [{ spr: 'org', t: JOURNAL.org_night }] : []);
 }
 function openJournal() {
   const items = journalItems();
   st.dayDone = true; saveDiary(); renderCal();
   $('#jTitle').textContent = '杭州 · ' + DAYNAME[st.day];
   $('#journalBody').innerHTML = items.map(x => '<div class="jitem">' + spr(x.spr) + '<span>' + x.t + '</span></div>').join('') +
-    (st.day === 1 && st.room.tidy ? '<p class="jnote">明天：抽空搞一把刮刀。</p>' : '') +
+    (st.day === 1 && st.night ? '<p class="jnote">明天：一早来取收纳架。</p>' : '') +
     (st.day === 2 && st.dMsg ? '<p class="jnote">明天：D 会早点过来。</p>' : '');
   const nb = $('#nextDayBtn');
   nb.textContent = st.day === 1 ? '第二天' : '第三天（制作中）'; nb.disabled = st.day !== 1;
@@ -3253,7 +3286,7 @@ function openJournal() {
 }
 /* ---------- desk calendar: a circle for each finished day, tap a day to read its diary ---------- */
 const DIARY_KEY = 'shuangchengji-diary-';
-const DIARY_DEFAULT = { 1: [{ spr: 'bm1', t: JOURNAL.bm1 }, { spr: 'org_full', t: JOURNAL.org }] };
+const DIARY_DEFAULT = { 1: [{ spr: 'bm1', t: JOURNAL.bm1 }, { spr: 'org', t: JOURNAL.org_night }] };
 const CN = ['零', '一', '二', '三', '四', '五', '六', '七', '八', '九', '十', '十一', '十二', '十三', '十四', '十五'];
 function saveDiary() { try { localStorage.setItem(DIARY_KEY + st.day, JSON.stringify(journalItems())); } catch (e) {} }
 function diaryOf(d) {
@@ -3337,6 +3370,7 @@ function start(day, coins, keep) {
   $('#coinText').textContent = st.coins;
   setGrow(0); setHead(0, 0); G.glow.setAttribute('opacity', '0'); G.lcd.textContent = '待命';
   $('#scene').classList.remove('printing');
+  if (st.printer === 'ready') { G.spr.innerHTML = S[st.pending]; setGrow(1); G.glow.setAttribute('opacity', '1'); G.lcd.textContent = '可取件'; }
   setTime('morning');
   renderBoard();
   queue(day === 2 ? INTRO2 : INTRO, true);
