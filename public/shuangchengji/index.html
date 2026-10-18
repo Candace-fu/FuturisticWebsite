@@ -1994,7 +1994,7 @@ function finishLift(to) {
   if (o) st.printed[st.order] = true;
   st.pending = null; st.printer = 'idle'; st.sel = -1;
   st.maint.plate++; st.maint.poop++;
-  if (needsCare()) setTimeout(() => hint(st.maint.poop >= POOP_MAX ? '竹屎堆满了，点打印机清理一下。' : '打印板该洗了，点打印机看看。', 3400), 1200);
+  if (needsCare()) setTimeout(() => hint(st.maint.poop >= POOP_MAX ? '接竹屎的盒子满了，点打印机清理一下。' : '打印板该洗了，点打印机看看。', 3400), 1200);
   setGrow(0); G.glow.setAttribute('opacity', '0'); G.lcd.textContent = '待命';
   $('#liftModal').hidden = true; cancelAnimationFrame(L.raf);
   if (to) { renderBoard(); giveTo(to, k, null); return; }
@@ -2349,21 +2349,23 @@ function washDone() {
   hint('打印板洗干净，擦干，吸回去了。', 2800); renderScene(); openPrinter();
 }
 
-/* ---------- purge waste: sweep the 竹屎 into a dustpan with a finger, then tip it into the bin ---------- */
+/* ---------- purge waste: the A1 has no catch box, so a box sits under the chute and fills up fast (Hestia). Sweep the spill back in with a finger, then tip the box into the bin ---------- */
 const P = { step: 0, bits: [], total: 0, last: null, drag: null };
 const poopSvg = $('#poopSvg');
-const PSTEP = [['把竹屎扫进簸箕', '手指在桌上划，像用刷子一样，把竹屎扫进右下角的簸箕。'], ['倒进垃圾桶', '按住簸箕，拖到垃圾桶上面倒掉。']];
+const PSTEP = [['把满出来的竹屎扫回盒子', '盒子满了，竹屎掉了一桌。手指在桌上划，像用刷子一样，把它们扫回盒子里。'], ['倒进垃圾桶', '按住盒子，拖到垃圾桶上面倒掉。']];
 const PCOL = ['#F1ECE2', '#CBC6B8', '#F1ECE2', '#8C6A4F', '#3A3634', '#F1ECE2'];
-const PAN = [236, 186, 314, 236];
+const PAN = [240, 172, 310, 234];
 const poopBit = b => '<g transform="translate(' + b.x.toFixed(1) + ' ' + b.y.toFixed(1) + ') rotate(' + b.r + ') scale(' + (b.s || 1) + ')"><path d="M-9 2 q-2 -8 6 -7 q9 -2 11 5 q1 7 -8 7 q-7 1 -9 -5z" fill="' + b.c + '" stroke="#6E4A31" stroke-width="1"></path><path d="M-4 0 q3 -3 7 0" stroke="#6E4A31" stroke-width=".8" fill="none" stroke-opacity=".6"></path></g>';
+const BOX_FULL = 8;
 const panSvg = (x, y, rot, n) => '<g class="pan" id="pPan" transform="translate(' + x + ' ' + y + ') rotate(' + (rot || 0) + ')">' +
-  '<path d="M-38 -22 L36 -22 L36 22 L-38 22 L-30 -14 Z" fill="#7FA7A0" stroke="#3F6560" stroke-width="1.4" stroke-linejoin="round"></path>' +
-  '<path d="M-38 22 L-30 -14" stroke="#3F6560" stroke-width="2.4"></path><rect x="36" y="-5" width="30" height="10" rx="5" fill="#5E8C88" stroke="#3F6560" stroke-width="1.2"></rect>' +
-  Array.from({ length: n || 0 }, (_, i) => poopBit({ x: -16 + (i % 4) * 12, y: 8 - Math.floor(i / 4) * 8, r: i * 47 % 360, c: PCOL[i % PCOL.length] })).join('') + '</g>';
+  Array.from({ length: Math.min(12, BOX_FULL + (n || 0)) }, (_, i) => poopBit({ x: -24 + (i % 5) * 12 + (Math.floor(i / 5) % 2) * 5, y: -18 - Math.floor(i / 5) * 6, r: i * 47 % 360, c: PCOL[i % PCOL.length] })).join('') +
+  '<path d="M-34 -16 h68 v38 h-68 z" fill="#C9A877" stroke="#6E4A31" stroke-width="1.4" stroke-linejoin="round"></path>' +
+  '<path d="M-34 -16 l-8 -9 M34 -16 l8 -9" stroke="#6E4A31" stroke-width="1.4"></path><path d="M-34 -16 l-8 -9 h0 l0 0" fill="none"></path>' +
+  '<path d="M-20 2 h40" stroke="#A88A5C" stroke-width="1.2"></path></g>';
 const BIN_SVG = '<g id="pBin"><path d="M222 140 h96 l-10 104 h-76 z" fill="#B9A585" stroke="#6E4A31" stroke-width="1.6"></path><ellipse cx="270" cy="140" rx="48" ry="8" fill="#5E5248" stroke="#6E4A31" stroke-width="1.6"></ellipse><path d="M244 160 l4 70 M270 160 v72 M296 160 l-4 70" stroke="#6E4A31" stroke-opacity=".35" stroke-width="1.2"></path></g>';
 function openPoop() {
   const n = clampN(st.maint.poop * 2 + 2, 4, 12);
-  const bits = Array.from({ length: n }, (_, i) => ({ x: 40 + (i * 53) % 170 + Math.random() * 14, y: 64 + (i * 37) % 96 + Math.random() * 10, r: Math.round(Math.random() * 360), c: PCOL[i % PCOL.length], s: 1.4 }));
+  const bits = Array.from({ length: n }, (_, i) => ({ x: 30 + (i * 53) % 180 + Math.random() * 14, y: 64 + (i * 37) % 96 + Math.random() * 10, r: Math.round(Math.random() * 360), c: PCOL[i % PCOL.length], s: 1.4 }));
   Object.assign(P, { step: 0, bits, total: n, last: null, drag: null });
   sfx.soft(); $('#poopModal').hidden = false; poopRender(); updateGuide();
 }
@@ -2374,7 +2376,7 @@ function poopRender() {
   if (k === 0) {
     $('#poopFill').style.width = (1 - P.bits.length / P.total) * 100 + '%';
     poopSvg.innerHTML = '<rect x="0" y="0" width="340" height="250" fill="#E3C9A0"></rect><path d="M0 40 h340" stroke="#C9AD82" stroke-width="2"></path>' +
-      '<g><rect x="6" y="0" width="70" height="34" rx="4" fill="#8B827A"></rect><rect x="24" y="22" width="34" height="14" rx="3" fill="#2F2B28"></rect></g>' +
+      '<g><rect x="226" y="0" width="98" height="34" rx="4" fill="#8B827A"></rect><rect x="258" y="22" width="34" height="14" rx="3" fill="#2F2B28"></rect><path d="M275 40 v130" stroke="#6E4A31" stroke-opacity=".25" stroke-width="1.2" stroke-dasharray="3 5"></path></g>' +
       panSvg(274, 211, 0, P.total - P.bits.length) + '<g id="pBits">' + P.bits.map(poopBit).join('') + '</g>' +
       '<g id="pBrush" opacity="0"><circle r="16" fill="#FFFDF6" fill-opacity=".35" stroke="#6E4A31" stroke-width="1" stroke-dasharray="3 3"></circle></g>';
   } else {
@@ -2409,7 +2411,7 @@ poopSvg.addEventListener('pointermove', e => {
     if (over) {
       P.drag = null; P.last = null;
       const pan = $('#pPan'); pan.setAttribute('transform', 'translate(258 108) rotate(55)');
-      pan.querySelectorAll('g').forEach((g, i) => { setTimeout(() => { g.classList.add('pin'); if (i % 3 === 0) sfx.place(); }, i * 45); });
+      pan.querySelectorAll(':scope > g').forEach((g, i) => { setTimeout(() => { g.classList.add('pin'); if (i % 3 === 0) sfx.place(); }, i * 45); });
       setTimeout(poopDone, 700 + P.total * 45);
     }
   }
@@ -2419,7 +2421,7 @@ poopSvg.addEventListener('pointerup', poopUp); poopSvg.addEventListener('pointer
 function poopDone() {
   st.maint.poop = 0; st.room.binPoop = (+st.room.binPoop || 0) + 1;
   $('#poopModal').hidden = true; sfx.chime();
-  hint('竹屎扫干净，倒进了垃圾桶。', 2800); renderScene(); renderBin(); openPrinter();
+  hint('盒子倒空了，放回打印机下面接着。', 2800); renderScene(); renderBin(); openPrinter();
 }
 
 /* ---------- story dialogue ---------- */
@@ -3094,7 +3096,7 @@ function openPrinter() {
     row('热床', hot ? '55 °C' : st.printer === 'cooling' || st.printer === 'ready' ? '降温中' : '室温', hot ? 'hot' : 'dim') +
     row('打印板', 'Bambu 纹理 PEI 板') +
     row('打印板干净吗', m.plate >= PLATE_MAX ? '该清洗了（打了 ' + m.plate + ' 次）' : m.plate ? '打了 ' + m.plate + ' 次，还行' : '刚洗过', m.plate >= PLATE_MAX ? 'hot' : '') +
-    row('竹屎', m.poop >= POOP_MAX ? '堆满了，该清理了' : m.poop ? '攒了一点（' + m.poop + ' 次打印）' : '清空了', m.poop >= POOP_MAX ? 'hot' : '') +
+    row('竹屎盒', m.poop >= POOP_MAX ? '满了，该清理了' : m.poop ? '攒了一点（' + m.poop + ' 次打印）' : '清空了', m.poop >= POOP_MAX ? 'hot' : '') +
     row('耗材', st.room.ams ? 'AMS lite：白、灰、黑、透明' : st.room.spools ? '白、灰、黑、透明（挂在耗材架上）' : '顶上挂着一卷 PLA') +
     row('环境湿度', st.done.includes('stand') || (st.day > 2 && diaryOf(2).some(x => x.spr === 'stand')) ? humidity() + '%' : '不知道（还没有温湿度计）', st.done.includes('stand') ? '' : 'dim') +
     '<p class="psec">累计</p>' +
