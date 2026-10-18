@@ -506,7 +506,18 @@ body.framed .stage{border-radius:34px;box-shadow:0 0 0 1px rgba(74,51,36,.18),0 
 @keyframes breathe{0%,100%{opacity:1}50%{opacity:.5}}
 @keyframes fadein{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
 @keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
-@keyframes pop{0%{transform:scale(.55)}100%{transform:scale(1)}}
+@keyframes pop{0%{transform:scale(.55)}40%{transform:scale(1.22,.82)}65%{transform:scale(.92,1.1)}85%{transform:scale(1.03,.97)}100%{transform:scale(1)}}
+.confetti{position:absolute;left:50%;top:50%;width:6px;height:9px;margin:-4px 0 0 -3px;border-radius:1px;pointer-events:none;animation:confetti .7s cubic-bezier(.2,.7,.4,1) forwards}
+@keyframes confetti{0%{transform:translate(0,0) rotate(0);opacity:1}100%{transform:translate(var(--dx),var(--dy)) rotate(var(--rot));opacity:0}}
+.board.thud{animation:thud .28s ease}
+@keyframes thud{0%,100%{transform:none}20%{transform:translate(-3px,2px)}45%{transform:translate(3px,-2px)}70%{transform:translate(-2px,1px)}}
+.floatlbl{position:absolute;z-index:30;transform:translate(-50%,0);pointer-events:none;white-space:nowrap;font-family:var(--f-ui);font-weight:700;font-size:15px;color:var(--clay);text-shadow:0 1px 0 #FFFDF6,0 0 6px #FFFDF6;animation:floatup .9s ease-out forwards}
+.floatlbl.lucky{font-size:13px;color:#B07A1E;font-weight:600}
+@keyframes floatup{0%{opacity:0;margin-top:6px}15%{opacity:1}100%{opacity:0;margin-top:-26px}}
+.cell.tapflip>.spr{animation:pageflip .38s ease}
+@keyframes pageflip{0%{transform:none}40%{transform:perspective(80px) rotateY(-28deg) scaleX(.9)}100%{transform:none}}
+.cell.tapspin>.spr{animation:spoolspin .45s ease}
+@keyframes spoolspin{0%{transform:none}35%{transform:rotate(-14deg)}70%{transform:rotate(9deg)}100%{transform:none}}
 @keyframes spawn{0%{transform:scale(.3) translateY(8px);opacity:.3}100%{transform:none;opacity:1}}
 @keyframes bump{50%{transform:scale(1.12)}}
 @keyframes jiggle{0%,100%{transform:rotate(0)}25%{transform:rotate(-4deg) translateY(-2px)}75%{transform:rotate(4deg) translateY(-2px)}}
@@ -1051,6 +1062,15 @@ idea4: '<ellipse cx="24" cy="42" rx="16" ry="2" fill="#6E4A31" fill-opacity=".13
  '<circle cx="19.5" cy="16.5" r="1.2" stroke="#5E8C88" stroke-width=".8"/><path d="M27.5 13 v22 M26 13 h3 M26 35 h3" stroke="#C47A57" stroke-width=".7"/>' +
  '<circle cx="33.5" cy="31.5" r="4.6" stroke="#C47A57" stroke-width="1.1"/><path d="M31.4 31.6 l1.6 1.6 l3 -3.2" stroke="#C47A57" stroke-width="1.1"/>' +
  '<path d="M11 5 v9 q0 2.6 2.3 2.6 q2.3 0 2.3 -2.6 v-7" stroke="#8A847C" stroke-width="1.2"/>',
+idea5: '<ellipse cx="24" cy="42" rx="16" ry="2" fill="#6E4A31" fill-opacity=".13" stroke="none"/>' +
+ '<rect x="5" y="8" width="38" height="28" rx="2.5" fill="#E9EEF0"/><rect x="8" y="11" width="32" height="22" rx="1" fill="#F7FAFA" stroke-width=".8"/>' +
+ '<path d="M8 27 l8 -4 l16 0 l8 4" stroke="#C3D5D0" stroke-width=".5"/>' +
+ '<path d="M24 14 l9 4.5 v9 l-9 4.5 l-9 -4.5 v-9 Z" fill="#DDEAE7" stroke="#5E8C88" stroke-width="1"/><path d="M15 18.5 l9 4.5 l9 -4.5 M24 23 v9" stroke="#5E8C88" stroke-width=".9"/>' +
+ '<path d="M20 38 h8 M24 36 v2" stroke-width="1.2"/>',
+idea6: '<ellipse cx="24" cy="42" rx="16" ry="2" fill="#6E4A31" fill-opacity=".13" stroke="none"/>' +
+ '<path d="M10 6 h20 l8 8 v26 h-28 Z" fill="#FBF6EA"/><path d="M30 6 v8 h8 Z" fill="#E9DFCC"/><path d="M10 6 h20 l8 8 v26 h-28 Z"/>' +
+ '<path d="M15 32 h18 M15 29 h18 M16 26 h16 M17 23 h14 M18 20 h12" stroke="#5E8C88" stroke-width="1.1"/>' +
+ '<path d="M15 35.5 h7" stroke="#C47A57" stroke-width="1.4"/><path d="M14 11 h10" stroke-width=".7" stroke-opacity=".6"/>',
 gen_fil: SH(24,16) +
  '<rect x="7" y="7" width="34" height="34" rx="2.5" fill="#D9AE72"/><rect x="10" y="10" width="28" height="28" fill="#B98A52" stroke-width="1"/>' +
  '<rect x="10" y="22.5" width="28" height="3" fill="#D9AE72" stroke-width="1"/>' +
@@ -1151,8 +1171,9 @@ const CLOCK = '<svg viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6"
 
 /* ---------- items ---------- */
 const CHAINS = {
-  idea: { max: 4, names: ['灵感便签', '铅笔草图', '设计图', '精修设计图'], spr: ['idea1', 'idea2', 'idea3', 'idea4'],
-    descs: ['随手贴在屏幕边上的一句话。', '铅笔画的草图，比例还不太准。', '量好了尺寸的设计图，可以拿去打印。', '改了好几版，每个细节都想过了。'] },
+  idea: { max: 6, names: ['灵感便签', '铅笔草图', '设计图', '精修设计图', '3D 模型', '切片文件'], spr: ['idea1', 'idea2', 'idea3', 'idea4', 'idea5', 'idea6'],
+    descs: ['随手贴在屏幕边上的一句话。', '铅笔画的草图，比例还不太准。', '量好了尺寸的设计图，可以拿去打印。', '改了好几版，每个细节都想过了。',
+      '在电脑上建好的 3D 模型，可以转着看每一面。', '在 Bambu Studio 里切好片，层数、时间、用料都算好了。'] },
   fil: { max: 3, names: ['一小卷耗材', '半卷耗材', '整卷耗材'], spr: ['fil1', 'fil2', 'fil3'],
     descs: ['上次剩下的一小段，刚好够打个小零件。', '半卷 PLA 耗材。', '一整卷，够打好多东西。'] }
 };
@@ -1195,7 +1216,7 @@ const avatarHTML = who => PORTRAIT[who] || '';
 const ORDERS1 = [
   { who: 'D', tag: '她的小店', ask: '把我手绘的这幅画，打印成一枚书签。', need: { idea: 3, fil: 2 }, product: 'bm1', reward: 30, layers: 5, secs: 2, real: { h: '1.00 mm', time: '42 分钟', g: '6.6 g' }, color: '#F1ECE2',
     lift: '书签刚从打印板上取下来，还是温的。白色的一枚，D 画的图案镂空在上面。' },
-  { who: '我', tag: '给自己', ask: '把打印机的零零碎碎收起来。', need: { idea: 3, fil: 3 }, product: 'org', reward: 20, layers: 777, secs: 36, real: { h: '155.4 mm', time: '12 小时 52 分', g: '544 g' }, color: '#CBC6B8',
+  { who: '我', tag: '给自己', ask: '把打印机的零零碎碎收起来。', need: { idea: 4, fil: 3 }, product: 'org', reward: 20, layers: 777, secs: 36, real: { h: '155.4 mm', time: '12 小时 52 分', g: '544 g' }, color: '#CBC6B8',
     lift: '收纳架还带着热床的温度。五百多克，拿在手里沉甸甸的。' }
 ];
 const INTRO = [
@@ -1242,7 +1263,7 @@ const POST1 = [
 ];
 /* day 2: real data from Hestia (scraper: MakerWorld 1208293, plate 1, white PLA). Items marked todo still need slicer data. */
 const ORDERS2 = [
-  { who: '我', tag: '给自己', ask: '打一把刮刀，以后取件不用再掰板。', need: { idea: 3, fil: 2 }, product: 'scraper', reward: 10, layers: 40, secs: 2.4, real: { h: '9.56 mm', time: '51 分 40 秒', g: '18.8 g' }, color: '#F1ECE2',
+  { who: '我', tag: '给自己', ask: '打一把刮刀，以后取件不用再掰板。', need: { idea: 5, fil: 2 }, product: 'scraper', reward: 10, layers: 40, secs: 2.4, real: { h: '9.56 mm', time: '51 分 40 秒', g: '18.8 g' }, color: '#F1ECE2',
     lift: '刮刀还是温的。白色的一把，手柄上一排孔。' },
   null
 ];
@@ -1253,7 +1274,7 @@ const CHOICES = {
   boat: { layers: 192, secs: 1.2, real: { h: '48.00 mm', time: '24 分 53 秒', g: '12.18 g' }, color: '#F1ECE2', lift: '小船从打印板上取了下来。' }
 };
 function choiceOrder(k) {
-  return Object.assign({ who: '我', tag: '给自己', ask: '打一个' + SINGLE[k].name + '。', need: { idea: 3, fil: 2 }, product: k, reward: 15 }, CHOICES[k]);
+  return Object.assign({ who: '我', tag: '给自己', ask: '打一个' + SINGLE[k].name + '。', need: { idea: k === 'vase' ? 6 : 5, fil: k === 'vase' ? 3 : 2 }, product: k, reward: 15 }, CHOICES[k]);
 }
 let ORDERS = ORDERS1, POST = POST1;
 const ALL_ORDERS = () => ORDERS1.concat(ORDERS2).filter(Boolean);
@@ -1329,7 +1350,8 @@ const sfx = (() => {
   return {
     wake() { ctx(); },
     spawn() { tone(620, .1, 'triangle', .05, 880); },
-    merge(lv) { const f = 360 + lv * 110; tone(f, .18, 'triangle', .08, f * 1.6); tone(f * 3, .09, 'sine', .025, null, .05); },
+    merge(lv, combo) { const f = (360 + lv * 110) * Math.pow(1.0595, Math.min(12, (combo || 1) - 1)); tone(f, .18, 'triangle', .08, f * 1.6); tone(f * 3, .09, 'sine', .025, null, .05); },
+    lucky() { tone(880, .12, 'sine', .05, 1320); tone(1320, .16, 'sine', .04, 1760, .08); },
     place() { tone(250, .09, 'triangle', .06, 170); },
     tick() { tone(1800 + Math.random() * 400, .02, 'square', .007); },
     creak() { tone(260 + Math.random() * 220, .035, 'triangle', .02); },
@@ -1372,7 +1394,7 @@ function freshDay(day, coins) {
     room: { org: true, tidy: true, scraper: false, spools: false }, ams: null, unpack: {} });
 }
 const boardEl = $('#board'), nextBtn = $('#nextBtn'), dlg = $('#dlg');
-const GMAX = 6, GREGEN = 2600;
+const GMAX = 6, GREGEN = 1600;
 const cellEl = i => boardEl.children[i];
 const printerIdx = () => st.board.findIndex(isStation);
 const curOrder = () => st.order >= 0 ? ORDERS[st.order] : null;
@@ -1421,13 +1443,43 @@ function renderBoard(fx) {
     if (i === st.sel && it) cls.push('sel');
     if (fx.pop === i) cls.push('pop');
     if (fx.spawn === i) cls.push('spawn');
+    if (fx.gen === i) cls.push(it && it.k === 'gen_fil' ? 'tapspin' : 'tapflip');
     let label = it ? describe(it).name : '空格';
     if (isStation(it) && st.printer === 'ready') label += '：打印好了，点一下取件';
     html += '<button type="button" class="' + cls.join(' ') + '" data-i="' + i + '" data-drop="cell" aria-label="' + label + '">' + cellHTML(i) + '</button>';
   }
   boardEl.innerHTML = html;
-  if (fx.pop != null) sparks(fx.pop);
+  if (fx.pop != null) { sparks(fx.pop); confetti(fx.pop); }
   renderInfo(); renderOrders(); renderScene(); updateGuide();
+}
+function confetti(i) {
+  if (reduced) return;
+  const c = cellEl(i); if (!c) return;
+  const cols = ['#E3B969', '#9DB089', '#C47A57', '#7FA7A1', '#F4A6D7', '#FFFDF6'];
+  for (let n = 0; n < 12; n++) {
+    const s = document.createElement('span'); s.className = 'confetti';
+    const a = Math.random() * Math.PI * 2, r = 26 + Math.random() * 22;
+    s.style.setProperty('--dx', Math.cos(a) * r + 'px'); s.style.setProperty('--dy', Math.sin(a) * r + 14 + 'px');
+    s.style.setProperty('--rot', (Math.random() * 540 - 270) + 'deg'); s.style.background = cols[n % cols.length];
+    c.appendChild(s); setTimeout(() => s.remove(), 750);
+  }
+}
+/* a short label that floats up from a cell: combo count, or a lucky level-2 drop */
+function floatLabel(i, text, cls) {
+  const c = cellEl(i); if (!c) return;
+  const r = relRect(c), el = document.createElement('span');
+  el.className = 'floatlbl' + (cls ? ' ' + cls : ''); el.textContent = text;
+  el.style.left = (r.left + r.right) / 2 + 'px'; el.style.top = r.top - 4 + 'px';
+  stage.appendChild(el); setTimeout(() => el.remove(), 950);
+}
+/* merges within 1.8 s of each other count as a combo: rising pitch and a ×N label */
+const COMBO = { n: 0, t: 0 };
+function mergeFx(to, lv) {
+  const now = performance.now();
+  COMBO.n = now - COMBO.t < 1800 ? COMBO.n + 1 : 1; COMBO.t = now;
+  sfx.merge(lv, COMBO.n);
+  if (COMBO.n >= 2) floatLabel(to, '×' + COMBO.n);
+  if (lv >= 4 && !reduced) { boardEl.classList.remove('thud'); void boardEl.offsetWidth; boardEl.classList.add('thud'); }
 }
 function sparks(i) {
   if (reduced) return;
@@ -1459,8 +1511,10 @@ function tapGen(i) {
   const j = nearestEmpty(i);
   if (j < 0) { hint('桌上放不下了。合成一些，或者把用不上的收进抽屉。'); return; }
   g.c--;
-  st.board[j] = { k: SINGLE[it.k].gen, lv: Math.random() < .15 ? 2 : 1 };
-  sfx.spawn(); renderBoard({ spawn: j });
+  const lucky = Math.random() < .15;
+  st.board[j] = { k: SINGLE[it.k].gen, lv: lucky ? 2 : 1 };
+  sfx.spawn(); renderBoard({ spawn: j, gen: i });
+  if (lucky) { sfx.lucky(); floatLabel(j, it.k === 'gen_idea' ? '灵光一闪' : '运气不错', 'lucky'); }
 }
 function selectCell(i) {
   const it = st.board[i], prev = st.sel, p = prev >= 0 && prev !== i ? st.board[prev] : null;
@@ -1544,7 +1598,7 @@ function handleDrop(from, t) {
     if (CHAINS[it.k] && tt.k === it.k && tt.lv === it.lv) {
       if (it.lv < CHAINS[it.k].max) {
         st.board[to] = { k: it.k, lv: it.lv + 1 }; st.board[from] = null; st.sel = to;
-        sfx.merge(it.lv + 1); renderBoard({ pop: to }); return;
+        renderBoard({ pop: to }); mergeFx(to, it.lv + 1); return;
       }
       hint('这已经是最好的' + CHAINS[it.k].names[it.lv - 1] + '了。');
     }
