@@ -1227,8 +1227,9 @@ S.scraper = '<ellipse cx="24" cy="42" rx="16" ry="2" fill="#6E4A31" fill-opacity
 S.t_scraper = '<rect x="18" y="13" width="12" height="31" rx="5" fill="#F1ECE2"/>' +
   '<g fill="#D9D2C4" stroke-width=".6"><circle cx="24" cy="19" r="1.6"/><circle cx="24" cy="24.5" r="1.6"/><circle cx="24" cy="30" r="1.6"/><circle cx="24" cy="35.5" r="1.6"/></g>' +
   '<path d="M18.5 13 L19.5 3 h9 L29.5 13 Z" fill="#E4DED2"/><path d="M19.5 3 h9" stroke-width="1.8"/>';
-S.vase = SH(24, 11) + '<path d="M20.5 5 l7 -1 v4 q-1.5 4 -1 8 q10 6 10 15 q0 10 -12 10 q-12 0 -12 -10 q0 -9 9 -15 q.5 -4 -1 -8 Z" fill="#8C6A4F"/>' +
-  '<path d="M15 27 q9 3 18 0 M13.5 32 q10.5 3 21 0 M14.5 37 q9.5 2.6 19 0" stroke="#6E5038" stroke-width=".7"/><path d="M17 26 q-2 6 1 11" stroke="#B08A6A" stroke-width="1.2"/>';
+/* vase: proportions from Hestia's slicer screenshot (177.56 mm tall, bulb about half as wide, slanted rim) */
+S.vase = SH(24, 9) + '<path d="M20.5 4 L27.8 6.2 Q27.2 10 27 14 Q27.5 19 31 23 Q34 27 34 32 Q34 41 24 41 Q14 41 14 32 Q14 27 17 23 Q20.5 19 21 14 Q21 9 20.5 4 Z" fill="#8C6A4F"/>' +
+  '<path d="M20.6 5.2 L27.6 7.2" stroke="#5E4330" stroke-width="1.1"/><path d="M15.2 29 q8.8 2.6 17.6 0 M14.3 34 q9.7 2.6 19.4 0 M15.6 38.4 q8.4 2 16.8 0" stroke="#6E5038" stroke-width=".7"/><path d="M17.6 26 q-2 5 .4 10" stroke="#B08A6A" stroke-width="1.2"/>';
 S.stand = SH(24, 15) + '<path d="M8 41 h32 v-3 q0 -2 -2 -2 h-28 q-2 0 -2 2 Z" fill="#E8E4DA"/><path d="M17 36 v-5 h14 v5" fill="#ECE8E0"/>' +
   '<rect x="11" y="9" width="26" height="23" rx="3" fill="#F4F1EA"/><rect x="14.5" y="12.5" width="19" height="16" rx="1.5" fill="#FFFDF6" stroke-width=".8"/>' +
   '<path d="M17.5 16.5 h4 v3 h-4 v3 h4 M24 16.5 h4 v3 h-4 v3 h4" stroke-width=".8"/><path d="M18 26 h12" stroke-width=".6"/><rect x="6.5" y="16" width="4.5" height="9" rx="1.5" fill="#E4DED2"/>';
@@ -1999,6 +2000,30 @@ const GIFT_SAY = { D: { yes: '这个还不错呢。', no: '不要不要，人家
 const KEEP_IN_ROOM = { org: 1, scraper: 1 };
 const DESK_SPOTS = [[425, 410], [382, 412], [470, 410], [530, 412], [600, 410], [652, 413], [140, 412], [716, 413]];
 const DESK_BOX = [20, 352, 860, 414];
+// Real size on the desk, heights from the slicer. Scale comes from the desk props:
+// the mug (about 95 mm) is 34 units tall and the laptop lid 86, so 1 mm ≈ 0.4 units.
+// (The printer drawing is oversized for now; it is due to be redrawn as the A1.)
+const MM = 0.4;
+// Flat prints lie on the desk: drawn by their footprint, squashed for the desk's angle.
+// 草稿: real footprint of D's bookmark still needed from Hestia.
+const FLAT_MM = { bm1: { w: 45, d: 0.35 } };
+const sprBoxes = {};
+const noShadow = svg => svg.replace(/<ellipse[^>]*fill-opacity="\.1\d"[^>]*\/>/g, '');
+function sprBox(key) {
+  if (sprBoxes[key]) return sprBoxes[key];
+  let m = $('#sprMeasure');
+  if (!m) { m = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); m.id = 'sprMeasure'; m.setAttribute('width', '48'); m.setAttribute('height', '48'); m.style.cssText = 'position:absolute;left:-999px;top:0;visibility:hidden'; document.body.appendChild(m); }
+  m.innerHTML = '<g stroke-width="1.4">' + noShadow(S[key]) + '</g>';
+  let b; try { b = m.firstChild.getBBox(); } catch (e) { b = null; }
+  if (!b || !b.height) b = { x: 4, y: 4, width: 40, height: 40 };
+  return (sprBoxes[key] = { x: b.x, y: b.y, w: b.width, h: b.height });
+}
+function deskXf(k) {
+  const key = SINGLE[k].spr, b = sprBox(key), f = FLAT_MM[k];
+  if (f) { const sx = f.w * MM / b.w; return { sx, sy: sx * f.d, b }; }
+  const pd = printData(k), mm = pd && pd.real ? parseFloat(pd.real.h) : 40;
+  const sc = mm * MM / b.h; return { sx: sc, sy: sc, b };
+}
 function present() { const o = curOrder(), r = (st.here || []).slice(); if (o && o.who !== '我' && !r.includes(o.who)) r.push(o.who); return r; }
 function accepts(who, k) {
   if (who === 'D') { const t = GIFT_TAG[k]; return t === '好看' || t === '好玩' || (st.rel.D >= 60 && Math.random() < .3); }
@@ -2014,9 +2039,14 @@ function putOnDesk(k) {
 function renderDesk(fresh) {
   const g = $('#deskItems'); if (!g || !st) return;
   g.innerHTML = st.desk.map((d, i) => '<g class="dk' + (i === fresh ? ' newin' : '') + '" data-i="' + i + '" transform="translate(' + d.x.toFixed(1) + ' ' + d.y.toFixed(1) + ')">' +
-    '<ellipse cx="0" cy="0" rx="17" ry="3" fill="#6E4A31" fill-opacity=".16" stroke="none"></ellipse>' +
-    '<g><g transform="scale(.82) translate(-24 -45)" stroke="#6E4A31" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round" fill="none">' + S[SINGLE[d.k].spr] + '</g></g>' +
-    '<rect x="-22" y="-40" width="44" height="44" fill="transparent" stroke="none"></rect></g>').join('');
+    deskItemSvg(d.k) + '</g>').join('');
+}
+function deskItemSvg(k) {
+  const { sx, sy, b } = deskXf(k), w = b.w * sx, h = b.h * sy, sw = 1.4 / Math.max(.2, Math.min(sx, 3));
+  const hw = Math.max(w, 26), hh = Math.max(h, 26);
+  return '<ellipse cx="0" cy="0" rx="' + (w * .55 + 2).toFixed(1) + '" ry="' + Math.max(2, w * .09).toFixed(1) + '" fill="#6E4A31" fill-opacity=".16" stroke="none"></ellipse>' +
+    '<g><g transform="scale(' + sx.toFixed(3) + ' ' + sy.toFixed(3) + ') translate(' + (-(b.x + b.w / 2)).toFixed(2) + ' ' + (-(b.y + b.h)).toFixed(2) + ')" stroke="#6E4A31" stroke-width="' + sw.toFixed(2) + '" stroke-linejoin="round" stroke-linecap="round" fill="none">' + noShadow(S[SINGLE[k].spr]) + '</g></g>' +
+    '<rect x="' + (-hw / 2).toFixed(1) + '" y="' + (-hh).toFixed(1) + '" width="' + hw.toFixed(1) + '" height="' + (hh + 4).toFixed(1) + '" fill="transparent" stroke="none"></rect>';
 }
 let deskDrag = null;
 $('#deskItems').addEventListener('pointerdown', e => {
