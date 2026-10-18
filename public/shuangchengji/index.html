@@ -1089,8 +1089,9 @@ S.t_scraper = '<rect x="18" y="13" width="12" height="31" rx="5" fill="#F1ECE2"/
   '<path d="M18.5 13 L19.5 3 h9 L29.5 13 Z" fill="#E4DED2"/><path d="M19.5 3 h9" stroke-width="1.8"/>';
 S.vase = SH(24, 11) + '<path d="M20.5 5 l7 -1 v4 q-1.5 4 -1 8 q10 6 10 15 q0 10 -12 10 q-12 0 -12 -10 q0 -9 9 -15 q.5 -4 -1 -8 Z" fill="#8C6A4F"/>' +
   '<path d="M15 27 q9 3 18 0 M13.5 32 q10.5 3 21 0 M14.5 37 q9.5 2.6 19 0" stroke="#6E5038" stroke-width=".7"/><path d="M17 26 q-2 6 1 11" stroke="#B08A6A" stroke-width="1.2"/>';
-S.stand = SH(24, 15) + '<path d="M9 40 h30 l-2 -4 h-26 Z" fill="#E8E4DA"/><path d="M15 36 L19 11 h10 L33 36 Z" fill="#F4F1EA"/>' +
-  '<circle cx="24" cy="21" r="7.5" fill="#FFFDF6"/><path d="M24 21 L27.6 17.4" stroke="#B9694C" stroke-width="1.2"/><path d="M18.4 21 h1.6 M28 21 h1.6 M24 15.4 v1.6" stroke-width=".7"/>';
+S.stand = SH(24, 15) + '<path d="M8 41 h32 v-3 q0 -2 -2 -2 h-28 q-2 0 -2 2 Z" fill="#E8E4DA"/><path d="M17 36 v-5 h14 v5" fill="#ECE8E0"/>' +
+  '<rect x="11" y="9" width="26" height="23" rx="3" fill="#F4F1EA"/><rect x="14.5" y="12.5" width="19" height="16" rx="1.5" fill="#FFFDF6" stroke-width=".8"/>' +
+  '<path d="M17.5 16.5 h4 v3 h-4 v3 h4 M24 16.5 h4 v3 h-4 v3 h4" stroke-width=".8"/><path d="M18 26 h12" stroke-width=".6"/><rect x="6.5" y="16" width="4.5" height="9" rx="1.5" fill="#E4DED2"/>';
 S.boat = SH(24, 17) + '<path d="M5 30 h38 l-4 9 q-1 2 -3 2 h-24 q-2 0 -3 -2 Z" fill="#F4F1EA"/><circle cx="13" cy="34.5" r="1.8" fill="#FFFDF6" stroke-width=".8"/>' +
   '<rect x="14" y="18" width="16" height="12" rx="1" fill="#ECE8E0"/><rect x="16.5" y="21" width="4.5" height="4.5" fill="#FFFDF6" stroke-width=".8"/><rect x="23" y="21" width="4.5" height="4.5" fill="#FFFDF6" stroke-width=".8"/>' +
   '<path d="M12 18 h20" stroke-width="1.8"/><rect x="31.5" y="20" width="5" height="10" rx="1" fill="#E4DED2"/>';
@@ -1115,7 +1116,7 @@ const SINGLE = {
   org: { name: '桌面工具收纳', desc: '斜面上有长仓、小仓和披头孔，一体打印。收着打印机的零零碎碎。', spr: 'org', product: true },
   scraper: { name: '刮刀', desc: '白色，手柄上一排孔。不容易刮花打印板。', spr: 'scraper', product: true },
   vase: { name: '花瓶', desc: '棕色耗材打的花瓶，细细的瓶口。', spr: 'vase', product: true },
-  stand: { name: '温湿度计支架', desc: '放温湿度计，看看屋里的湿度。（切片数据待补）', spr: 'stand', product: true },
+  stand: { name: '温湿度计支架', desc: '米家温湿度计 2 的底座，可以调仰角，看看屋里的湿度。', spr: 'stand', product: true },
   boat: { name: '小船', desc: '经典的测试小船，白色。', spr: 'boat', product: true }
 };
 const isGen = it => !!(it && SINGLE[it.k] && SINGLE[it.k].gen);
@@ -1197,10 +1198,10 @@ const ORDERS2 = [
     lift: '刮刀还是温的。白色的一把，手柄上一排孔。' },
   null
 ];
-/* vase and boat from Hestia's slicer screenshots (2026-10-18); the stand still needs its slice. */
+/* vase, boat and stand from Hestia's slicer screenshots (2026-10-18). */
 const CHOICES = {
   vase: { layers: 740, secs: 18.5, real: { h: '177.56 mm', time: '6 小时 34 分', g: '141.14 g' }, color: '#8C6A4F', lift: '花瓶从打印板上取了下来。' },
-  stand: { layers: 0, secs: 3, real: null, todo: true, color: '#F1ECE2', lift: '温湿度计支架取下来了。以后看湿度就方便了。' },
+  stand: { layers: 169, secs: 2.0, real: { h: '33.80 mm', time: '42 分 39 秒', g: '14.76 g' }, color: '#F1ECE2', lift: '温湿度计支架取下来了。以后看湿度就方便了。' },
   boat: { layers: 192, secs: 1.2, real: { h: '48.00 mm', time: '24 分 53 秒', g: '12.18 g' }, color: '#F1ECE2', lift: '小船从打印板上取了下来。' }
 };
 function choiceOrder(k) {
@@ -2247,7 +2248,7 @@ $('#amsDone').addEventListener('click', () => {
 const SITE = [
   { k: 'scraper', note: '测试过，不容易刮花打印板。', data: '40 层 · 9.56 mm · 51 分 40 秒 · 18.8 g' },
   { k: 'vase', note: '棕色耗材，细细的瓶口。', data: '740 层 · 177.56 mm · 6 小时 34 分 · 141.14 g' },
-  { k: 'stand', note: '放温湿度计，看看屋里的湿度。', data: null },
+  { k: 'stand', note: '米家温湿度计 2 的底座，可以调仰角。', data: '169 层 · 33.80 mm · 42 分 39 秒 · 14.76 g' },
   { k: 'boat', note: '经典的测试小船。', data: '192 层 · 48.00 mm · 24 分 53 秒 · 12.18 g' }
 ];
 function openSite(a) {
