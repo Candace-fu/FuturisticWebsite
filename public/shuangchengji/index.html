@@ -1994,7 +1994,7 @@ function finishLift(to) {
   if (o) st.printed[st.order] = true;
   st.pending = null; st.printer = 'idle'; st.sel = -1;
   st.maint.plate++; st.maint.poop++;
-  if (needsCare()) setTimeout(() => hint(st.maint.poop >= POOP_MAX ? '接竹屎的盒子满了，点打印机清理一下。' : '打印板该洗了，点打印机看看。', 3400), 1200);
+  if (needsCare()) setTimeout(() => hint(st.maint.poop >= POOP_MAX ? '该清理竹屎了，点一下打印机。' : '打印板该洗了，点打印机看看。', 3400), 1200);
   setGrow(0); G.glow.setAttribute('opacity', '0'); G.lcd.textContent = '待命';
   $('#liftModal').hidden = true; cancelAnimationFrame(L.raf);
   if (to) { renderBoard(); giveTo(to, k, null); return; }
@@ -2421,7 +2421,7 @@ poopSvg.addEventListener('pointerup', poopUp); poopSvg.addEventListener('pointer
 function poopDone() {
   st.maint.poop = 0; st.room.binPoop = (+st.room.binPoop || 0) + 1;
   $('#poopModal').hidden = true; sfx.chime();
-  hint('盒子倒空了，放回打印机下面接着。', 2800); renderScene(); renderBin(); openPrinter();
+  hint('竹屎清理好了。', 2800); renderScene(); renderBin(); openPrinter();
 }
 
 /* ---------- story dialogue ---------- */
@@ -3096,7 +3096,7 @@ function openPrinter() {
     row('热床', hot ? '55 °C' : st.printer === 'cooling' || st.printer === 'ready' ? '降温中' : '室温', hot ? 'hot' : 'dim') +
     row('打印板', 'Bambu 纹理 PEI 板') +
     row('打印板干净吗', m.plate >= PLATE_MAX ? '该清洗了（打了 ' + m.plate + ' 次）' : m.plate ? '打了 ' + m.plate + ' 次，还行' : '刚洗过', m.plate >= PLATE_MAX ? 'hot' : '') +
-    row('竹屎盒', m.poop >= POOP_MAX ? '满了，该清理了' : m.poop ? '攒了一点（' + m.poop + ' 次打印）' : '清空了', m.poop >= POOP_MAX ? 'hot' : '') +
+    row('竹屎', m.poop >= POOP_MAX ? '该清理了' : m.poop ? '攒了一点（' + m.poop + ' 次打印）' : '清空了', m.poop >= POOP_MAX ? 'hot' : '') +
     row('耗材', st.room.ams ? 'AMS lite：白、灰、黑、透明' : st.room.spools ? '白、灰、黑、透明（挂在耗材架上）' : '顶上挂着一卷 PLA') +
     row('环境湿度', st.done.includes('stand') || (st.day > 2 && diaryOf(2).some(x => x.spr === 'stand')) ? humidity() + '%' : '不知道（还没有温湿度计）', st.done.includes('stand') ? '' : 'dim') +
     '<p class="psec">累计</p>' +
