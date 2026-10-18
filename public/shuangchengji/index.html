@@ -319,6 +319,15 @@ body.framed .stage{border-radius:34px;box-shadow:0 0 0 1px rgba(74,51,36,.18),0 
 .leavemodal .knock span{animation:fadein .6s .9s ease both;margin-bottom:0}
 .binlist{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
 .binlist .dritem{cursor:default}
+#washSvg{width:100%;height:auto;display:block;border-radius:12px;background:#EFE6D4;touch-action:none;user-select:none;-webkit-user-select:none}
+.washbar{height:8px;border-radius:4px;background:#E4D6BD;overflow:hidden}
+.washbar i{display:block;height:100%;width:0;background:var(--tealD);border-radius:4px;transition:width .12s linear}
+.washsteps{display:flex;gap:4px}
+.washsteps i{flex:1;height:4px;border-radius:2px;background:#E4D6BD}
+.washsteps i.on{background:var(--clay)}
+#washSvg .wplate{cursor:grab}
+#washSvg .bub{animation:bub 1.2s ease-out forwards}
+@keyframes bub{0%{opacity:.95}100%{opacity:0;transform:translateY(-14px)}}
 @keyframes knockin{0%{opacity:0;transform:scale(.9)}20%{opacity:1;transform:scale(1.06) translateX(-3px)}35%{transform:scale(1) translateX(3px)}50%{transform:translateX(-2px)}65%{transform:translateX(0)}100%{opacity:1;transform:none}}
 
 /* name card */
@@ -1051,6 +1060,18 @@ body.framed .stage{border-radius:34px;box-shadow:0 0 0 1px rgba(74,51,36,.18),0 
     </div>
   </div>
 
+  <div class="modal" id="washModal" hidden>
+    <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="washTitle">
+      <span class="eyebrow">清洗打印板</span>
+      <div class="washsteps" id="washSteps"><i></i><i></i><i></i><i></i><i></i></div>
+      <h2 id="washTitle"></h2>
+      <svg id="washSvg" viewBox="0 0 340 250" role="img" aria-label="洗打印板"></svg>
+      <div class="washbar" id="washBar"><i id="washFill"></i></div>
+      <p class="calcap" id="washHint"></p>
+      <div class="liftpick" id="washPick" hidden><button type="button" class="primary alt" data-w="water">清水冲洗</button><button type="button" class="primary" data-w="soap">洗洁精冲洗</button></div>
+    </div>
+  </div>
+
   <div class="modal deskmenu" id="deskModal" hidden>
     <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="dmTitle">
       <span class="eyebrow">桌上</span>
@@ -1454,6 +1475,8 @@ const sfx = (() => {
     place() { tone(250, .09, 'triangle', .06, 170); },
     tick() { tone(1800 + Math.random() * 400, .02, 'square', .007); },
     creak() { tone(260 + Math.random() * 220, .035, 'triangle', .02); },
+    bubble() { tone(700 + Math.random() * 500, .05, 'sine', .025, 1100); },
+    snap() { tone(2200, .02, 'square', .05, 1200); tone(140, .12, 'sine', .16, 70, .01); },
     pop() { tone(1500, .05, 'square', .045, 650); tone(120, .2, 'sine', .11, 55); },
     chime() { [659, 784, 988].forEach((f, i) => tone(f, .45, 'sine', .05, null, i * .09)); },
     soft() { tone(520, .12, 'sine', .03); },
@@ -1989,6 +2012,7 @@ function addCoins(n) {
 }
 
 /* ---------- item bar ---------- */
+const sellPrice = it => 5 * it.lv;
 function renderInfo() {
   const el = $('#info'); const it = st.sel >= 0 ? st.board[st.sel] : null;
   if (!it) {
@@ -2010,6 +2034,8 @@ function renderInfo() {
   } else if (CHAINS[it.k]) {
     if (o && !st.printed[st.order] && st.printer === 'idle' && o.need[it.k] === it.lv) btns = '<button type="button" class="sbtn p" id="ibLoad">放上打印机</button>';
     else btns = '<button type="button" class="sbtn" id="ibStash">收进抽屉</button>';
+    // top level can be sold to free the cell; 草稿 price: 5 coins per level
+    if (it.lv === CHAINS[it.k].max) btns = '<button type="button" class="sbtn p" id="ibSell">卖掉 +' + sellPrice(it) + '</button>' + btns;
   } else if (it.k === 'gen_idea') btns = '<button type="button" class="sbtn" id="ibSketch">翻看图纸</button>';
   else if (o && it.k === o.product) btns = '<button type="button" class="sbtn p" id="ibGive">' + (o.who === '我' ? '收好' : '交给 ' + o.who) + '</button>';
   const ro = ALL_ORDERS().find(x => x.product === it.k);
@@ -2019,6 +2045,7 @@ function renderInfo() {
   on('#ibLift', openLift); on('#ibSketch', openSketch); on('#ibUnload', unloadPrinter); on('#ibGive', deliver);
   on('#ibStash', () => { const x = st.board[st.sel]; st.drawer.push({ k: x.k, lv: x.lv }); st.board[st.sel] = null; st.sel = -1; sfx.place(); renderBoard(); hint('收进抽屉了。不选东西的时候，右下角可以打开抽屉。', 3200); });
   on('#ibLoad', () => loadPrinter(st.sel));
+  on('#ibSell', () => { const i = st.sel, x = st.board[i], n = sellPrice(x); st.board[i] = null; st.sel = -1; addCoins(n); sfx.chime(); floatLabel(i, '+' + n, 'lucky'); renderBoard(); });
 }
 
 /* ---------- prints on the desk, gifts ---------- */
@@ -2168,6 +2195,107 @@ function openBin() {
 }
 $('#binEmpty').addEventListener('click', () => { st.trash = []; st.room.binPoop = 0; sfx.pop(); renderBin(); renderScene(); $('#binModal').hidden = true; hint('垃圾倒掉了。', 2000); updateGuide(); });
 $('#binClose').addEventListener('click', () => { $('#binModal').hidden = true; updateGuide(); });
+
+/* ---------- washing the build plate: a short chain of gestures, like doing the dishes in a cooking game ---------- */
+const W = { step: 0, prog: 0, how: null, drops: [], smudge: 1, last: null, drag: null };
+const WSTEP = [
+  ['把打印板取下来', '按住打印板往上翘，它是磁吸的，翘起来就能拿下。'],
+  ['用什么洗？', '板子上有手指印和残留。'],
+  ['搓洗', '手指在板子上来回搓。'],
+  ['擦干', '拿毛巾把水擦干净。'],
+  ['装回去', '把板子拖回打印机上，对准了会吸住。']
+];
+const washSvg = $('#washSvg');
+function washPt(e) { const m = washSvg.getScreenCTM(); return new DOMPoint(e.clientX, e.clientY).matrixTransform(m.inverse()); }
+const PEI = (x, y, rot, extra) => '<g class="wplate" id="wPlate" transform="translate(' + x + ' ' + y + ') rotate(' + (rot || 0) + ')">' +
+  '<rect x="-90" y="-8" width="180" height="16" rx="3" fill="#2F2B28" stroke="#6E4A31" stroke-width="1.2"></rect>' +
+  '<rect x="-86" y="-6" width="172" height="12" rx="2" fill="#CDB98E"></rect>' +
+  '<path d="M-70 -2 h1 M-40 2 h1 M-10 -3 h1 M20 1 h1 M50 -2 h1 M75 2 h1" stroke="#A8925F" stroke-width="1.2"></path>' + (extra || '') + '</g>';
+// top-down plate for washing and drying
+const PEI_TOP = extra => '<g id="wTop"><rect x="70" y="55" width="200" height="150" rx="8" fill="#2F2B28"></rect><rect x="76" y="61" width="188" height="138" rx="6" fill="#CDB98E"></rect>' +
+  '<g fill="#A8925F">' + Array.from({ length: 40 }, (_, i) => '<circle cx="' + (84 + (i * 37) % 176) + '" cy="' + (68 + (i * 23) % 126) + '" r=".9"></circle>').join('') + '</g>' + (extra || '') + '</g>';
+function openWash() {
+  Object.assign(W, { step: 0, prog: 0, how: null, drops: [], smudge: 1, last: null, drag: null });
+  sfx.soft(); $('#washModal').hidden = false; washRender(); updateGuide();
+}
+function washRender() {
+  const k = W.step;
+  $('#washTitle').textContent = WSTEP[k][0]; $('#washHint').textContent = WSTEP[k][1];
+  document.querySelectorAll('#washSteps i').forEach((el, i) => el.classList.toggle('on', i <= k));
+  $('#washPick').hidden = k !== 1; $('#washBar').hidden = k !== 2 && k !== 3;
+  $('#washFill').style.width = (k === 3 ? (1 - W.drops.length / 9) : W.prog) * 100 + '%';
+  const bed = '<rect x="40" y="196" width="260" height="22" rx="4" fill="#8B827A"></rect><rect x="56" y="186" width="228" height="12" rx="2" fill="#6F665E"></rect><circle cx="62" cy="186" r="3" fill="#C9C2B6"></circle><circle cx="278" cy="186" r="3" fill="#C9C2B6"></circle>';
+  const smudges = '<g id="wSmudge" opacity="' + W.smudge.toFixed(2) + '"><ellipse cx="120" cy="100" rx="12" ry="8" fill="#8E7A55" fill-opacity=".45"></ellipse><ellipse cx="205" cy="150" rx="14" ry="9" fill="#8E7A55" fill-opacity=".4"></ellipse><ellipse cx="170" cy="85" rx="8" ry="6" fill="#8E7A55" fill-opacity=".35"></ellipse><path d="M100 170 q20 -8 40 2" stroke="#8E7A55" stroke-opacity=".45" stroke-width="5" fill="none" stroke-linecap="round"></path></g>';
+  if (k === 0) washSvg.innerHTML = bed + PEI(170, 178, 0);
+  else if (k === 1) washSvg.innerHTML = '<rect x="30" y="150" width="280" height="80" rx="14" fill="#C9D3D1"></rect><rect x="44" y="160" width="252" height="60" rx="10" fill="#A9B9B7"></rect><path d="M250 150 v-60 q0 -14 -14 -14 h-30 v14" stroke="#8B827A" stroke-width="8" fill="none" stroke-linecap="round"></path>' + PEI(170, 120, -8, '');
+  else if (k === 2) washSvg.innerHTML = '<rect x="0" y="0" width="340" height="250" fill="#C9D3D1"></rect>' + PEI_TOP(smudges) + '<g id="wFx"></g>' +
+    '<path id="wStream" d="M300 0 q-6 40 -40 70" stroke="#9FC3D6" stroke-width="7" fill="none" stroke-linecap="round" opacity=".8"></path>';
+  else if (k === 3) washSvg.innerHTML = PEI_TOP('<g id="wDrops">' + W.drops.map(d => '<ellipse cx="' + d[0] + '" cy="' + d[1] + '" rx="5" ry="4" fill="#BFE0EE" stroke="#7FA7B8" stroke-width=".8"></ellipse>').join('') + '</g>') +
+    '<g id="wTowel" transform="translate(300 40)"><rect x="-26" y="-18" width="52" height="36" rx="6" fill="#F1E3D0" stroke="#6E4A31" stroke-width="1.2"></rect><path d="M-20 -8 h40 M-20 0 h40 M-20 8 h40" stroke="#D9BFA0" stroke-width="2"></path></g>';
+  else washSvg.innerHTML = bed + '<rect x="56" y="180" width="228" height="10" rx="2" fill="none" stroke="#C66E48" stroke-width="1.6" stroke-dasharray="5 4" id="wTarget"></rect>' + PEI(170, 70, 0);
+}
+$('#washPick').addEventListener('click', e => {
+  const b = e.target.closest('[data-w]'); if (!b) return;
+  W.how = b.dataset.w; W.step = 2; W.prog = 0; sfx.soft(); washRender();
+  $('#washHint').textContent = W.how === 'soap' ? '挤一点洗洁精，手指来回搓，泡泡会把油带走。' : '开着水，手指来回搓。';
+});
+washSvg.addEventListener('pointerdown', e => {
+  const pt = washPt(e); W.last = pt;
+  try { washSvg.setPointerCapture(e.pointerId); } catch (x) {}
+  if (W.step === 0 || W.step === 4) { if (e.target.closest('#wPlate')) W.drag = { x0: pt.x, y0: pt.y }; }
+  e.preventDefault();
+});
+washSvg.addEventListener('pointermove', e => {
+  if (!W.last) return;
+  const pt = washPt(e), dx = pt.x - W.last.x, dy = pt.y - W.last.y; W.last = pt;
+  const pl = $('#wPlate');
+  if (W.step === 0 && W.drag) {
+    const up = clampN(W.drag.y0 - pt.y, 0, 120);
+    pl.setAttribute('transform', 'translate(' + (170 + up * .2) + ' ' + (178 - up * .9) + ') rotate(' + (-Math.min(18, up * .25)) + ')');
+    if (up > 95) { W.drag = null; W.last = null; sfx.pop(); W.step = 1; setTimeout(washRender, 120); }
+  } else if (W.step === 2) {
+    const d = Math.hypot(dx, dy); if (pt.x < 70 || pt.x > 270 || pt.y < 55 || pt.y > 205) return;
+    W.prog = Math.min(1, W.prog + d / (W.how === 'soap' ? 2200 : 2800));
+    W.smudge = Math.max(0, 1 - W.prog * 1.15);
+    $('#wSmudge').setAttribute('opacity', W.smudge.toFixed(2));
+    $('#washFill').style.width = W.prog * 100 + '%';
+    if (Math.random() < (W.how === 'soap' ? .35 : .15)) {
+      const fx = $('#wFx'); const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      c.setAttribute('cx', (pt.x + (Math.random() - .5) * 20).toFixed(1)); c.setAttribute('cy', (pt.y + (Math.random() - .5) * 20).toFixed(1));
+      c.setAttribute('r', (W.how === 'soap' ? 3 + Math.random() * 5 : 2 + Math.random() * 2).toFixed(1));
+      c.setAttribute('fill', W.how === 'soap' ? '#FFFFFF' : '#BFE0EE'); c.setAttribute('fill-opacity', '.8'); c.setAttribute('stroke', '#9FC3D6'); c.setAttribute('stroke-width', '.6'); c.setAttribute('class', 'bub');
+      fx.appendChild(c); setTimeout(() => c.remove(), 1200); if (W.how === 'soap') sfx.bubble();
+    }
+    if (W.prog >= 1) {
+      W.last = null; sfx.chime(); W.step = 3;
+      W.drops = Array.from({ length: 9 }, (_, i) => [92 + (i % 3) * 70 + Math.random() * 20, 80 + Math.floor(i / 3) * 42 + Math.random() * 14]);
+      setTimeout(washRender, 250);
+    }
+  } else if (W.step === 3) {
+    $('#wTowel').setAttribute('transform', 'translate(' + pt.x.toFixed(1) + ' ' + pt.y.toFixed(1) + ')');
+    const n = W.drops.length; W.drops = W.drops.filter(d => Math.hypot(d[0] - pt.x, d[1] - pt.y) > 26);
+    if (W.drops.length !== n) {
+      sfx.soft(); $('#wDrops').innerHTML = W.drops.map(d => '<ellipse cx="' + d[0] + '" cy="' + d[1] + '" rx="5" ry="4" fill="#BFE0EE" stroke="#7FA7B8" stroke-width=".8"></ellipse>').join('');
+      $('#washFill').style.width = (1 - W.drops.length / 9) * 100 + '%';
+      if (!W.drops.length) { W.last = null; W.step = 4; setTimeout(washRender, 300); }
+    }
+  } else if (W.step === 4 && W.drag) {
+    const y = clampN(70 + (pt.y - W.drag.y0), 40, 200);
+    pl.setAttribute('transform', 'translate(170 ' + y.toFixed(1) + ')');
+    if (y > 168) { W.drag = null; W.last = null; pl.setAttribute('transform', 'translate(170 178)'); sfx.snap(); setTimeout(washDone, 450); }
+  }
+});
+const washUp = () => {
+  if (W.step === 0 && W.drag) washRender();
+  if (W.step === 4 && W.drag) washRender();
+  W.drag = null; W.last = null;
+};
+washSvg.addEventListener('pointerup', washUp); washSvg.addEventListener('pointercancel', washUp);
+function washDone() {
+  st.maint.plate = 0; st.lastWash = W.how;
+  $('#washModal').hidden = true;
+  hint('打印板洗干净，擦干，吸回去了。', 2800); renderScene(); openPrinter();
+}
 
 /* ---------- story dialogue ---------- */
 const NAMES = { D: 'D', me: '我', mom: '妈妈' };
@@ -2810,7 +2938,7 @@ function openPrinter() {
     '<button type="button" class="sbtn" id="careWash"' + (m.plate && st.printer === 'idle' ? '' : ' disabled') + '>清洗打印板</button>' +
     '<button type="button" class="sbtn" id="carePoop"' + (m.poop ? '' : ' disabled') + '>清理竹屎</button></div>' +
     (needsCare() ? '<p class="pwarn">不保养的话，可能会引发打印故障。</p>' : '');
-  $('#careWash').addEventListener('click', () => { m.plate = 0; sfx.place(); hint('打印板取下来洗干净，擦干，装回去了。', 2800); renderScene(); openPrinter(); });
+  $('#careWash').addEventListener('click', () => { $('#printerModal').hidden = true; openWash(); });
   $('#carePoop').addEventListener('click', () => { m.poop = 0; st.room.binPoop = (+st.room.binPoop || 0) + 1; sfx.place(); hint('把竹屎倒进了垃圾桶。', 2600); renderScene(); renderBin(); openPrinter(); });
   sfx.soft(); $('#printerModal').hidden = false; updateGuide();
 }
@@ -3213,7 +3341,7 @@ $('#drGrid').addEventListener('click', e => {
 });
 $('#drClose').addEventListener('click', () => { $('#drawerModal').hidden = true; updateGuide(); });
 start(location.hash === '#day2' ? 2 : 1);
-if (/[?&]debug\b/.test(location.search)) window.__dbg = { st: () => st, giveTo, putOnDesk, renderBoard };
+if (/[?&]debug\b/.test(location.search)) window.__dbg = { st: () => st, giveTo, putOnDesk, renderBoard, openWash };
 })();
 </script>
 
