@@ -443,7 +443,12 @@ body.framed .stage{border-radius:34px;box-shadow:0 0 0 1px rgba(74,51,36,.18),0 
 .primary.alt{background:#FFFDF6;color:var(--tealD);border:1.5px solid var(--tealD);box-shadow:0 2px 0 #C9D6CF}
 .ubox{position:relative;min-height:150px;border-radius:12px;background:#C99A5E;border:1.5px solid #6E4A31;box-shadow:inset 0 -8px 0 #B08350;display:flex;align-items:center;justify-content:center}
 .utape{position:absolute;left:0;right:0;top:50%;height:22px;margin-top:-11px;background:rgba(240,226,190,.85);border-top:1px dashed #9C7244;border-bottom:1px dashed #9C7244}
-.ubox .primary{position:relative}
+.ubox{touch-action:none;user-select:none;-webkit-user-select:none;overflow:hidden}
+.ucut{position:absolute;top:50%;height:3px;margin-top:-1.5px;left:0;width:0;background:#6E4A31;border-radius:2px;box-shadow:0 0 0 1px rgba(255,253,246,.6)}
+.uswipe{position:absolute;left:0;right:0;top:50%;margin-top:18px;text-align:center;font-family:var(--f-ui);font-size:13px;color:#FBF6EC;text-shadow:0 1px 2px rgba(60,35,20,.6);pointer-events:none}
+.ufinger{position:absolute;top:50%;left:10%;width:30px;height:30px;margin:-15px 0 0 -15px;border-radius:50%;background:rgba(255,253,246,.85);box-shadow:0 0 0 3px var(--clay),0 4px 10px rgba(0,0,0,.25);pointer-events:none;animation:ufinger 1.6s ease-in-out infinite}
+@keyframes ufinger{0%{left:10%;opacity:0}15%{opacity:1}75%{left:88%;opacity:1}100%{left:88%;opacity:0}}
+.ubox.cutting .ufinger,.ubox.cutting .uswipe{display:none}
 .ugrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;padding:10px;width:100%;box-sizing:border-box}
 .uspool{display:flex;flex-direction:column;align-items:center;gap:1px;border:1.5px solid #9C7244;border-radius:10px;background:#E9D3AE;padding:6px 0 5px;cursor:pointer;font-family:var(--f-ui);font-size:11.5px;color:var(--ink);animation:pop .35s cubic-bezier(.3,1.6,.5,1) backwards}
 .uspool .spr{width:54px;height:54px;pointer-events:none}
@@ -480,7 +485,17 @@ body.framed .stage{border-radius:34px;box-shadow:0 0 0 1px rgba(74,51,36,.18),0 
 .ch-stk{padding:2px!important;background:transparent!important;border:0!important}
 .ch-stk svg{width:88px;height:88px;display:block}
 #chBody{padding-bottom:200px}
-#lapScreen .blueprint *{fill:none!important;stroke:#5E8C88!important}
+#lapScreen .blueprint *,.skpage .blueprint *{fill:none!important;stroke:#5E8C88!important}
+.s-card.rec{border:1.5px solid var(--clay);animation:recpulse 1.4s ease-in-out infinite}
+@keyframes recpulse{0%,100%{box-shadow:0 0 0 0 rgba(185,105,76,0)}50%{box-shadow:0 0 0 4px rgba(185,105,76,.25)}}
+.s-rec{display:inline-block;margin-left:6px;padding:0 6px;border-radius:6px;background:var(--clay);color:#FBF6EC;font-family:var(--f-ui);font-size:11px;font-style:normal;font-weight:500;vertical-align:2px}
+.site-tip{margin:0;padding:8px 10px;border-radius:10px;background:#FFF1DC;border:1px dashed #E0B07E;font-family:var(--f-ui);font-size:13px;color:var(--ink2)}
+.skgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;max-height:52vh;overflow:auto}
+.skpage{display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 6px 10px;border:1px solid var(--line);border-radius:10px;background:#FBF8F0;background-image:linear-gradient(#E3ECEA 1px,transparent 1px),linear-gradient(90deg,#E3ECEA 1px,transparent 1px);background-size:12px 12px;text-align:center}
+.skpage svg{width:86px;height:86px;display:block}
+.skpage b{font-family:var(--f-body);font-size:14px;color:var(--ink)}
+.skpage small{font-family:var(--f-ui);font-size:11px;line-height:1.45;color:var(--mute)}
+.skempty{grid-column:1/-1;margin:0;padding:18px 8px;text-align:center;font-family:var(--f-ui);font-size:13px;color:var(--mute)}
 @keyframes spin{to{transform:rotate(360deg)}}
 @keyframes glow{0%,100%{opacity:.35}50%{opacity:1}}
 @keyframes breathe{0%,100%{opacity:1}50%{opacity:.5}}
@@ -933,7 +948,17 @@ body.framed .stage{border-radius:34px;box-shadow:0 0 0 1px rgba(74,51,36,.18),0 
       <span class="eyebrow">模型网站</span>
       <h2 id="siteTitle">挑一个模型</h2>
       <div class="s-url" id="siteUrl"></div>
+      <p class="site-tip" id="siteTip" hidden></p>
       <div class="plist" id="siteList"></div>
+    </div>
+  </div>
+
+  <div class="modal" id="sketchModal" hidden>
+    <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="skTitle">
+      <span class="eyebrow">速写本</span>
+      <h2 id="skTitle">打过的图纸</h2>
+      <div class="skgrid" id="skGrid"></div>
+      <button type="button" class="primary" id="skClose">合上</button>
     </div>
   </div>
 
@@ -1233,20 +1258,24 @@ const INTRO2 = [
   { s: 'n', t: '打开电脑，挑第一样要打的东西。' },
   { do: 'site', stage: 1 }
 ];
+/* Every model is printable; the scraper is only suggested. The day ends once the scraper is printed and one more thing besides it. */
+const DUSK2 = [
+  { do: 'time', v: 'dusk' },
+  { s: 'me', t: '不知道 D 的书签用得怎么样了。' },
+  { do: 'dchat' },
+  { do: 'journal' }
+];
+const extraDone = () => st.done.some(k => CHOICES[k]);
 const POST2 = [
-  [
+  () => [
     { s: 'n', t: '刮刀打好了。把它收进收纳架的长仓。' },
     { do: 'stow' },
     { s: 'me', t: '以后取件，可以不用掰板了。' },
-    { do: 'time', v: 'afternoon' },
-    { s: 'n', t: '再挑一样打打看。' },
-    { do: 'site', stage: 2 }
+    ...(extraDone() ? DUSK2 : [{ do: 'time', v: 'afternoon' }, { s: 'n', t: '再挑一样打打看。' }, { do: 'site', stage: 2 }])
   ],
-  [
-    { do: 'time', v: 'dusk' },
-    { s: 'me', t: '不知道 D 的书签用得怎么样了。' },
-    { do: 'dchat' },
-    { do: 'journal' }
+  () => st.done.includes('scraper') ? DUSK2 : [
+    { s: 'me', t: '刮刀还没打。不打出来，今天收不了工。' },
+    { do: 'site', stage: 1 }
   ]
 ];
 const JOURNAL2 = {
@@ -1615,11 +1644,34 @@ function renderScene() {
   else if (st.printer === 'ready') tag.textContent = '打印好了 · 点击取件';
   $('#scene').classList.toggle('ready', st.printer === 'ready');
 }
+/* Like a classic RPG, everything in the room says something when tapped. Rects are in scene SVG units, checked in order. */
+const LOOKS = [
+  { r: [100, 228, 160, 304], on: () => st.room.ams, t: () => 'AMS lite。四个料位：白、灰、黑、透明。' },
+  { r: [690, 225, 830, 335], on: () => st.room.org, t: () => st.room.scraper ? '自己打的桌面收纳。刮刀收在长仓里。' : st.room.tidy ? '自己打的桌面收纳。工具都收进去了。' : '自己打的桌面收纳。' },
+  { r: [16, 362, 170, 416], t: () => { openSketch(); return null; } },
+  { r: [158, 0, 392, 356], printer: true, t: () => st.printer === 'printing' ? '正在打印「' + SINGLE[st.pending].name + '」。' : st.printer === 'cooling' ? '刚打完，热床还在降温。' : '3D 打印机，待命中。' },
+  { r: [444, 210, 628, 336], t: () => '电脑上开着 Bambu Studio。' },
+  { r: [654, 42, 864, 212], t: () => st.room.spools ? '耗材架。挂着白、灰、黑、透明四卷 PLA。' : '耗材架。' },
+  { r: [400, 258, 444, 332], t: () => '一杯热饮，还冒着热气。' },
+  { r: [576, 138, 616, 176], t: () => '洞洞板上贴着一张便利贴。' },
+  { r: [436, 30, 622, 192], t: () => st.room.tidy ? '洞洞板。工具都收进收纳架了，空出一大片。' : '洞洞板。打印用的工具都挂在这里。' },
+  { r: [40, 200, 112, 306], t: () => '一盆绿植。' },
+  { r: [14, 20, 176, 216], t: () => '窗外是杭州。' },
+  { r: [740, 455, 800, 515], t: () => '垃圾桶。' }
+];
+function scenePoint(e) {
+  const m = sceneSvg.getScreenCTM(); if (!m) return null;
+  return new DOMPoint(e.clientX, e.clientY).matrixTransform(m.inverse());
+}
 $('#scene').addEventListener('click', e => {
   if (panMoved) return;
   const hit = document.elementFromPoint(e.clientX, e.clientY);
   if (hit && hit.closest && hit.closest('#deskCal')) { openCal(); return; }
   if (hit && hit.closest && hit.closest('#deskPhone')) { if (st.notif) { openChat(); return; } if (st.pendingCard) openCard(st.pendingCard, false); else openPhone(); return; }
+  const pt = scenePoint(e);
+  const l = pt && LOOKS.find(x => pt.x >= x.r[0] && pt.x <= x.r[2] && pt.y >= x.r[1] && pt.y <= x.r[3] && (!x.on || x.on()));
+  if (l && l.printer && st.printer === 'ready') { openLift(); return; }
+  if (l) { const t = l.t(); if (t) { sfx.soft(); hint(t, 2600); } return; }
   if (st.printer === 'ready') openLift();
 });
 
@@ -1733,7 +1785,7 @@ function deliver() {
   if (o.product === 'org') { st.room.org = true; showInRoom(720); renderRoom('org'); setTimeout(() => hint('收纳架放在了桌子右边。拖动画面可以看到它。', 4200), 300); }
   if (st.tut && idx === 0) { st.tut = false; markTutDone(true); }
   renderBoard();
-  queue(POST[idx]);
+  queue(typeof POST[idx] === 'function' ? POST[idx]() : POST[idx]);
 }
 function addCoins(n) {
   const from = st.coins, to = st.coins + n; st.coins = to;
@@ -1759,12 +1811,13 @@ function renderInfo() {
   } else if (CHAINS[it.k]) {
     if (o && !st.printed[st.order] && st.printer === 'idle' && o.need[it.k] === it.lv) btns = '<button type="button" class="sbtn p" id="ibLoad">放上打印机</button>';
     else btns = '<button type="button" class="sbtn" id="ibStash">收进抽屉</button>';
-  } else if (o && it.k === o.product) btns = '<button type="button" class="sbtn p" id="ibGive">' + (o.who === '我' ? '收好' : '交给 ' + o.who) + '</button>';
+  } else if (it.k === 'gen_idea') btns = '<button type="button" class="sbtn" id="ibSketch">翻看图纸</button>';
+  else if (o && it.k === o.product) btns = '<button type="button" class="sbtn p" id="ibGive">' + (o.who === '我' ? '收好' : '交给 ' + o.who) + '</button>';
   const ro = ALL_ORDERS().find(x => x.product === it.k);
   if (ro && ro.real) desc += '　' + ro.layers + ' 层 · ' + ro.real.h + ' · 约 ' + ro.real.time + ' · ' + ro.real.g;
   el.innerHTML = '<div class="thumb">' + spr(d.spr) + '</div><div class="itxt"><div class="iname">' + d.name + '<span class="ilv">' + d.lv + '</span></div><div class="idesc">' + desc + '</div></div>' + btns;
   const on = (id, fn) => { const b = $(id); if (b) b.addEventListener('click', fn); };
-  on('#ibLift', openLift); on('#ibUnload', unloadPrinter); on('#ibGive', deliver);
+  on('#ibLift', openLift); on('#ibSketch', openSketch); on('#ibUnload', unloadPrinter); on('#ibGive', deliver);
   on('#ibStash', () => { st.board[st.sel] = null; st.sel = -1; sfx.place(); renderBoard(); });
   on('#ibLoad', () => loadPrinter(st.sel));
 }
@@ -2144,11 +2197,30 @@ function renderRack() {
 function openUnpack() {
   st.unpack = {};
   const box = $('#ubox');
-  box.innerHTML = '<i class="utape"></i><button type="button" class="primary" id="uCut">划开胶带</button>';
+  box.innerHTML = '<i class="utape"></i><i class="ucut"></i><i class="ufinger"></i><span class="uswipe">用手指沿着胶带划开</span>';
+  box.classList.remove('cutting');
   $('#urack').innerHTML = SPOOLS.map(s => '<i data-id="' + s.id + '"></i>').join('');
-  $('#uHint').textContent = '前几天买的耗材到了。';
+  $('#uHint').textContent = '前几天买的耗材到了。沿着胶带划一下，把箱子打开。';
   $('#uDone').hidden = true;
-  $('#uCut').addEventListener('click', () => { sfx.wake(); sfx.pop(); openBoxInside(); });
+  /* drag along the tape; once most of it is cut the box opens */
+  let cut = null;
+  const rel = e => { const r = box.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top, w: r.width, h: r.height }; };
+  box.onpointerdown = e => {
+    if (st.unpack.open) return;
+    const q = rel(e); if (Math.abs(q.y - q.h / 2) > 34) return;
+    cut = { a: q.x, b: q.x }; box.classList.add('cutting'); box.setPointerCapture(e.pointerId); sfx.wake();
+  };
+  box.onpointermove = e => {
+    if (!cut) return;
+    const q = rel(e); cut.a = Math.min(cut.a, q.x); cut.b = Math.max(cut.b, q.x);
+    const line = box.querySelector('.ucut'); line.style.left = Math.max(0, cut.a) + 'px'; line.style.width = (Math.min(q.w, cut.b) - Math.max(0, cut.a)) + 'px';
+    if (cut.b - cut.a > q.w * .72) { cut = null; st.unpack.open = true; box.onpointerdown = box.onpointermove = box.onpointerup = null; sfx.pop(); setTimeout(openBoxInside, reduced ? 0 : 220); }
+  };
+  box.onpointerup = box.onpointercancel = () => {
+    if (!cut) return;
+    cut = null; box.classList.remove('cutting'); const line = box.querySelector('.ucut'); line.style.width = '0';
+    $('#uHint').textContent = '再划长一点，从胶带一头划到另一头。';
+  };
   $('#boxModal').hidden = false; updateGuide();
 }
 function openBoxInside() {
@@ -2265,24 +2337,47 @@ const SITE = [
   { k: 'boat', note: '经典的测试小船。', data: '192 层 · 48.00 mm · 24 分 53 秒 · 12.18 g' }
 ];
 function openSite(a) {
-  const stage = a.stage;
-  $('#siteTitle').textContent = stage === 1 ? '挑第一样要打的东西' : '再挑一样';
-  $('#siteUrl').innerHTML = SEARCH_SVG + '<span>' + (stage === 1 ? '刮刀' : '多色 · 新手') + '</span>';
+  const done = k => st.done.includes(k), first = !st.done.some(k => k === 'scraper' || CHOICES[k]), rec = !done('scraper');
+  $('#siteTitle').textContent = first ? '挑第一样要打的东西' : '再挑一样';
+  $('#siteUrl').innerHTML = SEARCH_SVG + '<span>' + (rec ? '刮刀' : '多色 · 新手') + '</span>';
+  $('#siteTip').hidden = !rec;
+  $('#siteTip').textContent = '新手建议：先打一把刮刀。以后取件，就不用再掰板了。';
   $('#siteList').innerHTML = SITE.map(m => {
-    const done = m.k === 'scraper' && stage === 2, can = stage === 1 ? m.k === 'scraper' : m.k !== 'scraper';
-    return '<div class="s-card">' + spr(SINGLE[m.k].spr) + '<div class="s-txt"><b>' + SINGLE[m.k].name + '</b>' + (m.note ? '<span>' + m.note + '</span>' : '') +
+    const can = !done(m.k), r = rec && m.k === 'scraper';
+    return '<div class="s-card' + (r ? ' rec' : '') + '">' + spr(SINGLE[m.k].spr) + '<div class="s-txt"><b>' + SINGLE[m.k].name + (r ? '<em class="s-rec">建议先打</em>' : '') + '</b>' + (m.note ? '<span>' + m.note + '</span>' : '') +
       '<span class="s-data' + (m.data ? '' : ' todo') + '">' + (m.data || '切片数据待补') + '</span></div>' +
-      '<button type="button" class="s-go" data-k="' + m.k + '"' + (can ? '' : ' disabled') + '>' + (done ? '已打好' : can ? '打这个' : '先打刮刀') + '</button></div>';
+      '<button type="button" class="s-go" data-k="' + m.k + '"' + (can ? '' : ' disabled') + '>' + (can ? '打这个' : '已打好') + '</button></div>';
   }).join('');
   $('#siteList').querySelectorAll('.s-go:not([disabled])').forEach(b => b.addEventListener('click', () => {
     const k = b.dataset.k;
     $('#siteModal').hidden = true; sfx.wake(); sfx.chime();
     if (k === 'scraper') st.order = 0;
-    else { st.choice = k; ORDERS[1] = choiceOrder(k); st.order = 1; }
+    else { st.choice = k; ORDERS[1] = choiceOrder(k); st.printed[1] = false; st.order = 1; }
     renderBoard(); step();
   }));
   $('#siteModal').hidden = false; updateGuide();
 }
+
+/* ---------- sketchbook: every finished print's drawing is added here ---------- */
+const printData = k => ALL_ORDERS().find(o => o.product === k) || CHOICES[k];
+function sketchList() {
+  const out = [];
+  for (let d = 1; d <= st.day; d++) {
+    const keys = d === st.day ? st.done : diaryOf(d).map(x => String(x.spr).replace(/_full2?$/, ''));
+    keys.forEach(k => { if (SINGLE[k] && printData(k) && !out.some(x => x.k === k)) out.push({ k, d }); });
+  }
+  return out;
+}
+function openSketch() {
+  const list = sketchList();
+  $('#skGrid').innerHTML = list.length ? list.map(({ k, d }) => {
+    const o = printData(k), lines = S[SINGLE[k].spr].replace(/<ellipse[^>]*fill-opacity="\.1\d"[^>]*\/>/g, '');
+    return '<div class="skpage"><svg viewBox="0 0 48 48" aria-hidden="true"><g class="blueprint" stroke="#5E8C88" stroke-width="1" fill="none" stroke-linejoin="round" stroke-linecap="round">' + lines + '</g></svg>' +
+      '<b>' + SINGLE[k].name + '</b><small>' + (DAYNAME[d] || '第 ' + d + ' 天') + (o.real ? '<br>' + o.layers + ' 层 · ' + o.real.h + '<br>' + o.real.time + ' · ' + o.real.g : '') + '</small></div>';
+  }).join('') : '<p class="skempty">还没有打过东西。每完成一张单子，它的图纸就会收进这里。</p>';
+  sfx.soft(); $('#sketchModal').hidden = false; updateGuide();
+}
+$('#skClose').addEventListener('click', () => { $('#sketchModal').hidden = true; updateGuide(); });
 
 /* ---------- day 2: put the scraper away ---------- */
 function openStow() {
