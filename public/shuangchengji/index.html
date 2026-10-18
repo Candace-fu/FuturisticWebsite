@@ -42,7 +42,7 @@ body.framed .stage{border-radius:34px;box-shadow:0 0 0 1px rgba(74,51,36,.18),0 
 .brand{display:flex;align-items:baseline;gap:8px;margin-right:auto;min-width:0}
 .brand b{font-family:var(--f-display);font-weight:400;font-size:24px;letter-spacing:3px}
 .brand span{font-size:12px;letter-spacing:1px;color:var(--ink2);white-space:nowrap}
-.when{font-family:var(--f-ui);font-size:12px;color:var(--ink2);padding:3px 9px;border:1px solid var(--line);border-radius:999px;background:var(--card)}
+.when{font-family:var(--f-ui);font-size:13px;font-weight:500;font-variant-numeric:tabular-nums;color:var(--ink2);padding:3px 9px;border:1px solid var(--line);border-radius:999px;background:var(--card)}
 .coins{display:flex;align-items:center;gap:5px;padding:3px 10px 3px 4px;border:1px solid #DCC8A6;border-radius:999px;background:#FFFBF3;font-family:var(--f-ui);font-size:13px;font-weight:500;font-variant-numeric:tabular-nums}
 .coins.bump{animation:bump .5s ease}
 .iconbtn{width:44px;height:44px;margin-right:-6px;border:0;background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:50%}
@@ -64,7 +64,28 @@ body.framed .stage{border-radius:34px;box-shadow:0 0 0 1px rgba(74,51,36,.18),0 
 .scene.ready #bedGlow{animation:glow 1.6s ease-in-out infinite}
 
 /* order */
-.orders{flex:none;height:78px}
+.orders{flex:none;height:78px;position:relative}
+.order.story{background:#FFF8EA;border-color:#E3C79A}
+.order.story .av.narr{background:#C9A878}
+.order.story.new{animation:fadein .4s ease both,storyin 1.4s ease-in-out 2}
+@keyframes storyin{0%,100%{box-shadow:0 0 0 0 rgba(198,110,72,0)}50%{box-shadow:0 0 0 4px rgba(198,110,72,.28)}}
+.storypill{position:absolute;right:6px;top:-9px;z-index:3;font-family:var(--f-ui);font-size:11.5px;font-weight:500;height:26px;padding:0 10px;border-radius:999px;border:0;background:var(--clay);color:#FBF6EC;cursor:pointer;box-shadow:0 2px 6px rgba(74,51,36,.2);animation:bob 1.4s ease-in-out infinite}
+.stage.folded .boardwrap,.stage.folded .info{display:none}
+.modebtn{position:absolute;left:22px;top:0;z-index:12;width:78px;height:78px;box-sizing:border-box;border-radius:24px;border:2px solid var(--oakd);background:linear-gradient(#F8EACD,#E5C996);box-shadow:0 4px 0 #A57A4F,0 9px 18px rgba(74,51,36,.28);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;padding:0;font-family:var(--f-ui);font-size:13px;font-weight:600;color:var(--ink);cursor:pointer;-webkit-tap-highlight-color:transparent}
+.modebtn svg{width:44px;height:44px;display:block}
+.modebtn:active{transform:translateY(3px);box-shadow:0 1px 0 #A57A4F,0 4px 10px rgba(74,51,36,.25)}
+.modebtn.small{width:58px;height:58px;border-radius:18px;font-size:11px}
+.modebtn.small svg{width:30px;height:30px}
+.modebtn .dot{position:absolute;right:-6px;top:-6px;min-width:20px;height:20px;box-sizing:border-box;padding:0 5px;border-radius:10px;background:var(--clay);color:#FBF6EC;font-size:12px;line-height:20px;box-shadow:0 0 0 2px #FFFDF6;animation:bob 1.2s ease-in-out infinite}
+.modebtn.spot::after{border-radius:24px;inset:-4px}
+.stage.switching .boardwrap,.stage.switching .info{animation:boardin .3s cubic-bezier(.3,1.3,.5,1) both}
+@keyframes boardin{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
+.drgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;max-height:46vh;overflow:auto}
+.dritem{position:relative;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 2px 7px;border:1px solid var(--line);border-radius:10px;background:var(--cell);cursor:pointer;font-family:var(--f-ui);font-size:11px;color:var(--ink2);line-height:1.3}
+.dritem .spr{width:44px;height:44px}
+.dritem em{position:absolute;right:4px;top:3px;font-style:normal;font-size:10.5px;font-weight:500;color:var(--tealD)}
+.drempty{margin:0;font-size:13px;color:var(--mute)}
+.dlgfoot .later{margin-right:auto;font-family:var(--f-ui);font-size:13px;background:transparent;border:0;color:var(--mute);height:44px;padding:0 6px;cursor:pointer}
 .order{height:100%;box-sizing:border-box;display:flex;gap:10px;align-items:center;padding:8px 10px;background:var(--card);border:1px solid var(--line);border-radius:12px;animation:fadein .4s ease both}
 .order.ready{border-color:var(--tealD);box-shadow:0 0 0 2px rgba(63,108,104,.22);background:#F4F7EF}
 .order.over{background:#E4EEE6;border-color:var(--tealD)}
@@ -90,10 +111,10 @@ body.framed .stage{border-radius:34px;box-shadow:0 0 0 1px rgba(74,51,36,.18),0 
 /* board */
 .boardwrap{flex:none;position:relative}
 .rim{padding:5px;background:var(--oak);border:1px solid var(--oakd);border-radius:12px;box-shadow:inset 0 1px 0 rgba(255,236,200,.6),0 2px 4px rgba(110,74,49,.14)}
-.board{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px;padding:3px;background:#E4D6BD;border-radius:7px;touch-action:none;user-select:none;-webkit-user-select:none}
-.cell{position:relative;height:45px;border:0;padding:0;margin:0;border-radius:4px;background:var(--cell);display:flex;align-items:center;justify-content:center;touch-action:none;-webkit-tap-highlight-color:transparent}
+.board{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px;padding:4px;background:#E4D6BD;border-radius:7px;touch-action:none;user-select:none;-webkit-user-select:none}
+.cell{position:relative;height:62px;border:0;padding:0;margin:0;border-radius:4px;background:var(--cell);display:flex;align-items:center;justify-content:center;touch-action:none;-webkit-tap-highlight-color:transparent}
 .cell.has{cursor:grab}
-.cell>.spr{width:40px;height:40px;pointer-events:none}
+.cell>.spr{width:54px;height:54px;pointer-events:none}
 .cell.gen{background:#F1E4CB;box-shadow:inset 0 0 0 1px #D9C29A}
 .cell.station{background:#E9EFE6;box-shadow:inset 0 0 0 1.5px #A9BCA4}
 .cell.station.st-ready{background:#FCEBD6;box-shadow:inset 0 0 0 2px var(--clay)}
@@ -106,11 +127,11 @@ body.framed .stage{border-radius:34px;box-shadow:0 0 0 1px rgba(74,51,36,.18),0 
 .pips{position:absolute;left:12%;right:12%;bottom:3px;display:flex;gap:2px;pointer-events:none}
 .pips i{flex:1;height:3px;border-radius:2px;background:#E2D0AE}
 .pips i.on{background:var(--teal)}
-.badge{position:absolute;right:2px;top:2px;width:14px;height:14px;border-radius:50%;background:#5F8B5A;display:flex;align-items:center;justify-content:center;pointer-events:none;box-shadow:0 0 0 1.5px var(--cell)}
-.badge svg{width:9px;height:9px}
+.badge{position:absolute;right:3px;top:3px;width:17px;height:17px;border-radius:50%;background:#5F8B5A;display:flex;align-items:center;justify-content:center;pointer-events:none;box-shadow:0 0 0 1.5px var(--cell)}
+.badge svg{width:11px;height:11px}
 .loads{position:absolute;left:2px;right:2px;bottom:2px;display:flex;justify-content:space-between;pointer-events:none}
-.ld{width:16px;height:16px;border-radius:3px;background:#FFFCF5;box-shadow:0 0 0 1px #CDBB98;display:flex;align-items:center;justify-content:center}
-.ld .spr{width:15px;height:15px}
+.ld{width:20px;height:20px;border-radius:3px;background:#FFFCF5;box-shadow:0 0 0 1px #CDBB98;display:flex;align-items:center;justify-content:center}
+.ld .spr{width:19px;height:19px}
 .ld.empty{background:transparent;box-shadow:inset 0 0 0 1px #A9BCA4}
 .ring{position:absolute;inset:2px;width:calc(100% - 4px);height:calc(100% - 4px);transform:rotate(-90deg);pointer-events:none}
 .ring circle{fill:none;stroke-width:3.2}
@@ -190,9 +211,22 @@ body.framed .stage{border-radius:34px;box-shadow:0 0 0 1px rgba(74,51,36,.18),0 
 /* scene pan */
 .scene{touch-action:none;cursor:grab}
 .scene.grabbing{cursor:grabbing}
-.panhint{position:absolute;left:8px;bottom:8px;font-family:var(--f-ui);font-size:11px;padding:3px 9px;border-radius:999px;background:rgba(74,51,36,.62);color:#FBF6EC;pointer-events:none;transition:opacity .5s}
+.panhint{position:absolute;right:8px;bottom:8px;font-family:var(--f-ui);font-size:11px;padding:3px 9px;border-radius:999px;background:rgba(74,51,36,.62);color:#FBF6EC;pointer-events:none;transition:opacity .5s}
 .panhint.gone{opacity:0}
-#deskPhone{cursor:pointer}
+#deskPhone,#deskCal{cursor:pointer}
+.tearoff{transform-box:fill-box;transform-origin:10% 0;animation:tearoff 1.1s .35s cubic-bezier(.5,0,.7,1) both}
+@keyframes tearoff{0%{transform:none;opacity:1}30%{transform:rotate(-8deg) translate(-2px,-2px)}100%{transform:rotate(-38deg) translate(-40px,60px);opacity:0}}
+.amsin{animation:fadein .7s ease both}
+.calmark{stroke-dasharray:60;stroke-dashoffset:0}
+.calmark.draw{animation:caldraw 1s .3s ease both}
+@keyframes caldraw{from{stroke-dashoffset:60}to{stroke-dashoffset:0}}
+.calgrid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}
+.cday{position:relative;height:44px;border:1px solid var(--line);border-radius:8px;background:#FFFCF5;font-family:var(--f-ui);font-size:14px;color:var(--ink2);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0}
+.cday:disabled{color:#C9BCA6;background:transparent;cursor:default}
+.cday.on{border-color:var(--tealD);box-shadow:0 0 0 2px rgba(63,108,104,.25)}
+.cday svg{position:absolute;inset:3px;width:calc(100% - 6px);height:calc(100% - 6px);pointer-events:none}
+.cday small{position:absolute;bottom:1px;left:0;right:0;font-size:9px;color:var(--clay)}
+.calcap{margin:0;font-family:var(--f-ui);font-size:13px;color:var(--ink2)}
 .roomitem.appear{animation:roomin .6s cubic-bezier(.3,1.5,.5,1)}
 @keyframes roomin{0%{opacity:0;transform:translate(656px,180px) scale(3.3)}100%{opacity:1;transform:translate(656px,204px) scale(3.6)}}
 #deskPhone .ping{opacity:0;transform-box:fill-box;transform-origin:center}
@@ -228,6 +262,13 @@ body.framed .stage{border-radius:34px;box-shadow:0 0 0 1px rgba(74,51,36,.18),0 
 /* incoming message */
 .notif{position:absolute;left:12px;right:12px;top:10px;z-index:45;display:flex;align-items:center;gap:10px;padding:10px 12px;border:1.5px solid #6E4A31;border-radius:18px;background:rgba(255,253,246,.97);box-shadow:0 2px 0 #D8C4A0,0 10px 24px rgba(40,25,15,.25);text-align:left;cursor:pointer;font-family:var(--f-body)}
 .notif.in{animation:notifin .45s cubic-bezier(.3,1.3,.5,1) both,notifpulse 1.6s 1s ease-in-out infinite}
+/* a new message dims everything else and shakes the room (iPhone Safari cannot vibrate) */
+.notif-dim{position:absolute;inset:0;z-index:44;background:rgba(38,25,15,.55);animation:dimin .35s ease both}
+@keyframes dimin{from{opacity:0}to{opacity:1}}
+.notif.nudge{animation:notifnudge .45s ease}
+@keyframes notifnudge{0%,100%{transform:none}20%{transform:translateX(-8px)}40%{transform:translateX(7px)}60%{transform:translateX(-5px)}80%{transform:translateX(3px)}}
+.roomshake{animation:roomshake .08s linear 6}
+@keyframes roomshake{0%,100%{transform:none}25%{transform:translate(-3px,1px)}75%{transform:translate(3px,-1px)}}
 @keyframes notifin{from{opacity:0;transform:translateY(-70px)}to{opacity:1;transform:none}}
 @keyframes notifpulse{0%,100%{box-shadow:0 2px 0 #D8C4A0,0 10px 24px rgba(40,25,15,.25)}50%{box-shadow:0 2px 0 #D8C4A0,0 0 0 4px rgba(185,105,76,.35),0 10px 24px rgba(40,25,15,.25)}}
 .nt-av{flex:none;width:38px;height:38px;border-radius:50%;background:#D9CDB8;border:1.5px solid #6E4A31;display:flex;align-items:center;justify-content:center;font-family:var(--f-ui);font-size:16px;color:#8A7A66;filter:blur(.5px)}
@@ -272,6 +313,23 @@ body.framed .stage{border-radius:34px;box-shadow:0 0 0 1px rgba(74,51,36,.18),0 
 .knock b{font-family:var(--f-display);font-weight:400;font-size:46px;letter-spacing:6px;animation:knockin .9s ease both}
 .knock span{font-size:15px;color:#F2E6D4;margin-bottom:18px;animation:fadein .6s .5s ease both}
 .knock .primary{width:200px;animation:fadein .6s .8s ease both}
+.modal.leavemodal{background:rgba(38,25,15,0);transition:background .5s ease;cursor:pointer}
+.modal.leavemodal.on{background:rgba(38,25,15,.86)}
+.leavemodal .knock b{animation:knockin .9s .35s ease both}
+.leavemodal .knock span{animation:fadein .6s .9s ease both;margin-bottom:0}
+.binlist{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.binlist .dritem{cursor:default}
+#washSvg,#poopSvg{width:100%;height:auto;display:block;border-radius:12px;background:#EFE6D4;touch-action:none;user-select:none;-webkit-user-select:none}
+.washbar{height:8px;border-radius:4px;background:#E4D6BD;overflow:hidden}
+.washbar i{display:block;height:100%;width:0;background:var(--tealD);border-radius:4px;transition:width .12s linear}
+.washsteps{display:flex;gap:4px}
+.washsteps i{flex:1;height:4px;border-radius:2px;background:#E4D6BD}
+.washsteps i.on{background:var(--clay)}
+#washSvg .wplate,#poopSvg .pan{cursor:grab}
+#poopSvg .pin{animation:pin .35s ease-in forwards}
+@keyframes pin{to{opacity:0;transform:translateY(10px) scale(.6)}}
+#washSvg .bub{animation:bub 1.2s ease-out forwards}
+@keyframes bub{0%{opacity:.95}100%{opacity:0;transform:translateY(-14px)}}
 @keyframes knockin{0%{opacity:0;transform:scale(.9)}20%{opacity:1;transform:scale(1.06) translateX(-3px)}35%{transform:scale(1) translateX(3px)}50%{transform:translateX(-2px)}65%{transform:translateX(0)}100%{opacity:1;transform:none}}
 
 /* name card */
@@ -396,6 +454,7 @@ body.framed .stage{border-radius:34px;box-shadow:0 0 0 1px rgba(74,51,36,.18),0 
 .tut-bubble b{font-size:17px;line-height:1.45;text-wrap:balance}
 .tut-bubble span{font-size:13px;line-height:1.5;color:var(--ink2)}
 .tut-finger{position:absolute;left:0;top:0;width:34px;height:34px;margin:-17px 0 0 -17px;border-radius:50%;background:rgba(255,253,246,.9);box-shadow:0 0 0 3px var(--clay),0 4px 10px rgba(0,0,0,.3);pointer-events:none;animation:fingerdrag 1.9s ease-in-out infinite}
+.tut.at-top .tut-skip{top:auto;bottom:10px}
 .tut-skip{position:absolute;top:8px;right:10px;pointer-events:auto;font-family:var(--f-ui);font-size:13px;font-weight:500;color:#FBF6EC;background:rgba(38,25,15,.72);border:1px solid rgba(255,240,215,.5);border-radius:999px;padding:0 14px;height:40px;cursor:pointer;display:flex;align-items:center;gap:6px}
 
 /* sheets */
@@ -417,12 +476,108 @@ body.framed .stage{border-radius:34px;box-shadow:0 0 0 1px rgba(74,51,36,.18),0 
 .jitem{display:flex;gap:10px;align-items:center;min-height:60px;font-size:14.5px;line-height:1.7}
 .jitem .spr{flex:none;width:44px;height:44px}
 
+/* day 2: lift choice, unboxing, AMS tubes, model site, D's chat */
+.liftpick{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.liftgive{display:flex;flex-direction:column;gap:8px}
+#deskItems .dk{cursor:grab}
+#deskItems .dk.lift{filter:drop-shadow(0 6px 4px rgba(74,51,36,.3))}
+#deskItems .dk.newin>g{animation:spawn .45s cubic-bezier(.3,1.5,.5,1) both;transform-box:fill-box;transform-origin:50% 100%}
+.deskmenu .dmhead{display:flex;align-items:center;gap:12px}
+.deskmenu .dmhead .spr{width:64px;height:64px;flex:none;background:var(--cell);border-radius:12px;border:1px solid var(--line)}
+.deskmenu .dmbtns{display:flex;flex-direction:column;gap:8px}
+.givemodal{background:rgba(38,25,15,.38);padding:0;align-items:stretch}
+.givebox{position:relative;width:100%;height:100%;overflow:hidden}
+.givestand{position:absolute;left:0;right:0;margin:0 auto;bottom:150px;height:540px;animation:fadein .35s ease both;pointer-events:none}
+.giveitem{position:absolute;left:50%;bottom:36px;width:96px;height:96px;margin-left:-48px;border-radius:24px;background:#FFFDF6;border:2px solid #D8C4A0;box-shadow:0 8px 20px rgba(38,25,15,.3);display:flex;align-items:center;justify-content:center}
+.giveitem .spr{width:76px;height:76px}
+.giveitem.fly{animation:giveup .7s cubic-bezier(.3,1.2,.5,1) forwards}
+.giveitem.back{animation:giveback 1.3s ease-in-out forwards}
+@keyframes giveup{to{transform:translateY(-330px) scale(.62) rotate(-8deg)}}
+@keyframes giveback{0%{transform:none}35%{transform:translateY(-300px) scale(.66)}48%{transform:translateY(-300px) scale(.66) rotate(-12deg)}60%{transform:translateY(-300px) scale(.66) rotate(12deg)}100%{transform:none}}
+.givesay{position:absolute;left:24px;right:24px;top:96px;margin:0 auto;max-width:300px;padding:12px 16px;border-radius:16px;background:#FFFDF6;border:1.5px solid #D8C4A0;box-shadow:0 8px 20px rgba(38,25,15,.22);font-size:17px;line-height:1.6;text-align:center;color:var(--ink);animation:rise .3s ease both}
+.giveheart{position:absolute;left:50%;top:300px;font-size:44px;color:#E58FA5;transform:translateX(-50%);animation:heart 1.1s ease-out forwards;pointer-events:none}
+@keyframes heart{0%{opacity:0;transform:translate(-50%,10px) scale(.4)}30%{opacity:1;transform:translate(-50%,-10px) scale(1.15)}100%{opacity:0;transform:translate(-50%,-70px) scale(1)}}
+.givetap{position:absolute;left:0;right:0;bottom:12px;text-align:center;font-family:var(--f-ui);font-size:12px;color:#FBF6EC;opacity:.85}
+.primary.alt{background:#FFFDF6;color:var(--tealD);border:1.5px solid var(--tealD);box-shadow:0 2px 0 #C9D6CF}
+.ubox{position:relative;min-height:150px;border-radius:12px;background:#C99A5E;border:1.5px solid #6E4A31;box-shadow:inset 0 -8px 0 #B08350;display:flex;align-items:center;justify-content:center}
+.utape{position:absolute;left:0;right:0;top:50%;height:22px;margin-top:-11px;background:rgba(240,226,190,.85);border-top:1px dashed #9C7244;border-bottom:1px dashed #9C7244}
+.ubox{touch-action:none;user-select:none;-webkit-user-select:none;overflow:hidden}
+.ucut{position:absolute;top:50%;height:3px;margin-top:-1.5px;left:0;width:0;background:#6E4A31;border-radius:2px;box-shadow:0 0 0 1px rgba(255,253,246,.6)}
+.uswipe{position:absolute;left:0;right:0;top:50%;margin-top:18px;text-align:center;font-family:var(--f-ui);font-size:13px;color:#FBF6EC;text-shadow:0 1px 2px rgba(60,35,20,.6);pointer-events:none}
+.ufinger{position:absolute;top:50%;left:10%;width:30px;height:30px;margin:-15px 0 0 -15px;border-radius:50%;background:rgba(255,253,246,.85);box-shadow:0 0 0 3px var(--clay),0 4px 10px rgba(0,0,0,.25);pointer-events:none;animation:ufinger 1.6s ease-in-out infinite}
+@keyframes ufinger{0%{left:10%;opacity:0}15%{opacity:1}75%{left:88%;opacity:1}100%{left:88%;opacity:0}}
+.ubox.cutting .ufinger,.ubox.cutting .uswipe{display:none}
+.ugrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;padding:10px;width:100%;box-sizing:border-box}
+.uspool{display:flex;flex-direction:column;align-items:center;gap:1px;border:1.5px solid #9C7244;border-radius:10px;background:#E9D3AE;padding:6px 0 5px;cursor:pointer;font-family:var(--f-ui);font-size:11.5px;color:var(--ink);animation:pop .35s cubic-bezier(.3,1.6,.5,1) backwards}
+.uspool .spr{width:54px;height:54px;pointer-events:none}
+.uspool small{font-size:10px;color:var(--mute)}
+.uspool.gone{visibility:hidden}
+.urack{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;padding:8px;border-radius:10px;background:#D9AE72;border:1.5px solid #9C7244}
+.urack i{height:58px;border-radius:8px;border:1.5px dashed #9C7244;display:flex;align-items:center;justify-content:center}
+.urack i .spr{width:50px;height:50px;animation:pop .35s cubic-bezier(.3,1.6,.5,1)}
+#amsSvg{width:100%;height:auto;display:block;border-radius:12px;background:linear-gradient(#F4EAD7,#E9D9BC);touch-action:manipulation}
+#amsSvg .aport{cursor:pointer}
+.feed{stroke-dasharray:100;stroke-dashoffset:100;animation:feed 1.4s ease forwards}
+.feed.bad{animation:feedbad 1.4s ease forwards}
+@keyframes feed{to{stroke-dashoffset:0}}
+@keyframes feedbad{60%{stroke-dashoffset:62}100%{stroke-dashoffset:64}}
+.stuck{opacity:0;animation:fadein .3s 1.1s ease forwards}
+.atray{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+.atube{display:flex;align-items:center;gap:8px;height:44px;padding:0 10px;border:1.5px solid #CDB893;border-radius:10px;background:#FFFDF6;cursor:pointer;font-family:var(--f-ui);font-size:12.5px;color:var(--ink2);box-shadow:0 2px 0 #E0D0B4}
+.atube svg{flex:none;height:12px}
+.atube.sel{border-color:var(--tealD);box-shadow:0 0 0 2px rgba(63,108,104,.3);background:#F1F4EA}
+.atube.used{visibility:hidden}
+.s-url{display:flex;align-items:center;gap:6px;height:32px;padding:0 10px;border-radius:9px;background:#F1E8D8;border:1px solid #E3D6BF;font-family:var(--f-ui);font-size:13px;color:var(--ink2)}
+.s-url svg{width:13px;height:13px}
+.s-card{display:flex;gap:10px;align-items:center;padding:8px 10px;border:1px solid var(--line);border-radius:12px;background:#FFFCF5}
+.s-card .spr{flex:none;width:52px;height:52px}
+.s-txt{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.s-txt b{font-size:15px}
+.s-txt span{font-size:12px;color:var(--ink2);line-height:1.5}
+.s-data{font-family:var(--f-ui);font-size:11px;color:var(--tealD)}
+.s-data.todo{color:var(--clay)}
+.s-go{flex:none;font-family:var(--f-ui);font-size:13px;font-weight:500;height:40px;padding:0 12px;border-radius:8px;border:0;background:var(--tealD);color:#FBF6EC;cursor:pointer;white-space:nowrap}
+.s-go:disabled{background:#E4DACA;color:#8A7A66;cursor:default}
+.ch-avd{filter:none;background:transparent;border:0;overflow:visible}
+.ch-avd .ava{width:34px;height:34px}
+.ch-stk{padding:2px!important;background:transparent!important;border:0!important}
+.ch-stk svg{width:88px;height:88px;display:block}
+#chBody{padding-bottom:200px}
+#lapScreen .blueprint *,.skpage .blueprint *{fill:none!important;stroke:#5E8C88!important}
+.s-card.rec{border:1.5px solid var(--clay);animation:recpulse 1.4s ease-in-out infinite}
+@keyframes recpulse{0%,100%{box-shadow:0 0 0 0 rgba(185,105,76,0)}50%{box-shadow:0 0 0 4px rgba(185,105,76,.25)}}
+.s-rec{display:inline-block;margin-left:6px;padding:0 6px;border-radius:6px;background:var(--clay);color:#FBF6EC;font-family:var(--f-ui);font-size:11px;font-style:normal;font-weight:500;vertical-align:2px}
+.site-tip{margin:0;padding:8px 10px;border-radius:10px;background:#FFF1DC;border:1px dashed #E0B07E;font-family:var(--f-ui);font-size:13px;color:var(--ink2)}
+.skgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;max-height:52vh;overflow:auto}
+.skpage{display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 6px 10px;border:1px solid var(--line);border-radius:10px;background:#FBF8F0;background-image:linear-gradient(#E3ECEA 1px,transparent 1px),linear-gradient(90deg,#E3ECEA 1px,transparent 1px);background-size:12px 12px;text-align:center}
+.skpage svg{width:86px;height:86px;display:block}
+.skpage b{font-family:var(--f-body);font-size:14px;color:var(--ink)}
+.skpage small{font-family:var(--f-ui);font-size:11px;line-height:1.45;color:var(--mute)}
+.prow{display:flex;justify-content:space-between;gap:10px;padding:7px 2px;border-bottom:1px dashed var(--line);font-family:var(--f-ui);font-size:14px;color:var(--ink2)}
+.prow b{font-weight:500;color:var(--ink);text-align:right}
+.prow b.hot{color:var(--clay)}
+.prow b.dim{color:var(--mute);font-weight:400}
+.psec{margin:10px 0 0;font-family:var(--f-ui);font-size:12px;letter-spacing:2px;color:var(--mute)}
+.pcare{display:flex;gap:8px;margin-top:6px}.pcare .sbtn{flex:1;height:40px}.pcare .sbtn:disabled{opacity:.45}
+.pwarn{margin:8px 0 0;font-family:var(--f-ui);font-size:13px;color:var(--clay)}
+.skempty{grid-column:1/-1;margin:0;padding:18px 8px;text-align:center;font-family:var(--f-ui);font-size:13px;color:var(--mute)}
 @keyframes spin{to{transform:rotate(360deg)}}
 @keyframes glow{0%,100%{opacity:.35}50%{opacity:1}}
 @keyframes breathe{0%,100%{opacity:1}50%{opacity:.5}}
 @keyframes fadein{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
 @keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
-@keyframes pop{0%{transform:scale(.55)}100%{transform:scale(1)}}
+@keyframes pop{0%{transform:scale(.55)}40%{transform:scale(1.22,.82)}65%{transform:scale(.92,1.1)}85%{transform:scale(1.03,.97)}100%{transform:scale(1)}}
+.confetti{position:absolute;left:50%;top:50%;width:6px;height:9px;margin:-4px 0 0 -3px;border-radius:1px;pointer-events:none;animation:confetti .7s cubic-bezier(.2,.7,.4,1) forwards}
+@keyframes confetti{0%{transform:translate(0,0) rotate(0);opacity:1}100%{transform:translate(var(--dx),var(--dy)) rotate(var(--rot));opacity:0}}
+.board.thud{animation:thud .28s ease}
+@keyframes thud{0%,100%{transform:none}20%{transform:translate(-3px,2px)}45%{transform:translate(3px,-2px)}70%{transform:translate(-2px,1px)}}
+.floatlbl{position:absolute;z-index:30;transform:translate(-50%,0);pointer-events:none;white-space:nowrap;font-family:var(--f-ui);font-weight:700;font-size:15px;color:var(--clay);text-shadow:0 1px 0 #FFFDF6,0 0 6px #FFFDF6;animation:floatup .9s ease-out forwards}
+.floatlbl.lucky{font-size:13px;color:#B07A1E;font-weight:600}
+@keyframes floatup{0%{opacity:0;margin-top:6px}15%{opacity:1}100%{opacity:0;margin-top:-26px}}
+.cell.tapflip>.spr{animation:pageflip .38s ease}
+@keyframes pageflip{0%{transform:none}40%{transform:perspective(80px) rotateY(-28deg) scaleX(.9)}100%{transform:none}}
+.cell.tapspin>.spr{animation:spoolspin .45s ease}
+@keyframes spoolspin{0%{transform:none}35%{transform:rotate(-14deg)}70%{transform:rotate(9deg)}100%{transform:none}}
 @keyframes spawn{0%{transform:scale(.3) translateY(8px);opacity:.3}100%{transform:none;opacity:1}}
 @keyframes bump{50%{transform:scale(1.12)}}
 @keyframes jiggle{0%,100%{transform:rotate(0)}25%{transform:rotate(-4deg) translateY(-2px)}75%{transform:rotate(4deg) translateY(-2px)}}
@@ -444,7 +599,7 @@ body.framed .stage{border-radius:34px;box-shadow:0 0 0 1px rgba(74,51,36,.18),0 
 
 <div class="stage" id="stage">
   <header class="bar">
-    <div class="brand"><b>双城记</b><span>杭州 · 第一天</span></div>
+    <div class="brand"><b>双城记</b><span id="dayText">杭州 · 第一天</span></div>
     <span class="when" id="clockText">上午</span>
     <div class="coins" id="coins" aria-label="铜钱"><svg width="16" height="16" viewBox="0 0 18 18" aria-hidden="true"><circle cx="9" cy="9" r="7.4" fill="#E3B969" stroke="#8A6A3E" stroke-width="1.1"></circle><circle cx="9" cy="9" r="5.3" fill="none" stroke="#B88F4A" stroke-width=".7"></circle><rect x="7.2" y="7.2" width="3.6" height="3.6" fill="#FBF6EC" stroke="#8A6A3E" stroke-width=".9"></rect></svg><span id="coinText">120</span></div>
     <button type="button" class="iconbtn" id="menuBtn" aria-label="菜单" aria-expanded="false"><svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><circle cx="5" cy="11" r="1.8" fill="#6E5038"></circle><circle cx="11" cy="11" r="1.8" fill="#6E5038"></circle><circle cx="17" cy="11" r="1.8" fill="#6E5038"></circle></svg></button>
@@ -455,6 +610,7 @@ body.framed .stage{border-radius:34px;box-shadow:0 0 0 1px rgba(74,51,36,.18),0 
     <button type="button" id="muteBtn">声音：开</button>
     <button type="button" id="tutBtn">重新看教程</button>
     <button type="button" id="restartBtn">重新开始这一天</button>
+    <button type="button" id="dayBtn">去第二天</button>
   </div>
 
   <div class="scene" id="scene">
@@ -463,6 +619,7 @@ body.framed .stage{border-radius:34px;box-shadow:0 0 0 1px rgba(74,51,36,.18),0 
             <linearGradient id="skyG" x1="0" y1="0" x2="0" y2="1"><stop id="sk1" offset="0" stop-color="#E2ECEC"></stop><stop id="sk2" offset="1" stop-color="#F3EAD5"></stop></linearGradient>
             <linearGradient id="beamG" x1="0" y1="0" x2="1" y2=".45"><stop offset="0" stop-color="#FFF3D4" stop-opacity=".9"></stop><stop offset="1" stop-color="#FFF3D4" stop-opacity=".05"></stop></linearGradient>
             <pattern id="holes" width="12" height="12" patternUnits="userSpaceOnUse"><circle cx="6" cy="6" r="1.2" fill="#A97C4E"></circle></pattern>
+            <clipPath id="winClip"><rect x="33" y="37" width="118" height="162"></rect></clipPath>
             <clipPath id="printClip"><rect id="clipRect" x="180" y="310" width="200" height="0"></rect></clipPath>
             <radialGradient id="bedWarm"><stop offset="0" stop-color="#F2A65A" stop-opacity=".6"></stop><stop offset="1" stop-color="#F2A65A" stop-opacity="0"></stop></radialGradient>
           </defs>
@@ -475,7 +632,8 @@ body.framed .stage{border-radius:34px;box-shadow:0 0 0 1px rgba(74,51,36,.18),0 
             <circle cx="15" cy="24" r="2.4" fill="#C99A5E"></circle><circle cx="173" cy="24" r="2.4" fill="#C99A5E"></circle>
             <rect x="26" y="30" width="132" height="176" rx="3" fill="#6F9893"></rect>
             <rect x="33" y="37" width="118" height="162" fill="url(#skyG)" stroke="none"></rect>
-            <g fill="#C7D1CB" stroke="none">
+            <g clip-path="url(#winClip)"><circle id="sun" cx="120" cy="-30" r="11" fill="#FFF1C9" stroke="none"></circle></g>
+            <g id="cityB" fill="#C7D1CB" stroke="none">
               <rect x="36" y="118" width="12" height="50"></rect><rect x="50" y="98" width="10" height="70"></rect><rect x="62" y="124" width="14" height="44"></rect>
               <rect x="97" y="90" width="11" height="78"></rect><rect x="110" y="110" width="13" height="58"></rect><rect x="125" y="102" width="9" height="66"></rect><rect x="136" y="126" width="14" height="42"></rect>
             </g>
@@ -483,9 +641,9 @@ body.framed .stage{border-radius:34px;box-shadow:0 0 0 1px rgba(74,51,36,.18),0 
               <rect x="39" y="124" width="2" height="2"></rect><rect x="44" y="132" width="2" height="2"></rect><rect x="53" y="106" width="2" height="2"></rect><rect x="56" y="118" width="2" height="2"></rect><rect x="66" y="130" width="2" height="2"></rect><rect x="71" y="138" width="2" height="2"></rect>
               <rect x="100" y="98" width="2" height="2"></rect><rect x="104" y="112" width="2" height="2"></rect><rect x="114" y="118" width="2" height="2"></rect><rect x="118" y="130" width="2" height="2"></rect><rect x="128" y="110" width="2" height="2"></rect><rect x="140" y="134" width="2" height="2"></rect>
             </g>
-            <path d="M33 168 Q58 148 84 158 Q112 142 151 154 L151 199 L33 199 Z" fill="#A9B993" stroke="none"></path>
+            <path id="cityHill" d="M33 168 Q58 148 84 158 Q112 142 151 154 L151 199 L33 199 Z" fill="#A9B993" stroke="none"></path>
             <path d="M60 158 V139 M57.4 147 H62.6 M57.9 152.5 H62.1 M58.6 143 H61.4" stroke="#6F7E63" stroke-width="1" fill="none"></path>
-            <rect x="33" y="182" width="118" height="17" fill="#D3DFD5" stroke="none"></rect>
+            <rect id="cityWater" x="33" y="182" width="118" height="17" fill="#D3DFD5" stroke="none"></rect>
             <path d="M98 182 Q112 172 126 182" stroke="#7F8E72" stroke-width="1" fill="none"></path>
             <path d="M40 189 h14 M70 193 h16 M110 190 h12 M128 195 h12" stroke="#A7BDB3" stroke-width=".8" fill="none"></path>
             <path d="M40 46 L58 46 L44 74" stroke="#FFFFFF" stroke-opacity=".7" stroke-width="1.6" fill="none"></path>
@@ -497,6 +655,15 @@ body.framed .stage{border-radius:34px;box-shadow:0 0 0 1px rgba(74,51,36,.18),0 
             <path d="M29 34 Q33 90 28 150 Q26 186 30 210" stroke-opacity=".4" stroke-width=".8" fill="none"></path>
 
             <polygon id="beam" points="160,58 330,96 336,300 166,262" fill="url(#beamG)" stroke="none" opacity=".5"></polygon>
+
+            <!-- wall clock -->
+            <g id="wallClock" transform="translate(413 62)">
+              <circle r="19" fill="#FFFDF6" stroke-width="2.2"></circle>
+              <path d="M0 -15 v3 M15 0 h-3 M0 15 v-3 M-15 0 h3" stroke-width="1.4"></path>
+              <path id="wcH" d="M0 0 V-8" stroke-width="2.4"></path>
+              <path id="wcM" d="M0 0 V-13" stroke-width="1.5"></path>
+              <circle r="1.8" fill="#6E4A31" stroke="none"></circle>
+            </g>
 
             <!-- pegboard -->
             <rect x="446" y="34" width="174" height="156" rx="3" fill="#D9AE72"></rect>
@@ -539,6 +706,7 @@ body.framed .stage{border-radius:34px;box-shadow:0 0 0 1px rgba(74,51,36,.18),0 
               <circle cx="699" cy="170" r="3.6" fill="#6E4A31" stroke="none" fill-opacity=".7"></circle>
               <rect x="687" y="196" width="24" height="9" rx="1.5" fill="#FBF6EA" stroke-width=".8"></rect>
               <path d="M691 200.5 h16" stroke="#6F9893" stroke-width="1.2"></path>
+              <g id="rackNew"></g>
             </g>
 
             <!-- desk -->
@@ -583,17 +751,38 @@ body.framed .stage{border-radius:34px;box-shadow:0 0 0 1px rgba(74,51,36,.18),0 
             <polygon points="473,219 599,219 602,295 470,295" fill="#F8F2E6"></polygon>
             <polygon points="473,219 486,219 485,295 470,295" fill="#EDE3D0" stroke="none"></polygon>
             <path d="M476 228 h6 M476 236 h6 M476 244 h6 M490 226 H598" stroke-width=".6" stroke-opacity=".6" fill="none"></path>
+            <g id="lapScreen">
             <rect x="524" y="234" width="22" height="52" rx="3" fill="#FFFFFF" fill-opacity=".6" stroke="#5E8C88" stroke-width="1.2"></rect>
             <circle cx="535" cy="242" r="2.6" fill="none" stroke="#5E8C88" stroke-width="1"></circle>
             <path d="M528 270 Q535 260 542 270 M528 278 q3.5 -2 7 0 q3.5 2 7 0" stroke="#5E8C88" stroke-width="1" fill="none"></path>
             <path d="M556 234 v52 M553 234 h6 M553 286 h6 M524 292 h22" stroke="#C47A57" stroke-width=".8" fill="none"></path>
+            </g>
             <polygon points="464,300 608,300 628,334 444,334" fill="#CBC3B6"></polygon>
             <polygon points="474,304 598,304 608,320 464,320" fill="#B4AB9E" stroke-width=".9"></polygon>
             <path d="M471 309.5 H601 M468 315 H604 M500 304 L497 320 M530 304 L529 320 M560 304 L561 320 M585 304 L588 320" stroke-width=".5" stroke-opacity=".5" fill="none"></path>
             <polygon points="518,323 556,323 558,331 516,331" fill="#D8D1C5" stroke-width=".8"></polygon>
 
+            <!-- desk calendar: one page per day -->
+            <g id="deskCal" aria-label="桌上的台历" transform="translate(663 332) scale(.9) translate(-426 -397)">
+              <ellipse cx="426" cy="397" rx="32" ry="3" fill="#6E4A31" fill-opacity=".14" stroke="none"></ellipse>
+              <polygon points="400,396 452,396 446,342 406,342" fill="#C99A5E"></polygon>
+              <g id="calStubs"></g>
+              <rect x="396" y="346" width="60" height="50" rx="3" fill="#FFFDF6"></rect>
+              <rect x="396" y="346" width="60" height="11" rx="3" fill="#C47A57"></rect>
+              <text x="426" y="354.2" font-size="6.6" text-anchor="middle" fill="#FBF6EC" stroke="none" font-family="Noto Sans SC, sans-serif">杭 州</text>
+              <text id="calNum" x="426" y="383" font-size="25" text-anchor="middle" fill="#4A3324" stroke="none" font-family="ZCOOL XiaoWei, Noto Serif SC, serif">1</text>
+              <text id="calSub" x="426" y="392" font-size="6.4" text-anchor="middle" fill="#8A6A50" stroke="none" font-family="Noto Sans SC, sans-serif">第一天</text>
+              <g id="calTear"></g>
+              <path d="M410 343 v6 M426 343 v6 M442 343 v6" stroke-width="1.4"></path>
+              <rect x="392" y="336" width="68" height="64" fill="transparent" stroke="none"></rect>
+            </g>
+
             <!-- things kept in the room -->
             <g id="roomOrg" opacity="0"></g>
+            <g id="roomAms"></g>
+
+            <!-- prints left on the desk; drag to arrange -->
+            <g id="deskItems"></g>
 
             <!-- phone -->
             <g id="deskPhone" aria-label="手机">
@@ -622,6 +811,7 @@ body.framed .stage{border-radius:34px;box-shadow:0 0 0 1px rgba(74,51,36,.18),0 
               <path d="M751 472 L789 472 M752 483 L788 483 M753 494 L787 494" stroke="#94826A" stroke-width=".8" fill="none"></path>
               <path d="M758 464 L760 509 M770 464 L770 509 M782 464 L780 509" stroke="#94826A" stroke-width=".7" fill="none"></path>
               <ellipse cx="770" cy="462" rx="24" ry="4.6" fill="#A2906F"></ellipse>
+              <g id="binFill"></g>
             </g>
 
             <!-- printer -->
@@ -632,12 +822,14 @@ body.framed .stage{border-radius:34px;box-shadow:0 0 0 1px rgba(74,51,36,.18),0 
             <path d="M200 76 V300 M350 76 V300" stroke-width="1" stroke-dasharray="2 2" fill="none"></path>
             <rect x="170" y="58" width="210" height="15" rx="3" fill="#8B827A"></rect>
             <rect x="272" y="44" width="7" height="16" fill="#6F665E"></rect>
+            <g id="topSpool">
             <ellipse cx="281" cy="32" rx="23" ry="26" fill="#E2D2B5"></ellipse>
             <circle cx="275" cy="32" r="26" fill="#ECDFC6"></circle>
             <circle id="spoolRing" cx="275" cy="32" r="19.5" fill="#9DB089"></circle>
             <path d="M258 26 A17 17 0 0 1 269 15" stroke="#C6D3B3" stroke-width="2.4" fill="none"></path>
             <circle cx="275" cy="32" r="8" fill="#ECDFC6"></circle>
             <circle cx="275" cy="32" r="3" fill="#6E4A31" stroke="none" fill-opacity=".7"></circle>
+            </g>
             <path id="filPathO" d="M292 50 C 318 90 300 150 275 196" stroke="#6E4A31" stroke-width="3.6" fill="none"></path>
             <path id="filPath" d="M292 50 C 318 90 300 150 275 196" stroke="#9DB089" stroke-width="2" fill="none"></path>
             <rect x="158" y="316" width="234" height="38" rx="4" fill="#8B827A"></rect>
@@ -672,6 +864,8 @@ body.framed .stage{border-radius:34px;box-shadow:0 0 0 1px rgba(74,51,36,.18),0 
   </div>
 
   <div class="orders" id="orders"></div>
+  <button type="button" class="modebtn" id="toBoard" aria-label="进入合成桌" hidden><svg viewBox="0 0 44 44" aria-hidden="true"><rect x="4" y="6" width="36" height="32" rx="6" fill="#C9955F" stroke="#6E4A31" stroke-width="1.6"/><rect x="8" y="10" width="13" height="11" rx="2.5" fill="#FBF3E2"/><rect x="23" y="10" width="13" height="11" rx="2.5" fill="#FBF3E2"/><rect x="8" y="23" width="13" height="11" rx="2.5" fill="#FBF3E2"/><rect x="23" y="23" width="13" height="11" rx="2.5" fill="#E6EFE1"/><path d="M11 18 L15 13 L18 18 Z" fill="#5E8C88"/><circle cx="29.5" cy="15.5" r="3" fill="#C66E48"/><path d="M26 31 h7 M29.5 27.5 v7" stroke="#3F6C68" stroke-width="2" stroke-linecap="round"/><path d="M38 3 l1.2 2.8 2.8 1.2 -2.8 1.2 -1.2 2.8 -1.2 -2.8 -2.8 -1.2 2.8 -1.2 Z" fill="#E8B04A"/></svg>合成<span class="dot" id="toBoardDot" hidden></span></button>
+  <button type="button" class="modebtn small" id="toRoom" aria-label="回到工作室"><svg viewBox="0 0 44 44" aria-hidden="true"><path d="M6 21 L22 8 L38 21" fill="none" stroke="#6E4A31" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 19 V36 H34 V19" fill="#FBF3E2" stroke="#6E4A31" stroke-width="2" stroke-linejoin="round"/><rect x="18" y="25" width="8" height="11" rx="1.5" fill="#C9955F"/><rect x="27" y="22" width="5" height="5" rx="1" fill="#E6EFE1" stroke="#6E4A31" stroke-width="1.2"/></svg>工作室</button>
 
   <div class="boardwrap">
     <div class="toast" id="toast" role="status"></div>
@@ -685,10 +879,11 @@ body.framed .stage{border-radius:34px;box-shadow:0 0 0 1px rgba(74,51,36,.18),0 
     <div class="dlgcard" role="dialog" aria-live="polite">
       <div class="dlgwho" id="dlgWho"></div>
       <p class="dlgtext" id="dlgText"></p>
-      <div class="dlgfoot"><button type="button" class="next" id="nextBtn">继续</button></div>
+      <div class="dlgfoot"><button type="button" class="later" id="dlgLater">稍后再说</button><button type="button" class="next" id="nextBtn">继续</button></div>
     </div>
   </div>
 
+  <div class="notif-dim" id="notifDim" hidden></div>
   <button type="button" class="notif" id="notif" hidden>
     <span class="nt-av" aria-hidden="true">?</span>
     <span class="nt-txt"><b>？？？<em>刚刚</em></b><span>怎么说呢。有个朋友在做书签，想找台打印机…</span></span>
@@ -722,10 +917,13 @@ body.framed .stage{border-radius:34px;box-shadow:0 0 0 1px rgba(74,51,36,.18),0 
         <g id="liftObj"><g stroke="#6E4A31" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round" fill="none" id="liftSpr" style="stroke-width:1.1"></g></g>
         <path id="plate" d="" fill="url(#pei)" stroke="#6E4A31" stroke-width="1.6" stroke-linejoin="round"></path>
         <path id="plateEdge" d="" fill="#6F665E" stroke="#6E4A31" stroke-width="1.2" stroke-linejoin="round"></path>
+        <g id="liftScraper" opacity="0"><g id="liftScraperIn" stroke="#6E4A31" stroke-width="1.4" stroke-linejoin="round"><path d="M0 0 L-44 -3.5 L-44 3.5 Z" fill="#E4DED2"></path><rect x="-128" y="-7" width="86" height="14" rx="6" fill="#F1ECE2"></rect><g fill="#D9D2C4" stroke-width=".8"><circle cx="-112" cy="0" r="2.6"></circle><circle cx="-100" cy="0" r="2.6"></circle><circle cx="-88" cy="0" r="2.6"></circle><circle cx="-76" cy="0" r="2.6"></circle><circle cx="-64" cy="0" r="2.6"></circle></g></g></g>
       </svg>
       <p class="lifthint" id="liftHint"></p>
+      <div class="liftpick" id="liftPick" hidden><button type="button" class="primary alt" data-m="flex">掰下来</button><button type="button" class="primary" data-m="scrape">用刮刀</button></div>
       <button type="button" class="primary flex" id="flexBtn">按住，掰弯打印板</button>
       <p class="lifttext" id="liftText" hidden></p>
+      <div class="liftgive" id="liftGive" hidden></div>
       <button type="button" class="primary" id="placeBtn" hidden>放到桌上</button>
     </div>
   </div>
@@ -764,6 +962,23 @@ body.framed .stage{border-radius:34px;box-shadow:0 0 0 1px rgba(74,51,36,.18),0 
       <b id="knockTxt">咚，咚。</b>
       <span>有人在敲门。</span>
       <button type="button" class="primary" id="knockBtn">去开门</button>
+    </div>
+  </div>
+
+  <div class="modal leavemodal" id="leaveModal" hidden>
+    <div class="knock" role="dialog" aria-modal="true" aria-labelledby="leaveTxt">
+      <b id="leaveTxt">咔哒。</b>
+      <span id="leaveSub">门关上了。</span>
+    </div>
+  </div>
+
+  <div class="modal" id="binModal" hidden>
+    <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="binTitle">
+      <span class="eyebrow">垃圾桶</span>
+      <h2 id="binTitle">里面有什么</h2>
+      <div class="binlist" id="binList"></div>
+      <p class="calcap" id="binCap"></p>
+      <div class="liftpick"><button type="button" class="primary alt" id="binEmpty">倒掉</button><button type="button" class="primary" id="binClose">盖上</button></div>
     </div>
   </div>
 
@@ -811,8 +1026,115 @@ body.framed .stage{border-radius:34px;box-shadow:0 0 0 1px rgba(74,51,36,.18),0 
       <div class="journal" id="journalBody"></div>
       <div class="row">
         <button type="button" class="primary" id="againBtn">再过一遍这一天</button>
-        <button type="button" class="primary" disabled>第二天：刮刀（制作中）</button>
+        <button type="button" class="primary" id="nextDayBtn">第二天</button>
       </div>
+    </div>
+  </div>
+
+  <div class="modal" id="boxModal" hidden>
+    <div class="sheet tidy" role="dialog" aria-modal="true" aria-labelledby="boxTitle">
+      <span class="eyebrow">快递</span>
+      <h2 id="boxTitle">耗材到了</h2>
+      <div class="ubox" id="ubox"></div>
+      <div class="urack" id="urack" aria-label="耗材架"></div>
+      <p class="tidy-hint" id="uHint"></p>
+      <button type="button" class="primary" id="uDone" hidden>挂好了</button>
+    </div>
+  </div>
+
+  <div class="modal" id="amsModal" hidden>
+    <div class="sheet tidy" role="dialog" aria-modal="true" aria-labelledby="amsTitle">
+      <span class="eyebrow">组装</span>
+      <h2 id="amsTitle">装 AMS lite</h2>
+      <svg id="amsSvg" viewBox="0 0 340 214" role="img" aria-label="四个料位和通往打印机的特氟龙管"></svg>
+      <div class="atray" id="amsTray"></div>
+      <p class="tidy-hint" id="amsHint"></p>
+      <button type="button" class="primary" id="amsTest" hidden>试着送料</button>
+      <button type="button" class="primary" id="amsDone" hidden>装好了</button>
+    </div>
+  </div>
+
+  <div class="modal" id="siteModal" hidden>
+    <div class="sheet tidy" role="dialog" aria-modal="true" aria-labelledby="siteTitle">
+      <span class="eyebrow">模型网站</span>
+      <h2 id="siteTitle">挑一个模型</h2>
+      <div class="s-url" id="siteUrl"></div>
+      <p class="site-tip" id="siteTip" hidden></p>
+      <div class="plist" id="siteList"></div>
+    </div>
+  </div>
+
+  <div class="modal" id="printerModal" hidden>
+    <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="prTitle">
+      <span class="eyebrow">3D 打印机</span>
+      <h2 id="prTitle">打印机状态</h2>
+      <div id="prBody"></div>
+      <button type="button" class="primary" id="prClose">好</button>
+    </div>
+  </div>
+
+  <div class="modal" id="washModal" hidden>
+    <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="washTitle">
+      <span class="eyebrow">清洗打印板</span>
+      <div class="washsteps" id="washSteps"><i></i><i></i><i></i><i></i><i></i></div>
+      <h2 id="washTitle"></h2>
+      <svg id="washSvg" viewBox="0 0 340 250" role="img" aria-label="洗打印板"></svg>
+      <div class="washbar" id="washBar"><i id="washFill"></i></div>
+      <p class="calcap" id="washHint"></p>
+      <div class="liftpick" id="washPick" hidden><button type="button" class="primary alt" data-w="water">清水冲洗</button><button type="button" class="primary" data-w="soap">洗洁精冲洗</button></div>
+    </div>
+  </div>
+
+  <div class="modal" id="poopModal" hidden>
+    <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="poopTitle">
+      <span class="eyebrow">清理竹屎</span>
+      <div class="washsteps" id="poopSteps"><i></i><i></i></div>
+      <h2 id="poopTitle"></h2>
+      <svg id="poopSvg" viewBox="0 0 340 250" role="img" aria-label="清理竹屎"></svg>
+      <div class="washbar"><i id="poopFill"></i></div>
+      <p class="calcap" id="poopHint"></p>
+    </div>
+  </div>
+
+  <div class="modal deskmenu" id="deskModal" hidden>
+    <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="dmTitle">
+      <span class="eyebrow">桌上</span>
+      <div class="dmhead"><span id="dmSpr"></span><div><h2 id="dmTitle"></h2><p class="calcap" id="dmText"></p></div></div>
+      <div class="dmbtns" id="dmBtns"></div>
+    </div>
+  </div>
+
+  <div class="modal givemodal" id="giveModal" hidden>
+    <div class="givebox" id="giveBox"><img class="givestand" id="giveStand" alt=""><div class="givesay" id="giveSay" hidden></div><div class="giveheart" id="giveHeart" hidden>♥</div><div class="giveitem" id="giveItem"></div><div class="givetap" id="giveTap" hidden>点一下继续</div></div>
+  </div>
+
+  <div class="modal" id="drawerModal" hidden>
+    <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="drTitle">
+      <span class="eyebrow">抽屉</span>
+      <h2 id="drTitle">收起来的东西</h2>
+      <p class="calcap">点一下，拿回桌上。抽屉里的东西第二天也还在。</p>
+      <div class="drgrid" id="drGrid"></div>
+      <button type="button" class="primary" id="drClose">关上抽屉</button>
+    </div>
+  </div>
+
+  <div class="modal" id="sketchModal" hidden>
+    <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="skTitle">
+      <span class="eyebrow">速写本</span>
+      <h2 id="skTitle">打过的图纸</h2>
+      <div class="skgrid" id="skGrid"></div>
+      <button type="button" class="primary" id="skClose">合上</button>
+    </div>
+  </div>
+
+  <div class="modal" id="calModal" hidden>
+    <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="calTitle">
+      <span class="eyebrow">台历</span>
+      <h2 id="calTitle">在杭州的日子</h2>
+      <div class="calgrid" id="calGrid"></div>
+      <p class="calcap" id="calCap"></p>
+      <div class="journal" id="calDiary"></div>
+      <button type="button" class="primary" id="calClose">放回桌上</button>
     </div>
   </div>
 
@@ -824,7 +1146,8 @@ body.framed .stage{border-radius:34px;box-shadow:0 0 0 1px rgba(74,51,36,.18),0 
 'use strict';
 const $ = s => document.querySelector(s);
 const reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-const W0 = 390, H0 = 844, N = 42;
+/* the board is 5 × 4: fewer, bigger cells that are easy to tap on a phone */
+const W0 = 390, H0 = 844, COLS = 5, N = 20;
 const stage = $('#stage');
 let scale = 1;
 function fit() {
@@ -880,6 +1203,15 @@ idea4: '<ellipse cx="24" cy="42" rx="16" ry="2" fill="#6E4A31" fill-opacity=".13
  '<circle cx="19.5" cy="16.5" r="1.2" stroke="#5E8C88" stroke-width=".8"/><path d="M27.5 13 v22 M26 13 h3 M26 35 h3" stroke="#C47A57" stroke-width=".7"/>' +
  '<circle cx="33.5" cy="31.5" r="4.6" stroke="#C47A57" stroke-width="1.1"/><path d="M31.4 31.6 l1.6 1.6 l3 -3.2" stroke="#C47A57" stroke-width="1.1"/>' +
  '<path d="M11 5 v9 q0 2.6 2.3 2.6 q2.3 0 2.3 -2.6 v-7" stroke="#8A847C" stroke-width="1.2"/>',
+idea5: '<ellipse cx="24" cy="42" rx="16" ry="2" fill="#6E4A31" fill-opacity=".13" stroke="none"/>' +
+ '<rect x="5" y="8" width="38" height="28" rx="2.5" fill="#E9EEF0"/><rect x="8" y="11" width="32" height="22" rx="1" fill="#F7FAFA" stroke-width=".8"/>' +
+ '<path d="M8 27 l8 -4 l16 0 l8 4" stroke="#C3D5D0" stroke-width=".5"/>' +
+ '<path d="M24 14 l9 4.5 v9 l-9 4.5 l-9 -4.5 v-9 Z" fill="#DDEAE7" stroke="#5E8C88" stroke-width="1"/><path d="M15 18.5 l9 4.5 l9 -4.5 M24 23 v9" stroke="#5E8C88" stroke-width=".9"/>' +
+ '<path d="M20 38 h8 M24 36 v2" stroke-width="1.2"/>',
+idea6: '<ellipse cx="24" cy="42" rx="16" ry="2" fill="#6E4A31" fill-opacity=".13" stroke="none"/>' +
+ '<path d="M10 6 h20 l8 8 v26 h-28 Z" fill="#FBF6EA"/><path d="M30 6 v8 h8 Z" fill="#E9DFCC"/><path d="M10 6 h20 l8 8 v26 h-28 Z"/>' +
+ '<path d="M15 32 h18 M15 29 h18 M16 26 h16 M17 23 h14 M18 20 h12" stroke="#5E8C88" stroke-width="1.1"/>' +
+ '<path d="M15 35.5 h7" stroke="#C47A57" stroke-width="1.4"/><path d="M14 11 h10" stroke-width=".7" stroke-opacity=".6"/>',
 gen_fil: SH(24,16) +
  '<rect x="7" y="7" width="34" height="34" rx="2.5" fill="#D9AE72"/><rect x="10" y="10" width="28" height="28" fill="#B98A52" stroke-width="1"/>' +
  '<rect x="10" y="22.5" width="28" height="3" fill="#D9AE72" stroke-width="1"/>' +
@@ -947,13 +1279,43 @@ S.printer = '<ellipse cx="24" cy="43" rx="17" ry="2.2" fill="#6E4A31" fill-opaci
  '<rect x="13.5" y="18.5" width="21" height="1.8" fill="#D2CCC3" stroke-width=".9"/><rect x="19" y="15" width="10" height="9" rx="1.5" fill="#C47A57" stroke-width="1.2"/>' +
  '<circle cx="24" cy="19.5" r="2.6" fill="#E9DCC6" stroke-width=".9"/><polygon points="22.8,24 25.2,24 24,25.8" fill="#B08A4E" stroke-width=".8"/>' +
  '<circle cx="33.5" cy="5.6" r="4.6" fill="#ECDFC6" stroke-width="1.1"/><circle cx="33.5" cy="5.6" r="3.2" fill="#9DB089" stroke-width=".8"/><circle cx="33.5" cy="5.6" r="1.1" fill="#ECDFC6" stroke-width=".6"/>';
+/* day 2 sprites */
+const SPOOLS = [{ id: 'white', name: '白色', c: '#F6F3EC' }, { id: 'grey', name: '灰色', c: '#A9A59D' }, { id: 'black', name: '黑色', c: '#3E3A36' }, { id: 'clear', name: '透明', c: '#BFDCDA', clear: true }];
+SPOOLS.forEach(s => {
+  const core = '<ellipse cx="27" cy="25" rx="13" ry="15" fill="#E0CFB0"/><circle cx="23" cy="25" r="15" fill="#EEE1C8"/>' +
+    '<circle cx="23" cy="25" r="10" fill="' + s.c + '"' + (s.clear ? ' fill-opacity=".55"' : '') + '/><path d="M15.4 22 A7.6 7.6 0 0 1 20.5 17" stroke="#FFFFFF" stroke-opacity=".8" stroke-width="1.5"/>' +
+    '<circle cx="23" cy="25" r="5" fill="#EEE1C8"/><circle cx="23" cy="25" r="2" fill="#6E4A31" stroke="none" fill-opacity=".75"/>';
+  S['sp_' + s.id] = SH(24.5, 12) + core;
+  S['spb_' + s.id] = SH(24.5, 14) + core + '<rect x="5" y="6" width="38" height="37" rx="7" fill="#FFFFFF" fill-opacity=".3" stroke="#B9A88C" stroke-width=".9" stroke-dasharray="2 2"/>' +
+    '<rect x="33" y="33" width="9" height="7" rx="1.2" fill="#FFFDF6" stroke-width=".8"/><path d="M35 36.5 h5" stroke-width=".6"/>';
+});
+S.scraper = '<ellipse cx="24" cy="42" rx="16" ry="2" fill="#6E4A31" fill-opacity=".13" stroke="none"/>' +
+  '<g transform="rotate(-38 24 24)"><rect x="3" y="18" width="31" height="12" rx="5" fill="#F1ECE2"/>' +
+  '<g fill="#D9D2C4" stroke-width=".6"><circle cx="8.5" cy="24" r="1.6"/><circle cx="13.5" cy="24" r="1.6"/><circle cx="18.5" cy="24" r="1.6"/><circle cx="23.5" cy="24" r="1.6"/><circle cx="28.5" cy="24" r="1.6"/></g>' +
+  '<path d="M34 18.5 L45 19.8 L45 28.2 L34 29.5 Z" fill="#E4DED2"/><path d="M45 19.8 V28.2" stroke-width="1.8"/></g>';
+S.t_scraper = '<rect x="18" y="13" width="12" height="31" rx="5" fill="#F1ECE2"/>' +
+  '<g fill="#D9D2C4" stroke-width=".6"><circle cx="24" cy="19" r="1.6"/><circle cx="24" cy="24.5" r="1.6"/><circle cx="24" cy="30" r="1.6"/><circle cx="24" cy="35.5" r="1.6"/></g>' +
+  '<path d="M18.5 13 L19.5 3 h9 L29.5 13 Z" fill="#E4DED2"/><path d="M19.5 3 h9" stroke-width="1.8"/>';
+/* vase: proportions from Hestia's slicer screenshot (177.56 mm tall, bulb about half as wide, slanted rim) */
+S.vase = SH(24, 9) + '<path d="M20.5 4 L27.8 6.2 Q27.2 10 27 14 Q27.5 19 31 23 Q34 27 34 32 Q34 41 24 41 Q14 41 14 32 Q14 27 17 23 Q20.5 19 21 14 Q21 9 20.5 4 Z" fill="#8C6A4F"/>' +
+  '<path d="M20.6 5.2 L27.6 7.2" stroke="#5E4330" stroke-width="1.1"/><path d="M15.2 29 q8.8 2.6 17.6 0 M14.3 34 q9.7 2.6 19.4 0 M15.6 38.4 q8.4 2 16.8 0" stroke="#6E5038" stroke-width=".7"/><path d="M17.6 26 q-2 5 .4 10" stroke="#B08A6A" stroke-width="1.2"/>';
+S.stand = SH(24, 15) + '<path d="M8 41 h32 v-3 q0 -2 -2 -2 h-28 q-2 0 -2 2 Z" fill="#E8E4DA"/><path d="M17 36 v-5 h14 v5" fill="#ECE8E0"/>' +
+  '<rect x="11" y="9" width="26" height="23" rx="3" fill="#F4F1EA"/><rect x="14.5" y="12.5" width="19" height="16" rx="1.5" fill="#FFFDF6" stroke-width=".8"/>' +
+  '<path d="M17.5 16.5 h4 v3 h-4 v3 h4 M24 16.5 h4 v3 h-4 v3 h4" stroke-width=".8"/><path d="M18 26 h12" stroke-width=".6"/><rect x="6.5" y="16" width="4.5" height="9" rx="1.5" fill="#E4DED2"/>';
+S.boat = SH(24, 17) + '<path d="M5 30 h38 l-4 9 q-1 2 -3 2 h-24 q-2 0 -3 -2 Z" fill="#F4F1EA"/><circle cx="13" cy="34.5" r="1.8" fill="#FFFDF6" stroke-width=".8"/>' +
+  '<rect x="14" y="18" width="16" height="12" rx="1" fill="#ECE8E0"/><rect x="16.5" y="21" width="4.5" height="4.5" fill="#FFFDF6" stroke-width=".8"/><rect x="23" y="21" width="4.5" height="4.5" fill="#FFFDF6" stroke-width=".8"/>' +
+  '<path d="M12 18 h20" stroke-width="1.8"/><rect x="31.5" y="20" width="5" height="10" rx="1" fill="#E4DED2"/>';
+S.ams = SH(24, 18) + '<rect x="4" y="28" width="40" height="11" rx="3" fill="#CBC6B8"/><path d="M11 28 v-3 M20.3 28 v-3 M29.6 28 v-3 M39 28 v-3" stroke-width="1"/>' +
+  SPOOLS.map((s, i) => '<circle cx="' + (11 + i * 9.3) + '" cy="20" r="5.2" fill="#EEE1C8" stroke-width="1"/><circle cx="' + (11 + i * 9.3) + '" cy="20" r="3.4" fill="' + s.c + '"' + (s.clear ? ' fill-opacity=".55"' : '') + ' stroke-width=".7"/>').join('');
+S.org_full2 = '<path d="M25.2 21 L25 8.5" stroke-width="3.2"/><path d="M25.2 20.6 L25 8.9" stroke="#F1ECE2" stroke-width="1.9"/><path d="M23.6 8.7 h2.9 l-.3 -3.2 h-2.3 Z" fill="#E4DED2" stroke-width=".8"/>' + S.org_full;
 const CLOCK = '<svg viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="4.8" fill="none" stroke="#6E4A31" stroke-width="1.1"></circle><path d="M6 3.4V6l1.8 1.1" fill="none" stroke="#6E4A31" stroke-width="1.1" stroke-linecap="round"></path></svg>';
 
 
 /* ---------- items ---------- */
 const CHAINS = {
-  idea: { max: 4, names: ['灵感便签', '铅笔草图', '设计图', '精修设计图'], spr: ['idea1', 'idea2', 'idea3', 'idea4'],
-    descs: ['随手贴在屏幕边上的一句话。', '铅笔画的草图，比例还不太准。', '量好了尺寸的设计图，可以拿去打印。', '改了好几版，每个细节都想过了。'] },
+  idea: { max: 6, names: ['灵感便签', '铅笔草图', '设计图', '精修设计图', '3D 模型', '切片文件'], spr: ['idea1', 'idea2', 'idea3', 'idea4', 'idea5', 'idea6'],
+    descs: ['随手贴在屏幕边上的一句话。', '铅笔画的草图，比例还不太准。', '量好了尺寸的设计图，可以拿去打印。', '改了好几版，每个细节都想过了。',
+      '在电脑上建好的 3D 模型，可以转着看每一面。', '在 Bambu Studio 里切好片，层数、时间、用料都算好了。'] },
   fil: { max: 3, names: ['一小卷耗材', '半卷耗材', '整卷耗材'], spr: ['fil1', 'fil2', 'fil3'],
     descs: ['上次剩下的一小段，刚好够打个小零件。', '半卷 PLA 耗材。', '一整卷，够打好多东西。'] }
 };
@@ -962,7 +1324,11 @@ const SINGLE = {
   gen_fil: { name: '耗材架', desc: '轻点，取出一小卷耗材。', spr: 'gen_fil', gen: 'fil' },
   printer: { name: '3D 打印机', desc: '把图纸和耗材拖到它上面，材料齐了就会开始打印。打好了点它取件。', spr: 'printer', station: true },
   bm1: { name: '书签', desc: 'D 手绘的图案，用白色耗材打印的镂空书签。', spr: 'bm1', product: true },
-  org: { name: '桌面工具收纳', desc: '斜面上有长仓、小仓和披头孔，一体打印。收着打印机的零零碎碎。', spr: 'org', product: true }
+  org: { name: '桌面工具收纳', desc: '斜面上有长仓、小仓和披头孔，一体打印。收着打印机的零零碎碎。', spr: 'org', product: true },
+  scraper: { name: '刮刀', desc: '白色，手柄上一排孔。不容易刮花打印板。', spr: 'scraper', product: true },
+  vase: { name: '花瓶', desc: '棕色耗材打的花瓶，细细的瓶口。', spr: 'vase', product: true },
+  stand: { name: '温湿度计支架', desc: '米家温湿度计 2 的底座，可以调仰角，看看屋里的湿度。', spr: 'stand', product: true },
+  boat: { name: '小船', desc: '经典的测试小船，白色。', spr: 'boat', product: true }
 };
 const isGen = it => !!(it && SINGLE[it.k] && SINGLE[it.k].gen);
 const isStation = it => !!(it && it.k === 'printer');
@@ -989,16 +1355,18 @@ const PEOPLE = [
 ];
 const avatarHTML = who => PORTRAIT[who] || '';
 /* ---------- story ---------- */
-const ORDERS = [
+const ORDERS1 = [
   { who: 'D', tag: '她的小店', ask: '把我手绘的这幅画，打印成一枚书签。', need: { idea: 3, fil: 2 }, product: 'bm1', reward: 30, layers: 5, secs: 2, real: { h: '1.00 mm', time: '42 分钟', g: '6.6 g' }, color: '#F1ECE2',
     lift: '书签刚从打印板上取下来，还是温的。白色的一枚，D 画的图案镂空在上面。' },
-  { who: '我', tag: '给自己', ask: '把打印机的零零碎碎收起来。', need: { idea: 3, fil: 3 }, product: 'org', reward: 20, layers: 777, secs: 36, real: { h: '155.4 mm', time: '12 小时 52 分', g: '544 g' }, color: '#CBC6B8',
-    lift: '收纳架还带着热床的温度。五百多克，拿在手里沉甸甸的。' }
+  { who: '我', tag: '给自己', ask: '把打印机的零零碎碎收起来。', need: { idea: 4, fil: 3 }, product: 'org', reward: 20, layers: 777, secs: 36, real: { h: '155.4 mm', time: '12 小时 52 分', g: '544 g' }, color: '#CBC6B8',
+    lift: '收纳架还带着热床的温度。五百多克，拿在手里沉甸甸的。',
+    liftMorning: '打印板早就凉了。收纳架五百多克，拿在手里沉甸甸的。' }
 ];
 const INTRO = [
   { s: 'n', t: '杭州，工作室。' },
   { do: 'oldmsg' },
   { do: 'knock' },
+  { do: 'arrive', who: 'D' },
   { s: 'n', t: '门口站着一个粉色头发的女生，手里拿着一张草图。', pic: 'D_sketch' },
   { s: 'D', t: '你好……我是 D。是朋友介绍我来的。', pic: 'D_sketch' },
   { s: 'me', t: '我知道，进来吧。' },
@@ -1018,34 +1386,95 @@ const INTRO = [
   { s: 'me', t: '可以试试。先打一枚出来看看。' },
   { do: 'order', i: 0 }
 ];
-const POST = [
+const POST1 = [
   [
     { s: 'D', t: '原来打出来是这样的。', pic: 'D_bookmark' },
     { s: 'D', t: '……边上好像有一点毛边。', pic: 'D_bookmark' },
     { s: 'me', t: '小问题，可以修。' },
     { s: 'D', t: '那我先带回去，再想想。谢谢你。', pic: 'D_bookmark' },
     { s: 'n', t: 'D 收下了第一枚书签。之后她还会常来，我们会一起把它慢慢改好。', pic: 'D_bookmark' },
+    { do: 'leave', who: 'D' },
     { do: 'time', v: 'afternoon' },
     { s: 'n', t: '打印机附带的零零碎碎还散在桌上。我决定给它们打一个桌面工具收纳。' },
     { do: 'order', i: 1 }
-  ],
-  [
-    { s: 'n', t: '收纳架放好了。洞洞板上的工具，一件件收进去吧。' },
-    { do: 'tidy' },
-    { s: 'me', t: '哎呀，今天太着急了，两个模型都是直接掰下来的。' },
-    { s: 'me', t: '这可不是好习惯……抽空得搞把刮刀了。' },
-    { do: 'journal' }
   ]
 ];
-const TIMES = {
-  morning: { label: '上午', s1: '#E2ECEC', s2: '#F3EAD5', tint: 'rgba(255,250,235,0)', beam: '160,58 330,96 336,300 166,262', bo: .5, lights: 0 },
-  afternoon: { label: '下午', s1: '#ECE8D6', s2: '#F8E1B6', tint: 'rgba(255,205,140,.12)', beam: '160,70 370,138 384,300 166,292', bo: .75, lights: 0 },
-  dusk: { label: '傍晚', s1: '#B7AEC6', s2: '#F2BE8F', tint: 'rgba(150,92,80,.17)', beam: '160,130 430,214 440,300 166,300', bo: .2, lights: 1 }
+/* the organiser takes 12 h 52 min: at 22:00 it is still printing and stays on overnight (night lines are drafts) */
+const NIGHT1 = [
+  { s: 'n', t: '十点了。收纳架还没打完，还要好几个小时。' },
+  { s: 'me', t: '就让它开着打吧，明天一早来取。' },
+  { do: 'journal' }
+];
+/* day 2: real data from Hestia (scraper: MakerWorld 1208293, plate 1, white PLA). Items marked todo still need slicer data. */
+const ORDERS2 = [
+  { who: '我', tag: '给自己', ask: '打一把刮刀，以后取件不用再掰板。', need: { idea: 5, fil: 2 }, product: 'scraper', reward: 10, layers: 40, secs: 2.4, real: { h: '9.56 mm', time: '51 分 40 秒', g: '18.8 g' }, color: '#F1ECE2',
+    lift: '刮刀还是温的。白色的一把，手柄上一排孔。' },
+  null
+];
+/* vase, boat and stand from Hestia's slicer screenshots (2026-10-18). */
+const CHOICES = {
+  vase: { layers: 740, secs: 18.5, real: { h: '177.56 mm', time: '6 小时 34 分', g: '141.14 g' }, color: '#8C6A4F', lift: '花瓶从打印板上取了下来。' },
+  stand: { layers: 169, secs: 2.0, real: { h: '33.80 mm', time: '42 分 39 秒', g: '14.76 g' }, color: '#F1ECE2', lift: '温湿度计支架取下来了。以后看湿度就方便了。' },
+  boat: { layers: 192, secs: 1.2, real: { h: '48.00 mm', time: '24 分 53 秒', g: '12.18 g' }, color: '#F1ECE2', lift: '小船从打印板上取了下来。' }
 };
-
+function choiceOrder(k) {
+  return Object.assign({ who: '我', tag: '给自己', ask: '打一个' + SINGLE[k].name + '。', need: { idea: k === 'vase' ? 6 : 5, fil: k === 'vase' ? 3 : 2 }, product: k, reward: 15 }, CHOICES[k]);
+}
+let ORDERS = ORDERS1, POST = POST1;
+const ALL_ORDERS = () => ORDERS1.concat(ORDERS2).filter(Boolean);
+const DAYNAME = { 1: '第一天', 2: '第二天' };
+const INTRO2 = [
+  { s: 'n', t: '杭州，工作室。第二天。' },
+  { s: 'n', t: '打印机开了一整夜。收纳架打好了，还在打印板上。' }
+];
+/* after the organiser is lifted on day 2 morning */
+const MORNING2 = [
+  { s: 'n', t: '收纳架放好了。洞洞板上的工具，一件件收进去吧。' },
+  { do: 'tidy' },
+  { s: 'me', t: '哎呀，昨天太着急了，两个模型都是直接掰下来的。' },
+  { s: 'me', t: '这可不是好习惯……抽空得搞把刮刀了。' },
+  { s: 'n', t: '收纳架摆在桌上，长仓还空着。' },
+  { s: 'me', t: '今天得把刮刀打出来。' },
+  { s: 'n', t: '快递到了。是前几天买的耗材。' },
+  { do: 'unpack' },
+  { s: 'n', t: '每卷耗材的包里都有一包干燥剂。耗材怕潮。' },
+  { s: 'me', t: '有透明的……可以给 D 的书签做双层。' },
+  { s: 'me', t: '要打多色，得先把 AMS lite 装起来。' },
+  { s: 'me', t: 'AMS Pro 的烘干功能是真心动，可它长得太丑了。' },
+  { do: 'ams' },
+  { s: 'n', t: '打开电脑，挑第一样要打的东西。' },
+  { do: 'site', stage: 1 }
+];
+/* Every model is printable; the scraper is only suggested. The day ends once the scraper is printed and one more thing besides it. */
+const DUSK2 = [
+  { do: 'time', v: 'dusk' },
+  { s: 'me', t: '不知道 D 的书签用得怎么样了。' },
+  { do: 'dchat' },
+  { do: 'journal' }
+];
+const extraDone = () => st.done.some(k => CHOICES[k]);
+const POST2 = [
+  () => [
+    { s: 'n', t: '刮刀打好了。把它收进收纳架的长仓。' },
+    { do: 'stow' },
+    { s: 'me', t: '以后取件，可以不用掰板了。' },
+    ...(extraDone() ? DUSK2 : [{ do: 'time', v: 'afternoon' }, { s: 'n', t: '再挑一样打打看。' }, { do: 'site', stage: 2 }])
+  ],
+  () => st.done.includes('scraper') ? DUSK2 : [
+    { s: 'me', t: '刮刀还没打。不打出来，今天收不了工。' },
+    { do: 'site', stage: 1 }
+  ]
+];
+const JOURNAL2 = {
+  scraper: '打了一把白色的刮刀，收进收纳架的长仓。以后取件，可以不用掰板了。',
+  vase: '打了一个花瓶。',
+  stand: '打了一个温湿度计支架，以后能看湿度了。',
+  boat: '打了一艘经典的测试小船。'
+};
 const JOURNAL = {
   bm1: 'D 来工作室，把她手绘的画打印成了一枚书签。',
-  org: '给自己打了一个桌面工具收纳，把洞洞板上的工具都收了进去。'
+  org: '给自己打了一个桌面工具收纳，把洞洞板上的工具都收了进去。',
+  org_night: '给自己打一个桌面工具收纳。要打十二个多小时，开着过夜打。'
 };
 
 /* ---------- sound ---------- */
@@ -1068,14 +1497,18 @@ const sfx = (() => {
   return {
     wake() { ctx(); },
     spawn() { tone(620, .1, 'triangle', .05, 880); },
-    merge(lv) { const f = 360 + lv * 110; tone(f, .18, 'triangle', .08, f * 1.6); tone(f * 3, .09, 'sine', .025, null, .05); },
+    merge(lv, combo) { const f = (360 + lv * 110) * Math.pow(1.0595, Math.min(12, (combo || 1) - 1)); tone(f, .18, 'triangle', .08, f * 1.6); tone(f * 3, .09, 'sine', .025, null, .05); },
+    lucky() { tone(880, .12, 'sine', .05, 1320); tone(1320, .16, 'sine', .04, 1760, .08); },
     place() { tone(250, .09, 'triangle', .06, 170); },
     tick() { tone(1800 + Math.random() * 400, .02, 'square', .007); },
     creak() { tone(260 + Math.random() * 220, .035, 'triangle', .02); },
+    bubble() { tone(700 + Math.random() * 500, .05, 'sine', .025, 1100); },
+    snap() { tone(2200, .02, 'square', .05, 1200); tone(140, .12, 'sine', .16, 70, .01); },
     pop() { tone(1500, .05, 'square', .045, 650); tone(120, .2, 'sine', .11, 55); },
     chime() { [659, 784, 988].forEach((f, i) => tone(f, .45, 'sine', .05, null, i * .09)); },
     soft() { tone(520, .12, 'sine', .03); },
     buzz() { [0, .2].forEach(d => { tone(62, .14, 'sawtooth', .05, null, d); tone(124, .14, 'square', .012, null, d); }); },
+    door() { tone(95, .28, 'sine', .26, 42); tone(60, .35, 'sine', .14, 35, .02); tone(1900, .025, 'square', .03, 900, .2); tone(1300, .03, 'triangle', .025, 700, .24); },
     knock() { tone(150, .16, 'sine', .22, 70); tone(900, .03, 'triangle', .02); tone(150, .16, 'sine', .22, 70, .32); tone(900, .03, 'triangle', .02, .32); },
     humStart() {
       const a = ctx(); if (!a || muted || hum) return;
@@ -1093,19 +1526,26 @@ const sfx = (() => {
 
 /* ---------- state ---------- */
 const TUT_KEY = 'shuangchengji-tutorial-done';
-function tutWasDone() { try { return localStorage.getItem(TUT_KEY) === '1'; } catch (e) { return false; } }
 function markTutDone(v) { try { if (v) localStorage.setItem(TUT_KEY, '1'); else localStorage.removeItem(TUT_KEY); } catch (e) {} }
 
 let st, Q = [], toastT = 0, printRaf = 0;
-function fresh() {
+function fresh(day) {
   const b = Array(N).fill(null);
-  b[0] = { k: 'gen_idea' }; b[7] = { k: 'gen_fil' }; b[17] = { k: 'printer' };
-  b[2] = { k: 'idea', lv: 1 }; b[9] = { k: 'idea', lv: 1 }; b[14] = { k: 'fil', lv: 1 };
+  b[0] = { k: 'gen_idea' }; b[5] = { k: 'gen_fil' }; b[12] = { k: 'printer' };
+  b[2] = { k: 'idea', lv: 1 }; b[7] = { k: 'idea', lv: 1 }; b[10] = { k: 'fil', lv: 1 };
   return { board: b, gens: { gen_idea: { c: 6, t: 0 }, gen_fil: { c: 6, t: 0 } }, coins: 120, order: -1, printed: {}, done: [],
-    time: 'morning', notif: false, tidy: null, met: {}, saved: {}, pendingCard: null, phoneNew: false, room: { org: false, tidy: false }, sel: -1, slots: { idea: null, fil: null }, printer: 'idle', pLeft: 0, pProg: 0, pending: null, tut: !tutWasDone() };
+    time: 'morning', notif: false, tidy: null, met: {}, saved: {}, pendingCard: null, phoneNew: false, room: { org: false, tidy: false }, sel: -1, slots: { idea: null, fil: null }, printer: 'idle', pLeft: 0, pProg: 0, pending: null, tut: true,
+    day: 1, jr: [], choice: null, maint: { plate: 0, poop: 0 }, drawer: [], desk: [], rel: { D: 20, J: 60 }, here: [], trash: [], min: 600 };
+}
+function freshDay(day, coins) {
+  const s = fresh();
+  if (day !== 2) return s;
+  return Object.assign(s, { day: 2, tut: false, coins: coins || 150, met: { D: true }, saved: { D: true },
+    room: { org: false, tidy: false, scraper: false, spools: false }, ams: null, unpack: {}, maint: { plate: 1, poop: 1 },
+    printer: 'ready', pending: 'org' });
 }
 const boardEl = $('#board'), nextBtn = $('#nextBtn'), dlg = $('#dlg');
-const GMAX = 6, GREGEN = 2600;
+const GMAX = 6, GREGEN = 1600;
 const cellEl = i => boardEl.children[i];
 const printerIdx = () => st.board.findIndex(isStation);
 const curOrder = () => st.order >= 0 ? ORDERS[st.order] : null;
@@ -1125,7 +1565,7 @@ function stationHTML() {
   } else {
     const C = 106.8;
     h += '<svg class="ring" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="17" class="rbg"></circle><circle cx="20" cy="20" r="17" class="rfg" id="stRing" stroke-dasharray="' + C + '" stroke-dashoffset="' + (C * (1 - st.pProg)).toFixed(1) + '"></circle></svg>';
-    h += '<span class="timer">' + CLOCK + '<b id="stTimer">' + (st.printer === 'cooling' ? '凉' : st.pLeft + 's') + '</b></span>';
+    h += '<span class="timer">' + CLOCK + '<b id="stTimer">' + (st.printer === 'cooling' ? '凉' : st.printer === 'overnight' ? '夜' : st.pLeft + 's') + '</b></span>';
   }
   return h;
 }
@@ -1154,13 +1594,43 @@ function renderBoard(fx) {
     if (i === st.sel && it) cls.push('sel');
     if (fx.pop === i) cls.push('pop');
     if (fx.spawn === i) cls.push('spawn');
+    if (fx.gen === i) cls.push(it && it.k === 'gen_fil' ? 'tapspin' : 'tapflip');
     let label = it ? describe(it).name : '空格';
     if (isStation(it) && st.printer === 'ready') label += '：打印好了，点一下取件';
     html += '<button type="button" class="' + cls.join(' ') + '" data-i="' + i + '" data-drop="cell" aria-label="' + label + '">' + cellHTML(i) + '</button>';
   }
   boardEl.innerHTML = html;
-  if (fx.pop != null) sparks(fx.pop);
+  if (fx.pop != null) { sparks(fx.pop); confetti(fx.pop); }
   renderInfo(); renderOrders(); renderScene(); updateGuide();
+}
+function confetti(i) {
+  if (reduced) return;
+  const c = cellEl(i); if (!c) return;
+  const cols = ['#E3B969', '#9DB089', '#C47A57', '#7FA7A1', '#F4A6D7', '#FFFDF6'];
+  for (let n = 0; n < 12; n++) {
+    const s = document.createElement('span'); s.className = 'confetti';
+    const a = Math.random() * Math.PI * 2, r = 26 + Math.random() * 22;
+    s.style.setProperty('--dx', Math.cos(a) * r + 'px'); s.style.setProperty('--dy', Math.sin(a) * r + 14 + 'px');
+    s.style.setProperty('--rot', (Math.random() * 540 - 270) + 'deg'); s.style.background = cols[n % cols.length];
+    c.appendChild(s); setTimeout(() => s.remove(), 750);
+  }
+}
+/* a short label that floats up from a cell: combo count, or a lucky level-2 drop */
+function floatLabel(i, text, cls) {
+  const c = cellEl(i); if (!c) return;
+  const r = relRect(c), el = document.createElement('span');
+  el.className = 'floatlbl' + (cls ? ' ' + cls : ''); el.textContent = text;
+  el.style.left = (r.left + r.right) / 2 + 'px'; el.style.top = r.top - 4 + 'px';
+  stage.appendChild(el); setTimeout(() => el.remove(), 950);
+}
+/* merges within 1.8 s of each other count as a combo: rising pitch and a ×N label */
+const COMBO = { n: 0, t: 0 };
+function mergeFx(to, lv) {
+  const now = performance.now();
+  COMBO.n = now - COMBO.t < 1800 ? COMBO.n + 1 : 1; COMBO.t = now;
+  sfx.merge(lv, COMBO.n);
+  if (COMBO.n >= 2) floatLabel(to, '×' + COMBO.n);
+  if (lv >= 4 && !reduced) { boardEl.classList.remove('thud'); void boardEl.offsetWidth; boardEl.classList.add('thud'); }
 }
 function sparks(i) {
   if (reduced) return;
@@ -1182,8 +1652,8 @@ function updatePips() {
 }
 function emptyCells() { const r = []; st.board.forEach((x, i) => { if (!x) r.push(i); }); return r; }
 function nearestEmpty(i) {
-  const r0 = Math.floor(i / 7), c0 = i % 7; let best = -1, bd = 1e9;
-  emptyCells().forEach(j => { const r = Math.floor(j / 7), c = j % 7; const d = (r - r0) ** 2 + (c - c0) ** 2 + j * 1e-4; if (d < bd) { bd = d; best = j; } });
+  const r0 = Math.floor(i / COLS), c0 = i % COLS; let best = -1, bd = 1e9;
+  emptyCells().forEach(j => { const r = Math.floor(j / COLS), c = j % COLS; const d = (r - r0) ** 2 + (c - c0) ** 2 + j * 1e-4; if (d < bd) { bd = d; best = j; } });
   return best;
 }
 function tapGen(i) {
@@ -1192,8 +1662,10 @@ function tapGen(i) {
   const j = nearestEmpty(i);
   if (j < 0) { hint('桌上放不下了。合成一些，或者把用不上的收进抽屉。'); return; }
   g.c--;
-  st.board[j] = { k: SINGLE[it.k].gen, lv: Math.random() < .15 ? 2 : 1 };
-  sfx.spawn(); renderBoard({ spawn: j });
+  const lucky = Math.random() < .15;
+  st.board[j] = { k: SINGLE[it.k].gen, lv: lucky ? 2 : 1 };
+  sfx.spawn(); renderBoard({ spawn: j, gen: i });
+  if (lucky) { sfx.lucky(); floatLabel(j, it.k === 'gen_idea' ? '灵光一闪' : '运气不错', 'lucky'); }
 }
 function selectCell(i) {
   const it = st.board[i], prev = st.sel, p = prev >= 0 && prev !== i ? st.board[prev] : null;
@@ -1277,7 +1749,7 @@ function handleDrop(from, t) {
     if (CHAINS[it.k] && tt.k === it.k && tt.lv === it.lv) {
       if (it.lv < CHAINS[it.k].max) {
         st.board[to] = { k: it.k, lv: it.lv + 1 }; st.board[from] = null; st.sel = to;
-        sfx.merge(it.lv + 1); renderBoard({ pop: to }); return;
+        renderBoard({ pop: to }); mergeFx(to, it.lv + 1); return;
       }
       hint('这已经是最好的' + CHAINS[it.k].names[it.lv - 1] + '了。');
     }
@@ -1325,10 +1797,19 @@ function setGrow(p) {
   const h = p * 96;
   G.clip.setAttribute('y', (310 - h).toFixed(2)); G.clip.setAttribute('height', (h + .5).toFixed(2));
 }
+/* The laptop shows the drawing of the most recent print, as a blueprint. */
+let LAP0 = null;
+function setLaptop(k) {
+  const g = $('#lapScreen'); if (LAP0 == null) LAP0 = g.innerHTML;
+  if (!k) { g.innerHTML = LAP0; return; }
+  const lines = S[k].replace(/<ellipse[^>]*fill-opacity="\.1\d"[^>]*\/>/g, '');
+  g.innerHTML = '<path d="M490 236 H598 M490 252 H598 M490 268 H598 M490 284 H598 M506 226 V293 M530 226 V293 M554 226 V293 M578 226 V293" stroke="#C3D5D0" stroke-width=".5" fill="none"></path>' +
+    '<g class="blueprint" transform="translate(514 226) scale(1.38)" stroke="#5E8C88" stroke-width="1" fill="none">' + lines + '</g>';
+}
 function startPrint() {
   const o = curOrder();
   st.slots = { idea: null, fil: null }; st.printer = 'printing'; st.pending = o.product; st.pProg = 0; st.pLeft = o.secs;
-  G.spr.innerHTML = S[o.product]; setGrow(0);
+  G.spr.innerHTML = S[o.product]; setGrow(0); setLaptop(o.product);
   $('#spoolRing').setAttribute('fill', o.color);
   $('#scene').classList.add('printing');
   sfx.chime();
@@ -1337,6 +1818,7 @@ function startPrint() {
 }
 function runPrint(o) {
   const home = reduced ? 100 : 350, dur = o.secs * 1000 * (reduced ? .4 : 1), total = home + dur;
+  const m0 = st.min, mDur = o.real ? realMinutes(o.real.time) : 10;
   const t0 = performance.now(); let lastTick = 0, lastCx = 0;
   sfx.humStart();
   function f(now) {
@@ -1350,6 +1832,8 @@ function runPrint(o) {
       const p = Math.min(1, (e - home) / dur);
       const cx = Math.sin(now / 150) * 40 * (0.65 + 0.35 * Math.sin(now / 900));
       setHead(46 - p * 78, cx); setGrow(p);
+      st.min = Math.min(CLOSE, m0 + mDur * p); applyClock();
+      if (st.day === 1 && m0 + mDur * p >= CLOSE && p < 1) { overnight(o, p); return; }
       sfx.humSet(70 + Math.abs(cx - lastCx) * 9); lastCx = cx;
       if (now - lastTick > 120) { sfx.tick(); lastTick = now; }
       G.lcd.textContent = Math.round(p * 100) + '%';
@@ -1359,6 +1843,14 @@ function runPrint(o) {
     printRaf = requestAnimationFrame(f);
   }
   printRaf = requestAnimationFrame(f);
+}
+function overnight(o, p) {
+  sfx.humStop(); setHead(46 - p * 78, 0);
+  st.printer = 'overnight'; st.pProg = p; st.min = CLOSE; applyClock();
+  G.lcd.textContent = Math.round(p * 100) + '%';
+  st.order = -1; st.night = o.product;
+  renderBoard();
+  queue(NIGHT1, true);
 }
 function cool() {
   st.printer = 'cooling'; renderBoard();
@@ -1380,12 +1872,39 @@ function renderScene() {
   if (st.printer === 'idle') tag.textContent = '打印机 · 待命';
   else if (st.printer === 'cooling') tag.textContent = '降温中';
   else if (st.printer === 'ready') tag.textContent = '打印好了 · 点击取件';
+  else if (st.printer === 'overnight') tag.textContent = '打印中 · 开着过夜';
+  if (st.printer === 'idle' && needsCare()) tag.textContent = '打印机 · 该保养了';
   $('#scene').classList.toggle('ready', st.printer === 'ready');
 }
+/* Like a classic RPG, everything in the room says something when tapped. Rects are in scene SVG units, checked in order. */
+const LOOKS = [
+  { r: [100, 228, 160, 304], on: () => st.room.ams, t: () => 'AMS lite。四个料位：白、灰、黑、透明。' },
+  { r: [690, 225, 830, 335], on: () => st.room.org, t: () => st.room.scraper ? '自己打的桌面收纳。刮刀收在长仓里。' : st.room.tidy ? '自己打的桌面收纳。工具都收进去了。' : '自己打的桌面收纳。' },
+  { r: [16, 362, 170, 416], t: () => { openSketch(); return null; } },
+  { r: [158, 0, 392, 356], printer: true, t: () => { openPrinter(); return null; } },
+  { r: [444, 210, 628, 336], t: () => '电脑上开着 Bambu Studio。' },
+  { r: [654, 42, 864, 212], t: () => st.room.spools ? '耗材架。挂着白、灰、黑、透明四卷 PLA。' : '耗材架。' },
+  { r: [400, 258, 444, 332], t: () => '一杯热饮，还冒着热气。' },
+  { r: [576, 138, 616, 176], t: () => '洞洞板上贴着一张便利贴。' },
+  { r: [436, 30, 622, 192], t: () => st.room.tidy ? '洞洞板。工具都收进收纳架了，空出一大片。' : '洞洞板。打印用的工具都挂在这里。' },
+  { r: [40, 200, 112, 306], t: () => '一盆绿植。' },
+  { r: [14, 20, 176, 216], t: () => '窗外是杭州。' },
+  { r: [740, 455, 800, 515], bin: true, t: () => '垃圾桶。' }
+];
+function scenePoint(e) {
+  const m = sceneSvg.getScreenCTM(); if (!m) return null;
+  return new DOMPoint(e.clientX, e.clientY).matrixTransform(m.inverse());
+}
 $('#scene').addEventListener('click', e => {
-  if (panMoved) return;
+  if (panMoved || deskJustMoved || e.target.closest('#deskItems')) return;
   const hit = document.elementFromPoint(e.clientX, e.clientY);
+  if (hit && hit.closest && hit.closest('#deskCal')) { openCal(); return; }
   if (hit && hit.closest && hit.closest('#deskPhone')) { if (st.notif) { openChat(); return; } if (st.pendingCard) openCard(st.pendingCard, false); else openPhone(); return; }
+  const pt = scenePoint(e);
+  const l = pt && LOOKS.find(x => pt.x >= x.r[0] && pt.x <= x.r[2] && pt.y >= x.r[1] && pt.y <= x.r[3] && (!x.on || x.on()));
+  if (l && l.printer && st.printer === 'ready') { openLift(); return; }
+  if (l && l.bin) { openBin(); return; }
+  if (l) { const t = l.t(); if (t) { sfx.soft(); hint(t, 2600); } return; }
   if (st.printer === 'ready') openLift();
 });
 
@@ -1396,9 +1915,12 @@ function openLift() {
   const p = st.pending;
   $('#liftTitle').textContent = SINGLE[p].name;
   $('#liftSpr').innerHTML = S[p];
-  $('#liftText').hidden = true; $('#placeBtn').hidden = true; $('#flexBtn').hidden = false;
-  $('#liftHint').textContent = '打印板还是温的。按住下面的按钮（或按住图），把它轻轻掰弯。';
-  Object.assign(L, { b: 0, hold: false, popped: false, popT: 0, heat: 1, shown: false, last: performance.now() });
+  const pick = st.day === 2 && !!st.room.scraper;
+  $('#liftText').hidden = true; $('#placeBtn').hidden = true; $('#liftGive').hidden = true; $('#liftGive').innerHTML = ''; $('#flexBtn').hidden = pick; $('#liftPick').hidden = !pick;
+  $('#flexBtn').textContent = '按住，掰弯打印板'; $('#liftScraper').setAttribute('opacity', 0);
+  const warm = curOrder() ? '打印板还是温的。' : '';
+  $('#liftHint').textContent = pick ? warm + '这次怎么取？' : warm + '按住下面的按钮（或按住图），把打印板轻轻掰弯。';
+  Object.assign(L, { b: 0, hold: false, popped: false, cold: !warm, popT: 0, heat: warm ? 1 : 0, shown: false, last: performance.now(), mode: pick ? null : 'flex' });
   $('#liftModal').hidden = false; updateGuide();
   cancelAnimationFrame(L.raf); L.raf = requestAnimationFrame(liftLoop);
 }
@@ -1411,31 +1933,42 @@ function liftLoop(now) {
   } else {
     L.popT = Math.min(1, L.popT + dt / 650);
     L.b = Math.max(0, L.b - dt / 160);
-    L.heat = Math.max(.22, L.heat - dt / 4200);
+    L.heat = Math.max(L.cold ? 0 : .22, L.heat - dt / 4200);
     if (L.popT >= 1 && !L.shown) { L.shown = true; afterPop(); }
   }
   drawLift();
   if (!$('#liftModal').hidden) L.raf = requestAnimationFrame(liftLoop);
 }
 function drawLift() {
-  const b = L.b, e = b * 12, cy = 150 - b * 46;
+  const sc = L.mode === 'scrape', b = sc ? 0 : L.b, e = b * 12, cy = 150 - b * 46;
   $('#plate').setAttribute('d', 'M60 ' + (150 + e) + ' Q200 ' + cy + ' 340 ' + (150 + e) + ' L340 ' + (157 + e) + ' Q200 ' + (cy + 7) + ' 60 ' + (157 + e) + ' Z');
   $('#plateEdge').setAttribute('d', 'M60 ' + (157 + e) + ' Q200 ' + (cy + 7) + ' 340 ' + (157 + e) + ' L340 ' + (161 + e) + ' Q200 ' + (cy + 11) + ' 60 ' + (161 + e) + ' Z');
   const mid = .5 * (150 + e) + .5 * cy;
-  let x = 200 - 57.6, y = mid - 101, r = 0;
+  let x = 200 - 57.6, y = mid - 101, r = 0, px = 57.6;
   if (L.popped) { const t = L.popT; y += -70 * Math.sin(Math.PI * t); x += 18 * t; r = -12 * Math.sin(Math.PI * t) + 4 * t; }
-  $('#liftObj').setAttribute('transform', 'translate(' + x.toFixed(1) + ' ' + y.toFixed(1) + ') rotate(' + r.toFixed(2) + ' 57.6 101) scale(2.4)');
+  else if (sc) { const t = Math.max(0, (L.b - .78) / .22); r = 10 * t; px = 110; y -= 4 * t; }
+  $('#liftObj').setAttribute('transform', 'translate(' + x.toFixed(1) + ' ' + y.toFixed(1) + ') rotate(' + r.toFixed(2) + ' ' + px + ' 101) scale(2.4)');
+  if (sc) {
+    $('#liftScraperIn').setAttribute('transform', 'translate(' + (40 + L.b * 125).toFixed(1) + ' 150) rotate(14)');
+    $('#liftScraper').setAttribute('opacity', L.popped ? Math.max(0, 1 - L.popT * 1.5).toFixed(2) : 1);
+  }
   $('#liftSteam').setAttribute('opacity', (L.heat * .95).toFixed(2));
   $('#liftGlow').setAttribute('opacity', (L.heat * .9).toFixed(2));
 }
+const liftOrder = () => curOrder() || ALL_ORDERS().find(x => x.product === st.pending);
 function afterPop() {
-  const o = ORDERS[st.order];
+  const o = liftOrder(), night = !curOrder();
   $('#flexBtn').hidden = true;
-  $('#liftHint').textContent = '啪的一声，它松开了。';
-  const tx = $('#liftText'); tx.textContent = o.lift; tx.hidden = false;
-  $('#placeBtn').hidden = false;
+  $('#liftHint').textContent = L.mode === 'scrape' ? '刮刀斜着推进去，它一下翘了起来。' : '啪的一声，它松开了。';
+  const tx = $('#liftText'); tx.textContent = night && o.liftMorning || o.lift; tx.hidden = false;
+  // someone in the room: hand it over or leave it on the desk; alone: desk only
+  const who = o.who === '我' && KEEP_IN_ROOM[o.product] ? [] : present();
+  $('#liftGive').innerHTML = who.map(w => '<button type="button" class="primary" data-w="' + w + '">给 ' + (NAMES[w] || w) + '</button>').join('');
+  $('#liftGive').hidden = !who.length;
+  const pb = $('#placeBtn'); pb.hidden = false; pb.classList.toggle('alt', who.length > 0);
+  pb.textContent = o.who === '我' && KEEP_IN_ROOM[o.product] ? '收好' : '放到桌上';
 }
-function holdOn(e) { if (L.popped) return; sfx.wake(); L.hold = true; if (e && e.preventDefault) e.preventDefault(); }
+function holdOn(e) { if (L.popped || !L.mode) return; sfx.wake(); L.hold = true; if (e && e.preventDefault) e.preventDefault(); }
 function holdOff() { L.hold = false; }
 ['#flexBtn', '#liftSvg'].forEach(s => {
   const el = $(s);
@@ -1445,21 +1978,41 @@ function holdOff() { L.hold = false; }
 });
 $('#flexBtn').addEventListener('keydown', e => { if ((e.key === ' ' || e.key === 'Enter') && !e.repeat) { e.preventDefault(); holdOn(); } });
 $('#flexBtn').addEventListener('keyup', e => { if (e.key === ' ' || e.key === 'Enter') holdOff(); });
-$('#placeBtn').addEventListener('click', () => {
-  const j = nearestEmpty(printerIdx());
-  if (j < 0) { $('#liftHint').textContent = '桌上没有空位了。先把用不上的收进抽屉，再点打印机取件。'; $('#liftModal').hidden = true; updateGuide(); return; }
-  st.board[j] = { k: st.pending };
-  st.printed[st.order] = true; st.pending = null; st.printer = 'idle'; st.sel = j;
+$('#liftPick').addEventListener('click', e => {
+  const b = e.target.closest('[data-m]'); if (!b) return;
+  sfx.wake(); sfx.soft(); L.mode = b.dataset.m;
+  const sc = L.mode === 'scrape';
+  $('#liftPick').hidden = true; $('#flexBtn').hidden = false;
+  $('#flexBtn').textContent = sc ? '按住，用刮刀斜着推进去' : '按住，掰弯打印板';
+  $('#liftHint').textContent = sc ? '按住按钮（或按住图），让刮刀贴着打印板推进去。' : '按住按钮（或按住图），把打印板轻轻掰弯。';
+  $('#liftScraper').setAttribute('opacity', sc ? 1 : 0); drawLift();
+});
+$('#placeBtn').addEventListener('click', () => finishLift(null));
+$('#liftGive').addEventListener('click', e => { const b = e.target.closest('[data-w]'); if (b) finishLift(b.dataset.w); });
+function finishLift(to) {
+  const k = st.pending, o = curOrder(); passTime(3);
+  if (o) st.printed[st.order] = true;
+  st.pending = null; st.printer = 'idle'; st.sel = -1;
+  st.maint.plate++; st.maint.poop++;
+  if (needsCare()) setTimeout(() => hint(st.maint.poop >= POOP_MAX ? '该清理竹屎了，点一下打印机。' : '打印板该洗了，点打印机看看。', 3400), 1200);
   setGrow(0); G.glow.setAttribute('opacity', '0'); G.lcd.textContent = '待命';
   $('#liftModal').hidden = true; cancelAnimationFrame(L.raf);
-  sfx.place(); renderBoard({ spawn: j });
-});
+  if (to) { renderBoard(); giveTo(to, k, null); return; }
+  sfx.place();
+  if (o && o.who === '我' && KEEP_IN_ROOM[k]) { renderBoard(); completeOrder(); return; }
+  if (!o && k === 'org') { renderBoard(); morningOrg(); return; }
+  putOnDesk(k);
+  renderBoard();
+  if (o && o.who === '我') completeOrder();
+}
 
 /* ---------- orders ---------- */
 function renderOrders() {
   const el = $('#orders'), o = curOrder();
-  if (!o) { el.innerHTML = '<div class="orderwait">' + (st.done.length >= ORDERS.length ? '今天的事都做完了。' : '还没有新的事情。') + '</div>'; return; }
-  const onBoard = st.board.some(x => x && x.k === o.product);
+  updateModeDot();
+  if (!o && storyWait) { el.innerHTML = storyCardHTML(); $('#storyBtn').addEventListener('click', resumeStory); return; }
+  if (!o) { el.innerHTML = '<div class="orderwait">' + (st.done.length >= ORDERS.length ? '今天的事都做完了。' : '还没有新的事情。先随便合成一些吧。') + '</div>'; return; }
+  const onBoard = haveProduct(o.product);
   const have = (k, lv) => st.board.some(x => x && x.k === k && x.lv === lv) || (st.slots[k] && st.slots[k].lv === lv) || !!st.printed[st.order] || (st.printer !== 'idle');
   const chip = k => { const lv = o.need[k]; const ok = have(k, lv); return '<span class="chip' + (ok ? ' ok' : '') + '">' + spr(CHAINS[k].spr[lv - 1]) + CHAINS[k].names[lv - 1] + '</span>'; };
   const me = o.who === '我';
@@ -1468,21 +2021,39 @@ function renderOrders() {
     '<div class="otext"><div class="oname">' + (me ? '我自己' : o.who) + '<span class="otag">' + o.tag + '</span></div>' +
     (onBoard ? '<div class="readynote">' + SINGLE[o.product].name + '做好了。</div>' : '<div class="oask">' + o.ask + '</div><div class="recipe">' + chip('idea') + '<span>+</span>' + chip('fil') + '</div>') + '</div>' +
     '<div class="owant"><div class="wantimg' + (onBoard ? '' : ' missing') + '">' + spr(SINGLE[o.product].spr) + '</div>' +
-    '<button type="button" class="deliver" id="deliverBtn"' + (onBoard ? '' : ' disabled') + '>' + (me ? '收好' : '交给 ' + o.who) + '</button></div></article>';
+    '<button type="button" class="deliver" id="deliverBtn"' + (onBoard && (me || present().includes(o.who)) ? '' : ' disabled') + '>' + (me ? '收好' : '交给 ' + o.who) + '</button></div></article>';
   $('#deliverBtn').addEventListener('click', deliver);
+  if (storyWait) { el.insertAdjacentHTML('beforeend', '<button type="button" class="storypill" id="storyBtn">继续剧情</button>'); $('#storyBtn').addEventListener('click', resumeStory); }
+}
+const haveProduct = k => st.board.some(x => x && x.k === k) || st.desk.some(x => x.k === k);
+function takeProduct(k) {
+  const j = st.board.findIndex(x => x && x.k === k); if (j >= 0) { st.board[j] = null; return true; }
+  const d = st.desk.findIndex(x => x.k === k); if (d >= 0) { st.desk.splice(d, 1); renderDesk(); return true; }
+  return false;
 }
 function deliver() {
+  const o = curOrder(); if (!o || !haveProduct(o.product)) return;
+  if (o.who !== '我') { giveTo(o.who, o.product, st.desk.findIndex(x => x.k === o.product)); return; }
+  takeProduct(o.product); completeOrder();
+}
+function completeOrder(auto) {
   const o = curOrder(); if (!o) return;
-  const j = st.board.findIndex(x => x && x.k === o.product);
-  if (j < 0) return;
-  st.board[j] = null; st.sel = -1;
+  st.sel = -1;
   st.done.push(o.product);
+  if (st.day === 2 && JOURNAL2[o.product]) st.jr.push({ spr: o.product, t: JOURNAL2[o.product] });
   const idx = st.order; st.order = -1;
   addCoins(o.reward); sfx.chime();
   if (o.product === 'org') { st.room.org = true; showInRoom(720); renderRoom('org'); setTimeout(() => hint('收纳架放在了桌子右边。拖动画面可以看到它。', 4200), 300); }
-  if (st.tut && idx === 0) { st.tut = false; markTutDone(true); }
+  if (st.tut && idx === 0) { st.tut = false; markTutDone(true); placeModeBtns(); }
   renderBoard();
-  queue(POST[idx]);
+  queue(typeof POST[idx] === 'function' ? POST[idx]() : POST[idx], auto);
+}
+// day 2 morning: the organiser printed overnight; set it on the desk, then tidy the pegboard
+function morningOrg() {
+  st.room.org = true; showInRoom(720); renderRoom('org'); addCoins(ORDERS1[1].reward); sfx.chime();
+  setTimeout(() => hint('收纳架放在了桌子右边。拖动画面可以看到它。', 4200), 300);
+  st.jr.push({ spr: 'org_full', t: JOURNAL.org });
+  queue(MORNING2, true);
 }
 function addCoins(n) {
   const from = st.coins, to = st.coins + n; st.coins = to;
@@ -1492,14 +2063,21 @@ function addCoins(n) {
 }
 
 /* ---------- item bar ---------- */
+const sellPrice = it => 5 * it.lv;
 function renderInfo() {
   const el = $('#info'); const it = st.sel >= 0 ? st.board[st.sel] : null;
-  if (!it) { el.innerHTML = '<div class="empty">点一下桌上的东西，看看它是什么。</div>'; return; }
+  if (!it) {
+    const n = st.drawer.length;
+    el.innerHTML = '<div class="empty" style="flex:1">点一下桌上的东西，看看它是什么。</div>' + (n ? '<button type="button" class="sbtn" id="ibDrawer">抽屉 · ' + n + '</button>' : '');
+    if (n) $('#ibDrawer').addEventListener('click', openDrawer);
+    return;
+  }
   const d = describe(it), o = curOrder();
   let desc = d.desc, btns = '';
   if (isStation(it)) {
-    if (st.printer === 'printing') { const o = curOrder(); desc = '正在打印「' + SINGLE[st.pending].name + '」' + (o && o.real ? '：' + o.layers + ' 层，现实中约 ' + o.real.time + '。' : '。'); }
+    if (st.printer === 'printing') { const o = curOrder(); desc = '正在打印「' + SINGLE[st.pending].name + '」' + (o && o.real ? '：' + o.layers + ' 层，现实中约 ' + o.real.time + '。' : o && o.todo ? '：切片数据待补，时长先用 3 秒占位。' : '。'); }
     else if (st.printer === 'cooling') desc = '打完了，正在降温。';
+    else if (st.printer === 'overnight') desc = '「' + SINGLE[st.pending].name + '」还在打，开着过夜。';
     else if (st.printer === 'ready') { desc = '「' + SINGLE[st.pending].name + '」打印好了。'; btns = '<button type="button" class="sbtn p" id="ibLift">取件</button>'; }
     else {
       const loaded = ['idea', 'fil'].filter(k => st.slots[k]).map(k => describe(st.slots[k]).name);
@@ -1508,35 +2086,400 @@ function renderInfo() {
   } else if (CHAINS[it.k]) {
     if (o && !st.printed[st.order] && st.printer === 'idle' && o.need[it.k] === it.lv) btns = '<button type="button" class="sbtn p" id="ibLoad">放上打印机</button>';
     else btns = '<button type="button" class="sbtn" id="ibStash">收进抽屉</button>';
-  } else if (o && it.k === o.product) btns = '<button type="button" class="sbtn p" id="ibGive">' + (o.who === '我' ? '收好' : '交给 ' + o.who) + '</button>';
-  const ro = ORDERS.find(x => x.product === it.k);
+    // top level can be sold to free the cell; 草稿 price: 5 coins per level
+    if (it.lv === CHAINS[it.k].max) btns = '<button type="button" class="sbtn p" id="ibSell">卖掉 +' + sellPrice(it) + '</button>' + btns;
+  } else if (it.k === 'gen_idea') btns = '<button type="button" class="sbtn" id="ibSketch">翻看图纸</button>';
+  else if (o && it.k === o.product) btns = '<button type="button" class="sbtn p" id="ibGive">' + (o.who === '我' ? '收好' : '交给 ' + o.who) + '</button>';
+  const ro = ALL_ORDERS().find(x => x.product === it.k);
   if (ro && ro.real) desc += '　' + ro.layers + ' 层 · ' + ro.real.h + ' · 约 ' + ro.real.time + ' · ' + ro.real.g;
   el.innerHTML = '<div class="thumb">' + spr(d.spr) + '</div><div class="itxt"><div class="iname">' + d.name + '<span class="ilv">' + d.lv + '</span></div><div class="idesc">' + desc + '</div></div>' + btns;
   const on = (id, fn) => { const b = $(id); if (b) b.addEventListener('click', fn); };
-  on('#ibLift', openLift); on('#ibUnload', unloadPrinter); on('#ibGive', deliver);
-  on('#ibStash', () => { st.board[st.sel] = null; st.sel = -1; sfx.place(); renderBoard(); });
+  on('#ibLift', openLift); on('#ibSketch', openSketch); on('#ibUnload', unloadPrinter); on('#ibGive', deliver);
+  on('#ibStash', () => { const x = st.board[st.sel]; st.drawer.push({ k: x.k, lv: x.lv }); st.board[st.sel] = null; st.sel = -1; sfx.place(); renderBoard(); hint('收进抽屉了。不选东西的时候，右下角可以打开抽屉。', 3200); });
   on('#ibLoad', () => loadPrinter(st.sel));
+  on('#ibSell', () => { const i = st.sel, x = st.board[i], n = sellPrice(x); st.board[i] = null; st.sel = -1; addCoins(n); sfx.chime(); floatLabel(i, '+' + n, 'lucky'); renderBoard(); });
+}
+
+/* ---------- prints on the desk, gifts ---------- */
+// Hidden on purpose: players learn who likes what from the reactions alone.
+const GIFT_TAG = { bm1: '好看', vase: '好看', boat: '实用', scraper: '实用', stand: '实用', org: '实用' };
+const GIFT_SAY = { D: { yes: '这个还不错呢。', no: '不要不要，人家不要。' } };
+const KEEP_IN_ROOM = { org: 1, scraper: 1 };
+const DESK_SPOTS = [[425, 410], [382, 412], [470, 410], [530, 412], [600, 410], [652, 413], [140, 412], [716, 413]];
+const DESK_BOX = [20, 352, 860, 414];
+// Real size on the desk, heights from the slicer. Scale comes from the desk props:
+// the mug (about 95 mm) is 34 units tall and the laptop lid 86, so 1 mm ≈ 0.4 units.
+// (The printer drawing is oversized for now; it is due to be redrawn as the A1.)
+const MM = 0.4;
+// Flat prints lie on the desk: drawn by their footprint, squashed for the desk's angle.
+// 草稿: real footprint of D's bookmark still needed from Hestia.
+const FLAT_MM = { bm1: { w: 45, d: 0.35 } };
+const sprBoxes = {};
+const noShadow = svg => svg.replace(/<ellipse[^>]*fill-opacity="\.1\d"[^>]*\/>/g, '');
+function sprBox(key) {
+  if (sprBoxes[key]) return sprBoxes[key];
+  let m = $('#sprMeasure');
+  if (!m) { m = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); m.id = 'sprMeasure'; m.setAttribute('width', '48'); m.setAttribute('height', '48'); m.style.cssText = 'position:absolute;left:-999px;top:0;visibility:hidden'; document.body.appendChild(m); }
+  m.innerHTML = '<g stroke-width="1.4">' + noShadow(S[key]) + '</g>';
+  let b; try { b = m.firstChild.getBBox(); } catch (e) { b = null; }
+  if (!b || !b.height) b = { x: 4, y: 4, width: 40, height: 40 };
+  return (sprBoxes[key] = { x: b.x, y: b.y, w: b.width, h: b.height });
+}
+function deskXf(k) {
+  const key = SINGLE[k].spr, b = sprBox(key), f = FLAT_MM[k];
+  if (f) { const sx = f.w * MM / b.w; return { sx, sy: sx * f.d, b }; }
+  const pd = printData(k), mm = pd && pd.real ? parseFloat(pd.real.h) : 40;
+  const sc = mm * MM / b.h; return { sx: sc, sy: sc, b };
+}
+function present() { return (st.here || []).slice(); }
+function accepts(who, k) {
+  if (who === 'D') { const t = GIFT_TAG[k]; return t === '好看' || t === '好玩' || (st.rel.D >= 60 && Math.random() < .3); }
+  return true;
+}
+function putOnDesk(k) {
+  const used = st.desk.map(d => d.x + ',' + d.y);
+  const sp = DESK_SPOTS.find(p => !used.includes(p[0] + ',' + p[1])) || [400 + Math.random() * 200, 405 + Math.random() * 8];
+  st.desk.push({ k, x: sp[0], y: sp[1] });
+  renderDesk(st.desk.length - 1);
+  setTimeout(() => hint(SINGLE[k].name + '放在桌上了。可以拖动摆放，点一下看看能做什么。', 3400), 400);
+}
+function renderDesk(fresh) {
+  const g = $('#deskItems'); if (!g || !st) return;
+  g.innerHTML = st.desk.map((d, i) => '<g class="dk' + (i === fresh ? ' newin' : '') + '" data-i="' + i + '" transform="translate(' + d.x.toFixed(1) + ' ' + d.y.toFixed(1) + ')">' +
+    deskItemSvg(d.k) + '</g>').join('');
+}
+function deskItemSvg(k) {
+  const { sx, sy, b } = deskXf(k), w = b.w * sx, h = b.h * sy, sw = 1.4 / Math.max(.2, Math.min(sx, 3));
+  const hw = Math.max(w, 26), hh = Math.max(h, 26);
+  return '<ellipse cx="0" cy="0" rx="' + (w * .55 + 2).toFixed(1) + '" ry="' + Math.max(2, w * .09).toFixed(1) + '" fill="#6E4A31" fill-opacity=".16" stroke="none"></ellipse>' +
+    '<g><g transform="scale(' + sx.toFixed(3) + ' ' + sy.toFixed(3) + ') translate(' + (-(b.x + b.w / 2)).toFixed(2) + ' ' + (-(b.y + b.h)).toFixed(2) + ')" stroke="#6E4A31" stroke-width="' + sw.toFixed(2) + '" stroke-linejoin="round" stroke-linecap="round" fill="none">' + noShadow(S[SINGLE[k].spr]) + '</g></g>' +
+    '<rect x="' + (-hw / 2).toFixed(1) + '" y="' + (-hh).toFixed(1) + '" width="' + hw.toFixed(1) + '" height="' + (hh + 4).toFixed(1) + '" fill="transparent" stroke="none"></rect>';
+}
+let deskDrag = null;
+$('#deskItems').addEventListener('pointerdown', e => {
+  const el = e.target.closest('.dk'); if (!el) return;
+  e.stopPropagation(); e.preventDefault();
+  const i = +el.dataset.i, pt = scenePoint(e);
+  deskDrag = { i, el, dx: st.desk[i].x - pt.x, dy: st.desk[i].y - pt.y, sx: e.clientX, sy: e.clientY, moved: false };
+  el.classList.add('lift');
+});
+window.addEventListener('pointermove', e => {
+  if (!deskDrag) return;
+  if (!deskDrag.moved && Math.abs(e.clientX - deskDrag.sx) + Math.abs(e.clientY - deskDrag.sy) < 6) return;
+  deskDrag.moved = true;
+  const pt = scenePoint(e), d = st.desk[deskDrag.i];
+  d.x = clampN(pt.x + deskDrag.dx, DESK_BOX[0], DESK_BOX[2]); d.y = clampN(pt.y + deskDrag.dy, DESK_BOX[1], DESK_BOX[3]);
+  deskDrag.el.setAttribute('transform', 'translate(' + d.x.toFixed(1) + ' ' + d.y.toFixed(1) + ')');
+});
+window.addEventListener('pointerup', () => {
+  if (!deskDrag) return;
+  const { i, el, moved } = deskDrag; deskDrag = null; el.classList.remove('lift');
+  if (moved) { sfx.place(); deskJustMoved = true; setTimeout(() => { deskJustMoved = false; }, 50); renderDesk(); }
+  else { deskJustMoved = true; setTimeout(() => { deskJustMoved = false; }, 50); openDeskItem(i); }
+});
+let deskJustMoved = false;
+function openDeskItem(i) {
+  const d = st.desk[i]; if (!d) return;
+  const o = curOrder(), isOrder = o && o.who !== '我' && o.product === d.k && st.printed[st.order];
+  $('#dmSpr').innerHTML = spr(SINGLE[d.k].spr); $('#dmTitle').textContent = SINGLE[d.k].name;
+  const who = present();
+  $('#dmText').textContent = who.length ? '可以送人，也可以就这么摆着。' : '工作室里只有我。先摆着吧。';
+  $('#dmBtns').innerHTML = who.map(w => '<button type="button" class="primary" data-act="give" data-w="' + w + '">送给 ' + (NAMES[w] || w) + '</button>').join('') +
+    (isOrder ? '' : '<button type="button" class="primary alt" data-act="bin">丢进垃圾桶</button>') +
+    '<button type="button" class="sbtn" data-act="keep">先摆着</button>';
+  $('#dmBtns').dataset.i = i;
+  sfx.soft(); $('#deskModal').hidden = false; updateGuide();
+}
+$('#dmBtns').addEventListener('click', e => {
+  const b = e.target.closest('[data-act]'); if (!b) return;
+  const i = +$('#dmBtns').dataset.i, d = st.desk[i];
+  $('#deskModal').hidden = true;
+  if (!d || b.dataset.act === 'keep') { updateGuide(); return; }
+  if (b.dataset.act === 'bin') { st.trash.push(d.k); st.desk.splice(i, 1); renderDesk(); renderBin(); sfx.pop(); hint('丢进了垃圾桶。', 2200); updateGuide(); return; }
+  giveTo(b.dataset.w, d.k, i);
+});
+// deskIdx: index in st.desk when the gift comes from the desk, null when straight off the plate
+function giveTo(who, k, deskIdx) {
+  const o = curOrder(), isOrder = !!(o && o.who === who && o.product === k && st.printed[st.order]);
+  const ok = isOrder || accepts(who, k);
+  const m = $('#giveModal'), it = $('#giveItem'), say = $('#giveSay'), heart = $('#giveHeart');
+  const sd = standeeOf(who);
+  $('#giveStand').src = sd || ''; $('#giveStand').hidden = !sd;
+  it.innerHTML = spr(SINGLE[k].spr); it.className = 'giveitem'; say.hidden = true; heart.hidden = true; $('#giveTap').hidden = true;
+  m.hidden = false; updateGuide(); sfx.soft();
+  let done = false;
+  const finish = () => {
+    if (done) return; done = true; m.hidden = true; m.onclick = null;
+    if (ok) {
+      if (deskIdx != null && deskIdx >= 0) { st.desk.splice(deskIdx, 1); renderDesk(); }
+      if (isOrder) { completeOrder(true); return; }
+    } else if (deskIdx == null) putOnDesk(k);
+    updateGuide();
+  };
+  requestAnimationFrame(() => { void it.offsetWidth; it.classList.add(ok ? 'fly' : 'back'); });
+  setTimeout(() => {
+    if (ok) {
+      sfx.chime(); heart.hidden = false;
+      if (!isOrder) { st.rel[who] = Math.min(100, (st.rel[who] || 0) + 5 + Math.floor(Math.random() * 6)); }
+    }
+    const line = !isOrder && GIFT_SAY[who] && GIFT_SAY[who][ok ? 'yes' : 'no'];
+    if (line) { say.textContent = line; say.hidden = false; }
+    if (isOrder) setTimeout(finish, reduced ? 200 : 900);
+    else { $('#giveTap').hidden = false; m.onclick = finish; }
+  }, reduced ? 100 : ok ? 720 : 560);
+}
+
+function renderBin() {
+  const g = $('#binFill'); if (!g || !st) return;
+  const n = st.trash.length + (+st.room.binPoop || 0);
+  const bits = [[760, 461, '#EDE6D8'], [776, 459, '#D9CDB4'], [768, 456, '#F4EFE4'], [783, 462, '#8C6A4F']];
+  g.innerHTML = bits.slice(0, Math.min(4, n)).map(([x, y, c]) => '<path d="M' + (x - 6) + ' ' + y + ' q2 -6 6 -5 q5 -2 6 4 q-6 3 -12 1 Z" fill="' + c + '" stroke-width=".8"></path>').join('');
+}
+function openBin() {
+  const g = {}; st.trash.forEach(k => { g[k] = (g[k] || 0) + 1; });
+  const poop = +st.room.binPoop || 0;
+  const items = Object.keys(g).map(k => '<div class="dritem">' + spr(SINGLE[k].spr) + SINGLE[k].name + (g[k] > 1 ? '<em>×' + g[k] + '</em>' : '') + '</div>');
+  $('#binList').innerHTML = items.join('');
+  $('#binList').hidden = !items.length;
+  $('#binCap').textContent = !items.length && !poop ? '空的。' : poop ? '还有清出来的竹屎' + (poop > 1 ? '，倒过 ' + poop + ' 次。' : '。') : '';
+  $('#binEmpty').disabled = !items.length && !poop;
+  sfx.soft(); $('#binModal').hidden = false; updateGuide();
+}
+$('#binEmpty').addEventListener('click', () => { st.trash = []; st.room.binPoop = 0; sfx.pop(); renderBin(); renderScene(); $('#binModal').hidden = true; hint('垃圾倒掉了。', 2000); updateGuide(); });
+$('#binClose').addEventListener('click', () => { $('#binModal').hidden = true; updateGuide(); });
+
+/* ---------- washing the build plate: a short chain of gestures, like doing the dishes in a cooking game ---------- */
+const W = { step: 0, prog: 0, how: null, drops: [], smudge: 1, last: null, drag: null };
+const WSTEP = [
+  ['把打印板取下来', '按住打印板往上翘，它是磁吸的，翘起来就能拿下。'],
+  ['用什么洗？', '板子上有手指印和残留。'],
+  ['搓洗', '手指在板子上来回搓。'],
+  ['擦干', '拿毛巾把水擦干净。'],
+  ['装回去', '把板子拖回打印机上，对准了会吸住。']
+];
+const washSvg = $('#washSvg');
+function washPt(e) { const m = washSvg.getScreenCTM(); return new DOMPoint(e.clientX, e.clientY).matrixTransform(m.inverse()); }
+const PEI = (x, y, rot, extra) => '<g class="wplate" id="wPlate" transform="translate(' + x + ' ' + y + ') rotate(' + (rot || 0) + ')">' +
+  '<rect x="-90" y="-8" width="180" height="16" rx="3" fill="#2F2B28" stroke="#6E4A31" stroke-width="1.2"></rect>' +
+  '<rect x="-86" y="-6" width="172" height="12" rx="2" fill="#CDB98E"></rect>' +
+  '<path d="M-70 -2 h1 M-40 2 h1 M-10 -3 h1 M20 1 h1 M50 -2 h1 M75 2 h1" stroke="#A8925F" stroke-width="1.2"></path>' + (extra || '') + '</g>';
+// top-down plate for washing and drying
+const PEI_TOP = extra => '<g id="wTop"><rect x="70" y="55" width="200" height="150" rx="8" fill="#2F2B28"></rect><rect x="76" y="61" width="188" height="138" rx="6" fill="#CDB98E"></rect>' +
+  '<g fill="#A8925F">' + Array.from({ length: 40 }, (_, i) => '<circle cx="' + (84 + (i * 37) % 176) + '" cy="' + (68 + (i * 23) % 126) + '" r=".9"></circle>').join('') + '</g>' + (extra || '') + '</g>';
+function openWash() {
+  Object.assign(W, { step: 0, prog: 0, how: null, drops: [], smudge: 1, last: null, drag: null });
+  sfx.soft(); $('#washModal').hidden = false; washRender(); updateGuide();
+}
+function washRender() {
+  const k = W.step;
+  $('#washTitle').textContent = WSTEP[k][0]; $('#washHint').textContent = WSTEP[k][1];
+  document.querySelectorAll('#washSteps i').forEach((el, i) => el.classList.toggle('on', i <= k));
+  $('#washPick').hidden = k !== 1; $('#washBar').hidden = k !== 2 && k !== 3;
+  $('#washFill').style.width = (k === 3 ? (1 - W.drops.length / 9) : W.prog) * 100 + '%';
+  const bed = '<rect x="40" y="196" width="260" height="22" rx="4" fill="#8B827A"></rect><rect x="56" y="186" width="228" height="12" rx="2" fill="#6F665E"></rect><circle cx="62" cy="186" r="3" fill="#C9C2B6"></circle><circle cx="278" cy="186" r="3" fill="#C9C2B6"></circle>';
+  const smudges = '<g id="wSmudge" opacity="' + W.smudge.toFixed(2) + '"><ellipse cx="120" cy="100" rx="12" ry="8" fill="#8E7A55" fill-opacity=".45"></ellipse><ellipse cx="205" cy="150" rx="14" ry="9" fill="#8E7A55" fill-opacity=".4"></ellipse><ellipse cx="170" cy="85" rx="8" ry="6" fill="#8E7A55" fill-opacity=".35"></ellipse><path d="M100 170 q20 -8 40 2" stroke="#8E7A55" stroke-opacity=".45" stroke-width="5" fill="none" stroke-linecap="round"></path></g>';
+  if (k === 0) washSvg.innerHTML = bed + PEI(170, 178, 0);
+  else if (k === 1) washSvg.innerHTML = '<rect x="30" y="150" width="280" height="80" rx="14" fill="#C9D3D1"></rect><rect x="44" y="160" width="252" height="60" rx="10" fill="#A9B9B7"></rect><path d="M250 150 v-60 q0 -14 -14 -14 h-30 v14" stroke="#8B827A" stroke-width="8" fill="none" stroke-linecap="round"></path>' + PEI(170, 120, -8, '');
+  else if (k === 2) washSvg.innerHTML = '<rect x="0" y="0" width="340" height="250" fill="#C9D3D1"></rect>' + PEI_TOP(smudges) + '<g id="wFx"></g>' +
+    '<path id="wStream" d="M300 0 q-6 40 -40 70" stroke="#9FC3D6" stroke-width="7" fill="none" stroke-linecap="round" opacity=".8"></path>';
+  else if (k === 3) washSvg.innerHTML = PEI_TOP('<g id="wDrops">' + W.drops.map(d => '<ellipse cx="' + d[0] + '" cy="' + d[1] + '" rx="5" ry="4" fill="#BFE0EE" stroke="#7FA7B8" stroke-width=".8"></ellipse>').join('') + '</g>') +
+    '<g id="wTowel" transform="translate(300 40)"><rect x="-26" y="-18" width="52" height="36" rx="6" fill="#F1E3D0" stroke="#6E4A31" stroke-width="1.2"></rect><path d="M-20 -8 h40 M-20 0 h40 M-20 8 h40" stroke="#D9BFA0" stroke-width="2"></path></g>';
+  else washSvg.innerHTML = bed + '<rect x="56" y="180" width="228" height="10" rx="2" fill="none" stroke="#C66E48" stroke-width="1.6" stroke-dasharray="5 4" id="wTarget"></rect>' + PEI(170, 70, 0);
+}
+$('#washPick').addEventListener('click', e => {
+  const b = e.target.closest('[data-w]'); if (!b) return;
+  W.how = b.dataset.w; W.step = 2; W.prog = 0; sfx.soft(); washRender();
+  $('#washHint').textContent = W.how === 'soap' ? '挤一点洗洁精，手指来回搓，泡泡会把油带走。' : '开着水，手指来回搓。';
+});
+washSvg.addEventListener('pointerdown', e => {
+  const pt = washPt(e); W.last = pt;
+  try { washSvg.setPointerCapture(e.pointerId); } catch (x) {}
+  if (W.step === 0 || W.step === 4) { if (e.target.closest('#wPlate')) W.drag = { x0: pt.x, y0: pt.y }; }
+  e.preventDefault();
+});
+washSvg.addEventListener('pointermove', e => {
+  if (!W.last) return;
+  const pt = washPt(e), dx = pt.x - W.last.x, dy = pt.y - W.last.y; W.last = pt;
+  const pl = $('#wPlate');
+  if (W.step === 0 && W.drag) {
+    const up = clampN(W.drag.y0 - pt.y, 0, 120);
+    pl.setAttribute('transform', 'translate(' + (170 + up * .2) + ' ' + (178 - up * .9) + ') rotate(' + (-Math.min(18, up * .25)) + ')');
+    if (up > 95) { W.drag = null; W.last = null; sfx.pop(); W.step = 1; setTimeout(washRender, 120); }
+  } else if (W.step === 2) {
+    const d = Math.hypot(dx, dy); if (pt.x < 70 || pt.x > 270 || pt.y < 55 || pt.y > 205) return;
+    W.prog = Math.min(1, W.prog + d / (W.how === 'soap' ? 2200 : 2800));
+    W.smudge = Math.max(0, 1 - W.prog * 1.15);
+    $('#wSmudge').setAttribute('opacity', W.smudge.toFixed(2));
+    $('#washFill').style.width = W.prog * 100 + '%';
+    if (Math.random() < (W.how === 'soap' ? .35 : .15)) {
+      const fx = $('#wFx'); const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      c.setAttribute('cx', (pt.x + (Math.random() - .5) * 20).toFixed(1)); c.setAttribute('cy', (pt.y + (Math.random() - .5) * 20).toFixed(1));
+      c.setAttribute('r', (W.how === 'soap' ? 3 + Math.random() * 5 : 2 + Math.random() * 2).toFixed(1));
+      c.setAttribute('fill', W.how === 'soap' ? '#FFFFFF' : '#BFE0EE'); c.setAttribute('fill-opacity', '.8'); c.setAttribute('stroke', '#9FC3D6'); c.setAttribute('stroke-width', '.6'); c.setAttribute('class', 'bub');
+      fx.appendChild(c); setTimeout(() => c.remove(), 1200); if (W.how === 'soap') sfx.bubble();
+    }
+    if (W.prog >= 1) {
+      W.last = null; sfx.chime(); W.step = 3;
+      W.drops = Array.from({ length: 9 }, (_, i) => [92 + (i % 3) * 70 + Math.random() * 20, 80 + Math.floor(i / 3) * 42 + Math.random() * 14]);
+      setTimeout(washRender, 250);
+    }
+  } else if (W.step === 3) {
+    $('#wTowel').setAttribute('transform', 'translate(' + pt.x.toFixed(1) + ' ' + pt.y.toFixed(1) + ')');
+    const n = W.drops.length; W.drops = W.drops.filter(d => Math.hypot(d[0] - pt.x, d[1] - pt.y) > 26);
+    if (W.drops.length !== n) {
+      sfx.soft(); $('#wDrops').innerHTML = W.drops.map(d => '<ellipse cx="' + d[0] + '" cy="' + d[1] + '" rx="5" ry="4" fill="#BFE0EE" stroke="#7FA7B8" stroke-width=".8"></ellipse>').join('');
+      $('#washFill').style.width = (1 - W.drops.length / 9) * 100 + '%';
+      if (!W.drops.length) { W.last = null; W.step = 4; setTimeout(washRender, 300); }
+    }
+  } else if (W.step === 4 && W.drag) {
+    const y = clampN(70 + (pt.y - W.drag.y0), 40, 200);
+    pl.setAttribute('transform', 'translate(170 ' + y.toFixed(1) + ')');
+    if (y > 168) { W.drag = null; W.last = null; pl.setAttribute('transform', 'translate(170 178)'); sfx.snap(); setTimeout(washDone, 450); }
+  }
+});
+const washUp = () => {
+  if (W.step === 0 && W.drag) washRender();
+  if (W.step === 4 && W.drag) washRender();
+  W.drag = null; W.last = null;
+};
+washSvg.addEventListener('pointerup', washUp); washSvg.addEventListener('pointercancel', washUp);
+function washDone() {
+  st.maint.plate = 0; st.lastWash = W.how;
+  $('#washModal').hidden = true;
+  hint('打印板洗干净，擦干，吸回去了。', 2800); renderScene(); openPrinter();
+}
+
+/* ---------- purge waste: the A1 has no catch box, so a box sits under the chute and fills up fast (Hestia). Sweep the spill back in with a finger, then tip the box into the bin ---------- */
+const P = { step: 0, bits: [], total: 0, last: null, drag: null };
+const poopSvg = $('#poopSvg');
+const PSTEP = [['把满出来的竹屎扫回盒子', '盒子满了，竹屎掉了一桌。手指在桌上划，像用刷子一样，把它们扫回盒子里。'], ['倒进垃圾桶', '按住盒子，拖到垃圾桶上面倒掉。']];
+const PCOL = ['#F1ECE2', '#CBC6B8', '#F1ECE2', '#8C6A4F', '#3A3634', '#F1ECE2'];
+const PAN = [240, 172, 310, 234];
+const poopBit = b => '<g transform="translate(' + b.x.toFixed(1) + ' ' + b.y.toFixed(1) + ') rotate(' + b.r + ') scale(' + (b.s || 1) + ')"><path d="M-9 2 q-2 -8 6 -7 q9 -2 11 5 q1 7 -8 7 q-7 1 -9 -5z" fill="' + b.c + '" stroke="#6E4A31" stroke-width="1"></path><path d="M-4 0 q3 -3 7 0" stroke="#6E4A31" stroke-width=".8" fill="none" stroke-opacity=".6"></path></g>';
+const BOX_FULL = 8;
+const panSvg = (x, y, rot, n) => '<g class="pan" id="pPan" transform="translate(' + x + ' ' + y + ') rotate(' + (rot || 0) + ')">' +
+  Array.from({ length: Math.min(12, BOX_FULL + (n || 0)) }, (_, i) => poopBit({ x: -24 + (i % 5) * 12 + (Math.floor(i / 5) % 2) * 5, y: -18 - Math.floor(i / 5) * 6, r: i * 47 % 360, c: PCOL[i % PCOL.length] })).join('') +
+  '<path d="M-34 -16 h68 v38 h-68 z" fill="#C9A877" stroke="#6E4A31" stroke-width="1.4" stroke-linejoin="round"></path>' +
+  '<path d="M-34 -16 l-8 -9 M34 -16 l8 -9" stroke="#6E4A31" stroke-width="1.4"></path><path d="M-34 -16 l-8 -9 h0 l0 0" fill="none"></path>' +
+  '<path d="M-20 2 h40" stroke="#A88A5C" stroke-width="1.2"></path></g>';
+const BIN_SVG = '<g id="pBin"><path d="M222 140 h96 l-10 104 h-76 z" fill="#B9A585" stroke="#6E4A31" stroke-width="1.6"></path><ellipse cx="270" cy="140" rx="48" ry="8" fill="#5E5248" stroke="#6E4A31" stroke-width="1.6"></ellipse><path d="M244 160 l4 70 M270 160 v72 M296 160 l-4 70" stroke="#6E4A31" stroke-opacity=".35" stroke-width="1.2"></path></g>';
+function openPoop() {
+  const n = clampN(st.maint.poop * 2 + 2, 4, 12);
+  const bits = Array.from({ length: n }, (_, i) => ({ x: 30 + (i * 53) % 180 + Math.random() * 14, y: 64 + (i * 37) % 96 + Math.random() * 10, r: Math.round(Math.random() * 360), c: PCOL[i % PCOL.length], s: 1.4 }));
+  Object.assign(P, { step: 0, bits, total: n, last: null, drag: null });
+  sfx.soft(); $('#poopModal').hidden = false; poopRender(); updateGuide();
+}
+function poopRender() {
+  const k = P.step;
+  $('#poopTitle').textContent = PSTEP[k][0]; $('#poopHint').textContent = PSTEP[k][1];
+  document.querySelectorAll('#poopSteps i').forEach((el, i) => el.classList.toggle('on', i <= k));
+  if (k === 0) {
+    $('#poopFill').style.width = (1 - P.bits.length / P.total) * 100 + '%';
+    poopSvg.innerHTML = '<rect x="0" y="0" width="340" height="250" fill="#E3C9A0"></rect><path d="M0 40 h340" stroke="#C9AD82" stroke-width="2"></path>' +
+      '<g><rect x="226" y="0" width="98" height="34" rx="4" fill="#8B827A"></rect><rect x="258" y="22" width="34" height="14" rx="3" fill="#2F2B28"></rect><path d="M275 40 v130" stroke="#6E4A31" stroke-opacity=".25" stroke-width="1.2" stroke-dasharray="3 5"></path></g>' +
+      panSvg(274, 211, 0, P.total - P.bits.length) + '<g id="pBits">' + P.bits.map(poopBit).join('') + '</g>' +
+      '<g id="pBrush" opacity="0"><circle r="16" fill="#FFFDF6" fill-opacity=".35" stroke="#6E4A31" stroke-width="1" stroke-dasharray="3 3"></circle></g>';
+  } else {
+    $('#poopFill').style.width = '100%';
+    poopSvg.innerHTML = '<rect x="0" y="0" width="340" height="250" fill="#E3C9A0"></rect>' + BIN_SVG + panSvg(100, 120, 0, P.total) +
+      '<rect x="222" y="120" width="96" height="30" fill="none" stroke="#C66E48" stroke-width="1.6" stroke-dasharray="5 4" rx="6" id="pTarget"></rect>';
+  }
+}
+const poopPt = e => { const m = poopSvg.getScreenCTM(); return new DOMPoint(e.clientX, e.clientY).matrixTransform(m.inverse()); };
+poopSvg.addEventListener('pointerdown', e => {
+  const pt = poopPt(e); P.last = pt;
+  try { poopSvg.setPointerCapture(e.pointerId); } catch (x) {}
+  if (P.step === 1 && e.target.closest('#pPan')) P.drag = { dx: 100 - pt.x, dy: 120 - pt.y };
+  e.preventDefault();
+});
+poopSvg.addEventListener('pointermove', e => {
+  if (!P.last) return;
+  const pt = poopPt(e), dx = pt.x - P.last.x, dy = pt.y - P.last.y; P.last = pt;
+  if (P.step === 0) {
+    const br = $('#pBrush'); br.setAttribute('opacity', 1); br.setAttribute('transform', 'translate(' + pt.x.toFixed(1) + ' ' + pt.y.toFixed(1) + ')');
+    let moved = false, got = 0;
+    P.bits.forEach(b => { if (Math.hypot(b.x - pt.x, b.y - pt.y) < 24) { b.x = clampN(b.x + dx * 1.1, 8, 332); b.y = clampN(b.y + dy * 1.1, 48, 242); b.r = (b.r + dx * 3) % 360; moved = true; } });
+    if (!moved) return;
+    P.bits = P.bits.filter(b => { const inPan = b.x > PAN[0] && b.x < PAN[2] && b.y > PAN[1] && b.y < PAN[3]; if (inPan) got++; return !inPan; });
+    $('#pBits').innerHTML = P.bits.map(poopBit).join('');
+    if (got) { sfx.place(); $('#pPan').outerHTML = panSvg(274, 211, 0, P.total - P.bits.length); $('#poopFill').style.width = (1 - P.bits.length / P.total) * 100 + '%'; }
+    if (!P.bits.length) { P.last = null; sfx.chime(); P.step = 1; setTimeout(poopRender, 400); }
+  } else if (P.drag) {
+    const x = clampN(pt.x + P.drag.dx, 40, 300), y = clampN(pt.y + P.drag.dy, 30, 200);
+    const over = x > 200 && y < 150;
+    $('#pPan').setAttribute('transform', 'translate(' + x.toFixed(1) + ' ' + y.toFixed(1) + ') rotate(' + (over ? 35 : 0) + ')');
+    if (over) {
+      P.drag = null; P.last = null;
+      const pan = $('#pPan'); pan.setAttribute('transform', 'translate(258 108) rotate(55)');
+      pan.querySelectorAll(':scope > g').forEach((g, i) => { setTimeout(() => { g.classList.add('pin'); if (i % 3 === 0) sfx.place(); }, i * 45); });
+      setTimeout(poopDone, 700 + P.total * 45);
+    }
+  }
+});
+const poopUp = () => { if (P.step === 1 && P.drag) poopRender(); if (P.step === 0) { const br = $('#pBrush'); if (br) br.setAttribute('opacity', 0); } P.drag = null; P.last = null; };
+poopSvg.addEventListener('pointerup', poopUp); poopSvg.addEventListener('pointercancel', poopUp);
+function poopDone() {
+  st.maint.poop = 0; st.room.binPoop = (+st.room.binPoop || 0) + 1;
+  $('#poopModal').hidden = true; sfx.chime();
+  hint('竹屎清理好了。', 2800); renderScene(); renderBin(); openPrinter();
 }
 
 /* ---------- story dialogue ---------- */
 const NAMES = { D: 'D', me: '我', mom: '妈妈' };
-function queue(arr) { Q.push(...arr); if (dlg.hidden) step(); }
+// Story waits for the player: new beats become a card in the orders area
+// and only play when tapped. auto = play now (day intro).
+const STORY_PEEK = { leave: 'D 要走了', unpack: '快递到了', ams: '装 AMS', site: '挑模型', dchat: '给 D 发消息', journal: '写今天的手账', stow: '收好刮刀', knock: '有人敲门', oldmsg: '有新消息', meet: '有人来了', card: '收到一张卡片', tidy: '收拾桌子' };
+let storyOn = false, storyWait = false, storyFresh = false, curLine = null, foldView = null;
+function queue(arr, auto) {
+  if (!arr || !arr.length) { if (dlg.hidden && !storyWait) step(); return; }
+  Q.push(...arr);
+  if (auto || storyOn) { if (dlg.hidden) step(); return; }
+  storyWait = true; storyFresh = true; renderOrders(); updateGuide();
+}
+function storyPeek() {
+  for (const x of Q) {
+    if (!x.do) return { who: x.s, t: x.t };
+    if (STORY_PEEK[x.do]) return { who: x.who || null, t: STORY_PEEK[x.do] };
+  }
+  return { who: null, t: '接着往下。' };
+}
+function storyCardHTML() {
+  const p = storyPeek(), w = p.who;
+  const av = w === 'me' ? '<div class="av me" aria-hidden="true">我</div>' : w && PORTRAIT[w] ? '<div class="av pic" aria-hidden="true">' + PORTRAIT[w] + '</div>' : '<div class="av narr" aria-hidden="true">…</div>';
+  const cls = storyFresh ? ' new' : ''; storyFresh = false;
+  return '<article class="order story' + cls + '" aria-label="新的事情">' + av +
+    '<div class="otext"><div class="oname">' + (w && NAMES[w] && w !== 'me' ? NAMES[w] : '新的事情') + '<span class="otag">剧情</span></div><div class="oask">' + p.t.replace(/</g, '&lt;') + '</div></div>' +
+    '<button type="button" class="deliver" id="storyBtn">去看看</button></article>';
+}
+function resumeStory() { if (!storyWait) return; storyWait = false; sfx.wake(); sfx.soft(); renderOrders(); step(); }
+function storyLater(e) {
+  e.stopPropagation();
+  if (curLine) Q.unshift(curLine);
+  curLine = null; storyOn = false; storyWait = Q.length > 0;
+  dlg.hidden = true; $('#standee').hidden = true; $('#standee').dataset.who = '';
+  sfx.soft(); renderOrders(); updateGuide();
+  if (storyWait) hint('想接着看的时候，点上面的卡片。', 2600);
+}
 function doAction(a) {
   if (a.do === 'order') { st.order = a.i; renderBoard(); }
+  else if (a.do === 'arrive') { if (!st.here.includes(a.who)) st.here.push(a.who); }
   else if (a.do === 'time') setTime(a.v);
   else if (a.do === 'journal') setTimeout(openJournal, reduced ? 100 : 700);
 }
 function step() {
+  storyOn = true; storyWait = false; curLine = null;
   while (Q.length && Q[0].do) {
     if (Q[0].do === 'meet') { const a = Q.shift(); dlg.hidden = true; $('#standee').hidden = true; $('#standee').dataset.who = ''; openMeet(a.who); return; }
     if (Q[0].do === 'tidy') { Q.shift(); dlg.hidden = true; $('#standee').hidden = true; $('#standee').dataset.who = ''; openTidy(); return; }
     if (Q[0].do === 'oldmsg') { Q.shift(); dlg.hidden = true; openOldMsg(); return; }
     if (Q[0].do === 'knock') { Q.shift(); dlg.hidden = true; openKnock(); return; }
+    if (Q[0].do === 'leave') { const a = Q.shift(); dlg.hidden = true; $('#standee').hidden = true; $('#standee').dataset.who = ''; openLeave(a.who); return; }
+    if (STORY_DO[Q[0].do]) { passTime(5); const a = Q.shift(); dlg.hidden = true; $('#standee').hidden = true; $('#standee').dataset.who = ''; STORY_DO[a.do](a); return; }
     if (Q[0].do === 'card') { const a = Q.shift(); dlg.hidden = true; $('#standee').hidden = true; $('#standee').dataset.who = ''; openCard(a.who, true); return; }
     doAction(Q.shift());
   }
-  if (!Q.length) { dlg.hidden = true; $('#standee').hidden = true; $('#standee').dataset.who = ''; updateGuide(); return; }
-  const l = Q.shift();
+  if (!Q.length) { storyOn = false; dlg.hidden = true; $('#standee').hidden = true; $('#standee').dataset.who = ''; renderOrders(); updateGuide(); return; }
+  const l = Q.shift(); curLine = l; passTime(1);
   const narr = l.s === 'n';
   dlg.classList.toggle('narr', narr);
   $('#dlgWho').innerHTML = narr ? '' : '<span class="av' + (l.s === 'me' ? ' me' : PORTRAIT[l.s] ? ' pic' : '') + '" aria-hidden="true">' + (l.s === 'me' ? '我' : PORTRAIT[l.s] || (l.s === 'mom' ? '妈' : l.s)) + '</span>' + NAMES[l.s];
@@ -1552,15 +2495,55 @@ function step() {
   updateGuide();
 }
 dlg.addEventListener('click', () => { sfx.wake(); sfx.soft(); step(); });
+$('#dlgLater').addEventListener('click', storyLater);
 
 /* ---------- time of day ---------- */
+// The studio is open 10:00–22:00. Time moves with what happens: prints take their real
+// slicer time (fast-forwarded), story beats a few minutes. Light follows the clock;
+// Hangzhou in October: sunset about 17:30, then blue hour, then night.
+const OPEN = 600, CLOSE = 1320;
+const SKY = [ // minute, sky top, sky bottom, room tint rgba, sun beam polygon, beam opacity, city lights, sun [x, y, r,g,b]
+  [600, '#E2ECEC', '#F3EAD5', [255, 250, 235, 0], [160, 58, 330, 96, 336, 300, 166, 262], .5, 0, [112, -30, 255, 241, 201]],
+  [780, '#E4EEEC', '#F6EDD6', [255, 246, 225, .03], [160, 62, 350, 114, 358, 300, 166, 278], .6, 0, [118, 10, 255, 241, 201]],
+  [930, '#ECE8D6', '#F8E1B6', [255, 205, 140, .12], [160, 70, 370, 138, 384, 300, 166, 292], .75, 0, [126, 70, 255, 226, 170]],
+  [1035, '#E6B08A', '#F6A15F', [240, 140, 80, .2], [160, 118, 418, 202, 430, 300, 166, 300], .62, 0, [128, 84, 242, 138, 75]],
+  [1055, '#A692B6', '#EB9C78', [160, 92, 110, .2], [160, 130, 430, 214, 440, 300, 166, 300], .18, .35, [128, 125, 230, 110, 70]],
+  [1078, '#3E5A8E', '#7189B9', [40, 60, 120, .26], [160, 130, 430, 214, 440, 300, 166, 300], 0, .9, [128, 215, 230, 110, 70]],
+  [1110, '#1D2640', '#33405F', [20, 25, 50, .36], [160, 130, 430, 214, 440, 300, 166, 300], 0, 1, [128, 215, 230, 110, 70]]
+];
+const hexRgb = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));
+const mixN = (a, b, k) => a + (b - a) * k;
+const mixHex = (a, b, k) => { const x = hexRgb(a), y = hexRgb(b); return 'rgb(' + x.map((v, i) => Math.round(mixN(v, y[i], k))).join(',') + ')'; };
+const fmtClock = m => { m = Math.floor(m); return String(Math.floor(m / 60) % 24).padStart(2, '0') + ':' + String(m % 60).padStart(2, '0'); };
+const dayPart = m => m < 720 ? '上午' : m < 1050 ? '下午' : m < 1110 ? '傍晚' : '晚上';
+function applyClock() {
+  const m = clampN(st.min, OPEN, CLOSE);
+  let i = 0; while (i < SKY.length - 2 && m >= SKY[i + 1][0]) i++;
+  const A = SKY[i], B = SKY[i + 1], k = clampN((m - A[0]) / (B[0] - A[0]), 0, 1);
+  $('#sk1').setAttribute('stop-color', mixHex(A[1], B[1], k)); $('#sk2').setAttribute('stop-color', mixHex(A[2], B[2], k));
+  const t = A[3].map((v, j) => mixN(v, B[3][j], k));
+  $('#tint').style.background = 'rgba(' + t.slice(0, 3).map(Math.round).join(',') + ',' + t[3].toFixed(3) + ')';
+  const bp = A[4].map((v, j) => mixN(v, B[4][j], k).toFixed(1));
+  $('#beam').setAttribute('points', bp[0] + ',' + bp[1] + ' ' + bp[2] + ',' + bp[3] + ' ' + bp[4] + ',' + bp[5] + ' ' + bp[6] + ',' + bp[7]);
+  $('#beam').setAttribute('opacity', mixN(A[5], B[5], k).toFixed(2));
+  $('#cityLights').setAttribute('opacity', mixN(A[6], B[6], k).toFixed(2));
+  const su = A[7].map((v, j) => mixN(v, B[7][j], k));
+  const sun = $('#sun'); sun.setAttribute('cx', su[0].toFixed(1)); sun.setAttribute('cy', su[1].toFixed(1)); sun.setAttribute('fill', 'rgb(' + su.slice(2).map(Math.round).join(',') + ')');
+  // the city outside goes from day colours through dusk to night silhouettes
+  const dark = clampN((m - 1030) / 80, 0, 1);
+  $('#cityB').setAttribute('fill', dark < .5 ? mixHex('#C7D1CB', '#B39AA6', dark * 2) : mixHex('#B39AA6', '#2C3550', dark * 2 - 1));
+  $('#cityHill').setAttribute('fill', mixHex('#A9B993', '#2E3A3A', dark));
+  $('#cityWater').setAttribute('fill', mixHex('#D3DFD5', '#3A4868', dark));
+  $('#clockText').textContent = fmtClock(m);
+  $('#wcH').setAttribute('transform', 'rotate(' + ((m / 60) % 12 * 30).toFixed(1) + ')');
+  $('#wcM').setAttribute('transform', 'rotate(' + (m % 60 * 6).toFixed(1) + ')');
+  st.time = m < 840 ? 'morning' : m < 1050 ? 'afternoon' : 'dusk';
+}
+function passTime(min) { st.min = Math.min(CLOSE, st.min + min); applyClock(); }
+// story beats still name a part of the day; the clock never runs backwards
 function setTime(v) {
-  st.time = v; const T = TIMES[v];
-  $('#clockText').textContent = T.label;
-  $('#sk1').setAttribute('stop-color', T.s1); $('#sk2').setAttribute('stop-color', T.s2);
-  $('#tint').style.background = T.tint;
-  $('#beam').setAttribute('points', T.beam); $('#beam').setAttribute('opacity', T.bo);
-  $('#cityLights').setAttribute('opacity', T.lights);
+  const at = { morning: OPEN, afternoon: 840, dusk: 1065 }[v];
+  st.min = v === 'morning' ? OPEN : Math.max(st.min || OPEN, at); applyClock();
 }
 
 function hint(t, ms) {
@@ -1570,15 +2553,19 @@ function hint(t, ms) {
 
 /* ---------- guide ---------- */
 function guide() {
-  if (!$('#liftModal').hidden || !$('#journalModal').hidden || !$('#meetModal').hidden || !$('#peopleModal').hidden || !$('#phoneModal').hidden || !$('#cardModal').hidden || !$('#knockModal').hidden || !$('#tidyModal').hidden) return null;
+  if (document.querySelector('.modal:not([hidden])')) return null;
   if (!dlg.hidden) return null;
+  if (st.notif && !$('#notif').hidden) return { t: [{ el: '#notif' }], text: '有人发来消息，点开看看', sub: '先看消息，再做别的。' };
   const o = curOrder();
-  if (!o) return null;
+  if (!o && storyWait) return { t: [{ el: '#storyBtn' }], text: '有新的事情，点「去看看」', sub: '不急的话，也可以先在桌上随便合成。' };
   const pi = printerIdx();
+  if (!o && st.printer === 'ready') return isFolded() ? { t: [{ el: '#toBoard' }], text: '打印好了，点左下角「合成」', sub: '去合成桌上取件。' } : { t: [{ cell: pi }], text: '打印好了！点一下打印机', sub: '把它从打印板上取下来。' };
+  if (!o) return null;
   if (st.printed[st.order]) {
-    if (!st.board.some(x => x && x.k === o.product)) return null;
+    if (!haveProduct(o.product)) return null;
     return { t: [{ el: '#deliverBtn' }], text: o.who === '我' ? '点这里，收好' : '点这里，交给 ' + o.who, sub: SINGLE[o.product].name + '做好了。' };
   }
+  if (isFolded()) return { t: [{ el: '#toBoard' }], text: st.printer === 'ready' ? '打印好了，点左下角「合成」' : '点左下角「合成」', sub: '去合成桌上接着做。', soft: st.printer !== 'idle' && st.printer !== 'ready' };
   if (st.printer === 'ready') return { t: [{ cell: pi }], text: '打印好了！点一下打印机', sub: '把它从温热的打印板上取下来。' };
   if (st.printer !== 'idle') return { t: [{ cell: pi }], text: '正在打印，等几秒', sub: '小表转完一圈就好了。', soft: true };
   for (const k of ['idea', 'fil']) {
@@ -1608,8 +2595,10 @@ function updateGuide() {
   tutStep = st.tut ? g : null;
   if (!st.tut && g && !g.soft) g.t.forEach(t => { const el = resolve(t); if (el) el.classList.add('spot'); });
   $('#tut').hidden = !tutStep;
+  $('#notifDim').hidden = !(st.notif && !$('#notif').hidden && !tutStep);
   if (!tutStep) return;
   $('#tut').classList.toggle('soft', !!tutStep.soft);
+  $('#tut').classList.toggle('at-top', tutStep.t[0].el === '#notif');
   $('#tutText').textContent = tutStep.text; $('#tutSub').textContent = tutStep.sub;
   $('#tutSub').hidden = !tutStep.sub;
   $('#tutBubble').hidden = !!tutStep.onlyArrow;
@@ -1652,7 +2641,7 @@ function layoutTut() {
   } else f.hidden = true;
 }
 ['#tbT', '#tbB', '#tbL', '#tbR'].forEach(s => $(s).addEventListener('click', () => { const h = $('#tutHole'); h.classList.remove('nudge'); void h.offsetWidth; h.classList.add('nudge'); }));
-$('#tutSkip').addEventListener('click', () => { st.tut = false; markTutDone(true); updateGuide(); hint('教程已关闭。之后会用小光圈提示下一步。', 3600); });
+$('#tutSkip').addEventListener('click', () => { st.tut = false; markTutDone(true); placeModeBtns(); updateGuide(); hint('教程已关闭。之后会用小光圈提示下一步。', 3600); });
 (function tutFrame() { if (tutStep) layoutTut(); requestAnimationFrame(tutFrame); })();
 
 
@@ -1677,24 +2666,27 @@ const SLOTS = [
   { kind: 'small', x: 198, y: 16, w: 34, h: 48 }, { kind: 'small', x: 198, y: 70, w: 34, h: 48 },
   { kind: 'big', x: 264, y: 16, w: 54, h: 156 }
 ];
-let tidySel = null, tidyDrag = null;
-function openTidy() {
-  st.tidy = { placed: {}, slots: {} };
+let tidySel = null, tidyDrag = null, tidyTools = TOOLS, tidyAfter = null;
+function openTidy(cfg) {
+  cfg = cfg || {};
+  tidyTools = cfg.tools || TOOLS; tidyAfter = cfg.after || null;
+  st.tidy = { placed: {}, slots: Object.assign({}, cfg.prefill || {}) };
   tidySel = null;
-  $('#tidyPeg').innerHTML = TOOLS.map(t => '<button type="button" class="ttool" data-id="' + t.id + '">' + spr('t_' + t.id) + '<span>' + t.name + '</span></button>').join('');
-  $('#tidyOrg').innerHTML = SLOTS.map((sl, i) => '<button type="button" class="tslot k-' + sl.kind + '" data-i="' + i + '" aria-label="' + KIND_NAME[sl.kind] + '" style="left:' + sl.x + 'px;top:' + sl.y + 'px;width:' + sl.w + 'px;height:' + sl.h + 'px"></button>').join('') +
+  $('#tidyTitle').textContent = cfg.title || '把工具收进收纳架';
+  $('#tidyPeg').innerHTML = tidyTools.map(t => '<button type="button" class="ttool" data-id="' + t.id + '">' + spr('t_' + t.id) + '<span>' + t.name + '</span></button>').join('');
+  $('#tidyOrg').innerHTML = SLOTS.map((sl, i) => { const f = st.tidy.slots[i]; return '<button type="button" class="tslot k-' + sl.kind + (f ? ' full' : '') + '" data-i="' + i + '" aria-label="' + KIND_NAME[sl.kind] + '" style="left:' + sl.x + 'px;top:' + sl.y + 'px;width:' + sl.w + 'px;height:' + sl.h + 'px">' + (f ? spr('t_' + f) : '') + '</button>'; }).join('') +
     '<div class="tbits" aria-hidden="true">' + '<i></i>'.repeat(7) + '</div>';
   $('#tidyHint').textContent = '把工具拖进收纳架。也可以先点工具，再点一个空位。';
   $('#tidyModal').hidden = false; updateGuide();
 }
 function tidyMark() {
   document.querySelectorAll('.ttool').forEach(b => b.classList.toggle('sel', b.dataset.id === tidySel));
-  const t = TOOLS.find(x => x.id === tidySel);
+  const t = tidyTools.find(x => x.id === tidySel);
   document.querySelectorAll('.tslot').forEach(b => b.classList.toggle('fit', !!t && SLOTS[+b.dataset.i].kind === t.kind && !st.tidy.slots[b.dataset.i]));
   if (t) $('#tidyHint').textContent = t.name + '：放进' + KIND_NAME[t.kind] + '。';
 }
 function tidyPlace(id, slotEl) {
-  const t = TOOLS.find(x => x.id === id), i = slotEl ? +slotEl.dataset.i : -1;
+  const t = tidyTools.find(x => x.id === id), i = slotEl ? +slotEl.dataset.i : -1;
   if (!t || i < 0) return false;
   if (st.tidy.slots[i]) { $('#tidyHint').textContent = '这一格已经放了东西。'; return false; }
   if (SLOTS[i].kind !== t.kind) {
@@ -1707,14 +2699,14 @@ function tidyPlace(id, slotEl) {
   const tile = document.querySelector('.ttool[data-id="' + id + '"]'); if (tile) tile.classList.add('gone');
   sfx.place(); setTimeout(() => sfx.spawn(), 60);
   tidySel = null; tidyMark();
-  const left = TOOLS.filter(x => !st.tidy.placed[x.id]).length;
+  const left = tidyTools.filter(x => !st.tidy.placed[x.id]).length;
   $('#tidyHint').textContent = left ? '还有 ' + left + ' 件。' : '都收好了。';
   if (!left) setTimeout(finishTidy, reduced ? 200 : 900);
   return true;
 }
 function finishTidy() {
   $('#tidyModal').hidden = true;
-  st.room.tidy = true; renderRoom(); showInRoom(640); sfx.chime();
+  st.room.tidy = true; if (tidyAfter) tidyAfter(); renderRoom(); showInRoom(640); sfx.chime();
   setTimeout(() => step(), reduced ? 100 : 700);
 }
 $('#tidyPeg').addEventListener('click', e => {
@@ -1774,12 +2766,13 @@ function openOldMsg() {
   $('#phScreen').setAttribute('fill', '#CFE3DE');
   dp.classList.remove('buzz'); void dp.getBoundingClientRect(); dp.classList.add('buzz');
   sfx.buzz(); try { if (navigator.vibrate) navigator.vibrate([120, 80, 120]); } catch (e) {}
-  setTimeout(() => { if (!st.notif) return; const n = $('#notif'); n.hidden = false; n.classList.remove('in'); void n.offsetWidth; n.classList.add('in'); }, reduced ? 0 : 650);
+  if (!reduced) { const sc = $('#scene'); sc.classList.remove('roomshake'); void sc.offsetWidth; sc.classList.add('roomshake'); }
+  setTimeout(() => { if (!st.notif) return; const n = $('#notif'); n.hidden = false; n.classList.remove('in'); void n.offsetWidth; n.classList.add('in'); updateGuide(); }, reduced ? 0 : 650);
 }
 function openChat() {
   if (!st.notif) return;
-  st.notif = false; $('#notif').hidden = true; $('#deskPhone').classList.remove('buzz'); renderDeskPhone();
-  $('#ipTime').textContent = IPTIME[st.time] || '10:12';
+  st.notif = false; $('#notif').hidden = true; $('#notifDim').hidden = true; $('#deskPhone').classList.remove('buzz'); renderDeskPhone();
+  $('#ipTime').textContent = fmtClock(st.min);
   $('#ipScreen').classList.remove('poster-on');
   $('#ipPage').innerHTML = '<div class="ch-nav"><span class="ch-back" aria-hidden="true">‹</span><span class="ch-who"><i class="ch-av">?</i><b>？？？</b></span><span></span></div>' +
     '<div class="ip-scroll ch-body" id="chBody"><p class="ch-time">刚刚</p>' +
@@ -1803,16 +2796,27 @@ function openChat() {
   $('#phoneModal').hidden = false; sfx.soft(); updateGuide();
 }
 $('#notif').addEventListener('click', () => { sfx.wake(); openChat(); });
+$('#notifDim').addEventListener('click', () => { const n = $('#notif'); n.classList.remove('nudge', 'in'); void n.offsetWidth; n.classList.add('nudge'); sfx.buzz(); });
 function openKnock() {
   $('#knockModal').hidden = false; updateGuide();
   setTimeout(() => sfx.knock(), 250);
 }
 $('#knockBtn').addEventListener('click', () => { sfx.wake(); $('#knockModal').hidden = true; sfx.soft(); step(); });
+// someone leaves: the door closes, answering the knock that brought them in
+function openLeave(who) {
+  st.here = st.here.filter(x => x !== who);
+  const m = $('#leaveModal'); m.classList.remove('on'); m.hidden = false; updateGuide();
+  requestAnimationFrame(() => m.classList.add('on'));
+  setTimeout(() => sfx.door(), reduced ? 0 : 420);
+  let done = false;
+  const go = () => { if (done) return; done = true; m.onclick = null; m.classList.remove('on'); setTimeout(() => { m.hidden = true; step(); }, reduced ? 0 : 450); };
+  m.onclick = go; setTimeout(go, reduced ? 600 : 2200);
+}
 
 /* ---------- hand-drawn name card ---------- */
 let cardWho = null, cardFromStory = false, cardDrag = null;
 function mpIdle() {
-  $('#mpScreen').innerHTML = '<div class="mp-lock"><b>' + (IPTIME[st.time] || '10:12') + '</b><span>把名片放进来</span><i class="mp-drop"></i></div>';
+  $('#mpScreen').innerHTML = '<div class="mp-lock"><b>' + (fmtClock(st.min)) + '</b><span>把名片放进来</span><i class="mp-drop"></i></div>';
 }
 function openCard(who, fromStory) {
   cardWho = who; cardFromStory = fromStory;
@@ -1870,6 +2874,330 @@ $('#cfLater').addEventListener('click', () => {
   nc.addEventListener('pointerup', end); nc.addEventListener('pointercancel', end);
 })();
 
+/* ---------- day 2: filament on the rack ---------- */
+function renderRack() {
+  const g = $('#rackNew'); if (!g) return;
+  g.innerHTML = st && st.room.spools ? SPOOLS.map((s, i) => {
+    const cx = 748 + i * 30;
+    return '<ellipse cx="' + (cx + 3) + '" cy="170" rx="11" ry="14" fill="#E2D2B5"></ellipse><circle cx="' + cx + '" cy="170" r="14" fill="#ECDFC6"></circle>' +
+      '<circle cx="' + cx + '" cy="170" r="10" fill="' + s.c + '"' + (s.clear ? ' fill-opacity=".55"' : '') + '></circle><circle cx="' + cx + '" cy="170" r="3.6" fill="#ECDFC6"></circle>';
+  }).join('') : '';
+}
+
+/* ---------- day 2: unboxing ---------- */
+function openUnpack() {
+  st.unpack = {};
+  const box = $('#ubox');
+  box.innerHTML = '<i class="utape"></i><i class="ucut"></i><i class="ufinger"></i><span class="uswipe">用手指沿着胶带划开</span>';
+  box.classList.remove('cutting');
+  $('#urack').innerHTML = SPOOLS.map(s => '<i data-id="' + s.id + '"></i>').join('');
+  $('#uHint').textContent = '前几天买的耗材到了。沿着胶带划一下，把箱子打开。';
+  $('#uDone').hidden = true;
+  /* drag along the tape; once most of it is cut the box opens */
+  let cut = null;
+  const rel = e => { const r = box.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top, w: r.width, h: r.height }; };
+  box.onpointerdown = e => {
+    if (st.unpack.open) return;
+    const q = rel(e); if (Math.abs(q.y - q.h / 2) > 34) return;
+    cut = { a: q.x, b: q.x }; box.classList.add('cutting'); box.setPointerCapture(e.pointerId); sfx.wake();
+  };
+  box.onpointermove = e => {
+    if (!cut) return;
+    const q = rel(e); cut.a = Math.min(cut.a, q.x); cut.b = Math.max(cut.b, q.x);
+    const line = box.querySelector('.ucut'); line.style.left = Math.max(0, cut.a) + 'px'; line.style.width = (Math.min(q.w, cut.b) - Math.max(0, cut.a)) + 'px';
+    if (cut.b - cut.a > q.w * .72) { cut = null; st.unpack.open = true; box.onpointerdown = box.onpointermove = box.onpointerup = null; sfx.pop(); setTimeout(openBoxInside, reduced ? 0 : 220); }
+  };
+  box.onpointerup = box.onpointercancel = () => {
+    if (!cut) return;
+    cut = null; box.classList.remove('cutting'); const line = box.querySelector('.ucut'); line.style.width = '0';
+    $('#uHint').textContent = '再划长一点，从胶带一头划到另一头。';
+  };
+  $('#boxModal').hidden = false; updateGuide();
+}
+function openBoxInside() {
+  const box = $('#ubox');
+  box.innerHTML = '<div class="ugrid">' + SPOOLS.map((s, n) => '<button type="button" class="uspool" data-id="' + s.id + '" style="animation-delay:' + n * 80 + 'ms">' + spr('spb_' + s.id) + '<span>' + s.name + ' PLA</span><small>附干燥剂</small></button>').join('') + '</div>';
+  $('#uHint').textContent = '四卷耗材。点一下，挂到耗材架上。';
+  box.querySelectorAll('.uspool').forEach(b => b.addEventListener('click', () => {
+    const id = b.dataset.id; if (st.unpack[id]) return;
+    st.unpack[id] = true; b.classList.add('gone'); sfx.place(); setTimeout(() => sfx.spawn(), 60);
+    $('#urack [data-id="' + id + '"]').innerHTML = spr('sp_' + id);
+    const left = SPOOLS.filter(s => !st.unpack[s.id]).length;
+    $('#uHint').textContent = left ? '还有 ' + left + ' 卷。' : '四卷都挂好了。';
+    if (!left) { st.room.spools = true; renderRack(); $('#uDone').hidden = false; }
+  }));
+}
+$('#uDone').addEventListener('click', () => {
+  $('#boxModal').hidden = true; showInRoom(760); sfx.chime();
+  st.jr.push({ spr: 'sp_clear', t: '快递到了：白、灰、黑、透明四卷 PLA，每卷的包里都有干燥剂。' });
+  setTimeout(step, reduced ? 100 : 600);
+});
+
+/* ---------- day 2: AMS lite tubes ---------- */
+/* Ports 1–4 sit at different distances from the printer, so each needs a different tube length.
+   Hestia swapped a long and a short tube in real life and the filament wouldn't feed; the test reproduces that. */
+const AMS_X = [50, 120, 190, 260];
+const TUBES = ['最长', '较长', '较短', '最短'];
+let amsSel = null;
+const amsPath = i => { const yT = 118 + i * 14; return 'M' + AMS_X[i] + ' 94 V' + yT + ' H300 Q312 ' + yT + ' 312 ' + (yT + 12) + ' V176'; };
+function openAms() {
+  st.ams = { port: [null, null, null, null], res: null, mistake: false, order: [2, 0, 3, 1] };
+  amsSel = null;
+  $('#amsHint').textContent = '特氟龙管长短不一。先点一根管子，再点它要接的料位。';
+  $('#amsTest').hidden = true; $('#amsDone').hidden = true;
+  renderAms();
+  $('#amsModal').hidden = false; updateGuide();
+}
+function renderAms() {
+  const A = st.ams;
+  let h = '<g stroke="#6E4A31" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round">';
+  h += '<rect x="18" y="66" width="276" height="20" rx="6" fill="#CBC6B8"></rect>';
+  AMS_X.forEach((x, i) => {
+    const s = SPOOLS[i];
+    h += '<circle cx="' + x + '" cy="38" r="25" fill="#ECDFC6"></circle><circle cx="' + x + '" cy="38" r="17" fill="' + s.c + '"' + (s.clear ? ' fill-opacity=".55"' : '') + '></circle><circle cx="' + x + '" cy="38" r="6" fill="#ECDFC6"></circle>';
+    h += '<rect x="' + (x - 7) + '" y="84" width="14" height="10" rx="2" fill="#8B827A"></rect>';
+    h += '<text x="' + x + '" y="80.5" font-size="10" text-anchor="middle" fill="#6E4A31" stroke="none" font-family="Noto Sans SC, sans-serif">' + (i + 1) + '</text>';
+  });
+  h += '<rect x="298" y="174" width="28" height="22" rx="5" fill="#8B827A"></rect><text x="312" y="208" font-size="9.5" text-anchor="middle" fill="#6E4A31" stroke="none" font-family="Noto Sans SC, sans-serif">通往打印机</text>';
+  AMS_X.forEach((x, i) => {
+    const t = A.port[i], d = amsPath(i);
+    h += '<path d="' + d + '" fill="none" stroke="#B9A88C" stroke-width="1.2" stroke-dasharray="3 3"></path>';
+    if (t == null) return;
+    h += '<path d="' + d + '" fill="none" stroke="#6E4A31" stroke-width="5.6"></path><path d="' + d + '" fill="none" stroke="#FFFDF6" stroke-width="3.4"></path>';
+    if (A.res) {
+      const ok = A.res[i], s = SPOOLS[i];
+      h += '<path d="' + d + '" pathLength="100" class="feed' + (ok ? '' : ' bad') + '" fill="none" stroke="' + (s.clear ? '#8DB9B6' : s.id === 'white' ? '#D8CFBF' : s.c) + '" stroke-width="1.8"></path>';
+      if (!ok) h += '<g class="stuck"><rect x="' + (x - 22) + '" y="98" width="44" height="17" rx="8.5" fill="#B9694C" stroke="none"></rect><text x="' + x + '" y="110" font-size="10" text-anchor="middle" fill="#FBF6EC" stroke="none" font-family="Noto Sans SC, sans-serif">拉不动</text></g>';
+    }
+  });
+  AMS_X.forEach((x, i) => { h += '<rect class="aport" data-i="' + i + '" x="' + (x - 30) + '" y="8" width="60" height="112" fill="transparent" stroke="none"></rect>'; });
+  h += '</g>';
+  $('#amsSvg').innerHTML = h;
+  const W = [89, 68, 47, 26];
+  $('#amsTray').innerHTML = A.order.map(t => '<button type="button" class="atube' + (A.port.includes(t) ? ' used' : '') + (amsSel === t ? ' sel' : '') + '" data-t="' + t + '"><svg viewBox="0 0 ' + (W[t] + 4) + ' 12" width="' + (W[t] + 4) + '" aria-hidden="true"><rect x="2" y="3" width="' + W[t] + '" height="6" rx="3" fill="#FFFDF6" stroke="#6E4A31" stroke-width="1.4"></rect></svg>' + TUBES[t] + '</button>').join('');
+}
+$('#amsTray').addEventListener('click', e => {
+  const b = e.target.closest('.atube'); if (!b || b.classList.contains('used')) return;
+  sfx.wake(); sfx.soft();
+  const t = +b.dataset.t; amsSel = amsSel === t ? null : t;
+  $('#amsHint').textContent = amsSel == null ? '先点一根管子，再点它要接的料位。' : TUBES[amsSel] + '的这根，接到哪个料位？';
+  renderAms();
+});
+$('#amsSvg').addEventListener('click', e => {
+  const p = e.target.closest('.aport'); if (!p || !st.ams) return;
+  const A = st.ams, i = +p.dataset.i;
+  if (amsSel == null) {
+    if (A.port[i] == null) { $('#amsHint').textContent = '先点一根管子。'; return; }
+    $('#amsHint').textContent = '把 ' + (i + 1) + ' 号料位的管子拔了下来。';
+    A.port[i] = null; sfx.soft();
+  } else {
+    A.port[i] = amsSel; amsSel = null; sfx.place();
+    const left = A.port.filter(x => x == null).length;
+    $('#amsHint').textContent = left ? '还有 ' + left + ' 根。' : '四根都接上了。试试送料。';
+  }
+  A.res = null;
+  $('#amsTest').hidden = A.port.some(x => x == null); $('#amsDone').hidden = true;
+  renderAms();
+});
+$('#amsTest').addEventListener('click', () => {
+  const A = st.ams; sfx.wake();
+  A.res = A.port.map((t, i) => t === i);
+  const ok = A.res.every(Boolean);
+  if (!ok) A.mistake = true;
+  $('#amsTest').hidden = true; sfx.humStart(); renderAms();
+  setTimeout(() => {
+    sfx.humStop();
+    if (ok) { sfx.chime(); $('#amsHint').textContent = '四路都送到了。'; $('#amsDone').hidden = false; }
+    else { sfx.buzz(); $('#amsHint').textContent = '有的料位总拉不动……点料位把管子拔下来，一根一根检查。'; }
+  }, reduced ? 200 : 1500);
+});
+$('#amsDone').addEventListener('click', () => {
+  const m = st.ams.mistake;
+  $('#amsModal').hidden = true;
+  st.room.ams = true; renderAmsRoom(true); showInRoom(250); sfx.chime();
+  st.jr.push({ spr: 'ams', t: m ? '装好了 AMS lite。一长一短两根特氟龙管接反了，送料总拉不动，重新检查才解决。' : '装好了 AMS lite。四根特氟龙管长短不一，都接对了。' });
+  Q.unshift(m ? { s: 'me', t: '原来是长短两根管子接反了。难怪总拉不动。' } : { s: 'me', t: '四根管子都接对了。' });
+  step();
+});
+
+/* ---------- day 2: model site on the laptop ---------- */
+const SITE = [
+  { k: 'scraper', note: '测试过，不容易刮花打印板。', data: '40 层 · 9.56 mm · 51 分 40 秒 · 18.8 g' },
+  { k: 'vase', note: '棕色耗材，细细的瓶口。', data: '740 层 · 177.56 mm · 6 小时 34 分 · 141.14 g' },
+  { k: 'stand', note: '米家温湿度计 2 的底座，可以调仰角。', data: '169 层 · 33.80 mm · 42 分 39 秒 · 14.76 g' },
+  { k: 'boat', note: '经典的测试小船。', data: '192 层 · 48.00 mm · 24 分 53 秒 · 12.18 g' }
+];
+function openSite(a) {
+  const done = k => st.done.includes(k), first = !st.done.some(k => k === 'scraper' || CHOICES[k]), rec = !done('scraper');
+  $('#siteTitle').textContent = first ? '挑第一样要打的东西' : '再挑一样';
+  $('#siteUrl').innerHTML = SEARCH_SVG + '<span>' + (rec ? '刮刀' : '多色 · 新手') + '</span>';
+  $('#siteTip').hidden = !rec;
+  $('#siteTip').textContent = '新手建议：先打一把刮刀。以后取件，就不用再掰板了。';
+  $('#siteList').innerHTML = SITE.map(m => {
+    const can = !done(m.k), r = rec && m.k === 'scraper';
+    return '<div class="s-card' + (r ? ' rec' : '') + '">' + spr(SINGLE[m.k].spr) + '<div class="s-txt"><b>' + SINGLE[m.k].name + (r ? '<em class="s-rec">建议先打</em>' : '') + '</b>' + (m.note ? '<span>' + m.note + '</span>' : '') +
+      '<span class="s-data' + (m.data ? '' : ' todo') + '">' + (m.data || '切片数据待补') + '</span></div>' +
+      '<button type="button" class="s-go" data-k="' + m.k + '"' + (can ? '' : ' disabled') + '>' + (can ? '打这个' : '已打好') + '</button></div>';
+  }).join('');
+  $('#siteList').querySelectorAll('.s-go:not([disabled])').forEach(b => b.addEventListener('click', () => {
+    const k = b.dataset.k;
+    $('#siteModal').hidden = true; sfx.wake(); sfx.chime();
+    if (k === 'scraper') st.order = 0;
+    else { st.choice = k; ORDERS[1] = choiceOrder(k); st.printed[1] = false; st.order = 1; }
+    renderBoard(); step();
+  }));
+  $('#siteModal').hidden = false; updateGuide();
+}
+
+/* ---------- sketchbook: every finished print's drawing is added here ---------- */
+const printData = k => ALL_ORDERS().find(o => o.product === k) || CHOICES[k];
+function sketchList() {
+  const out = [];
+  for (let d = 1; d <= st.day; d++) {
+    const keys = d === st.day ? st.done : diaryOf(d).map(x => String(x.spr).replace(/_full2?$/, ''));
+    keys.forEach(k => { if (SINGLE[k] && printData(k) && !out.some(x => x.k === k)) out.push({ k, d }); });
+  }
+  return out;
+}
+function openSketch() {
+  const list = sketchList();
+  $('#skGrid').innerHTML = list.length ? list.map(({ k, d }) => {
+    const o = printData(k), lines = S[SINGLE[k].spr].replace(/<ellipse[^>]*fill-opacity="\.1\d"[^>]*\/>/g, '');
+    return '<div class="skpage"><svg viewBox="0 0 48 48" aria-hidden="true"><g class="blueprint" stroke="#5E8C88" stroke-width="1" fill="none" stroke-linejoin="round" stroke-linecap="round">' + lines + '</g></svg>' +
+      '<b>' + SINGLE[k].name + '</b><small>' + (DAYNAME[d] || '第 ' + d + ' 天') + (o.real ? '<br>' + o.layers + ' 层 · ' + o.real.h + '<br>' + o.real.time + ' · ' + o.real.g : '') + '</small></div>';
+  }).join('') : '<p class="skempty">还没有打过东西。每完成一张单子，它的图纸就会收进这里。</p>';
+  sfx.soft(); $('#sketchModal').hidden = false; updateGuide();
+}
+$('#skClose').addEventListener('click', () => { $('#sketchModal').hidden = true; updateGuide(); });
+
+/* ---------- printer status: looking after the printer will matter later in the game ---------- */
+/* Temperatures are Bambu's PLA preset on the textured PEI plate (nozzle 220 °C, bed 55 °C).
+   Hestia: the Hangzhou studio's humidity floats between 30 and 45%. Maintenance from her: empty the
+   purge waste (竹屎) and wash the plate every few prints, or prints may fail (failures start on day 3). */
+const humidity = () => 30 + (st.day * 7 + st.done.length * 3) % 16;
+const PLATE_MAX = 3, POOP_MAX = 4;
+const needsCare = () => st.maint && (st.maint.plate >= PLATE_MAX || st.maint.poop >= POOP_MAX);
+function realMinutes(t) {
+  const h = /(\d+)\s*小时/.exec(t), m = /(\d+)\s*分/.exec(t), sec = /(\d+)\s*秒/.exec(t);
+  return (h ? +h[1] * 60 : 0) + (m ? +m[1] : 0) + (sec ? +sec[1] / 60 : 0);
+}
+const fmtMinutes = n => (n >= 60 ? Math.floor(n / 60) + ' 小时 ' : '') + Math.round(n % 60) + ' 分';
+function openPrinter() {
+  const row = (k, v, c) => '<div class="prow"><span>' + k + '</span><b' + (c ? ' class="' + c + '"' : '') + '>' + v + '</b></div>';
+  const state = { idle: '待命', printing: '正在打印「' + (st.pending ? SINGLE[st.pending].name : '') + '」', cooling: '打完了，降温中', ready: '打印好了，等着取件', overnight: '开着过夜，还在打「' + (st.pending ? SINGLE[st.pending].name : '') + '」' }[st.printer] || '待命';
+  const hot = st.printer === 'printing' || st.printer === 'overnight', o = curOrder();
+  const list = sketchList(), mins = list.reduce((a, x) => { const d = printData(x.k); return a + (d.real ? realMinutes(d.real.time) : 0); }, 0);
+  const grams = list.reduce((a, x) => { const d = printData(x.k); return a + (d.real ? parseFloat(d.real.g) : 0); }, 0);
+  const m = st.maint;
+  $('#prBody').innerHTML =
+    row('状态', state, hot || st.printer === 'ready' ? 'hot' : '') +
+    (hot && o && o.layers ? row('进度', Math.round(st.pProg * o.layers) + ' / ' + o.layers + ' 层') : '') +
+    row('喷嘴', hot ? '220 °C' : st.printer === 'cooling' ? '降温中' : '室温', hot ? 'hot' : 'dim') +
+    row('热床', hot ? '55 °C' : st.printer === 'cooling' || st.printer === 'ready' ? '降温中' : '室温', hot ? 'hot' : 'dim') +
+    row('打印板', 'Bambu 纹理 PEI 板') +
+    row('打印板干净吗', m.plate >= PLATE_MAX ? '该清洗了（打了 ' + m.plate + ' 次）' : m.plate ? '打了 ' + m.plate + ' 次，还行' : '刚洗过', m.plate >= PLATE_MAX ? 'hot' : '') +
+    row('竹屎', m.poop >= POOP_MAX ? '该清理了' : m.poop ? '攒了一点（' + m.poop + ' 次打印）' : '清空了', m.poop >= POOP_MAX ? 'hot' : '') +
+    row('耗材', st.room.ams ? 'AMS lite：白、灰、黑、透明' : st.room.spools ? '白、灰、黑、透明（挂在耗材架上）' : '顶上挂着一卷 PLA') +
+    row('环境湿度', st.done.includes('stand') || (st.day > 2 && diaryOf(2).some(x => x.spr === 'stand')) ? humidity() + '%' : '不知道（还没有温湿度计）', st.done.includes('stand') ? '' : 'dim') +
+    '<p class="psec">累计</p>' +
+    row('打印次数', list.length + ' 次') + row('打印时长', fmtMinutes(mins)) + row('用掉的耗材', Math.round(grams * 10) / 10 + ' g') +
+    '<p class="psec">保养</p><div class="pcare">' +
+    '<button type="button" class="sbtn" id="careWash"' + (m.plate && st.printer === 'idle' ? '' : ' disabled') + '>清洗打印板</button>' +
+    '<button type="button" class="sbtn" id="carePoop"' + (m.poop ? '' : ' disabled') + '>清理竹屎</button></div>' +
+    (needsCare() ? '<p class="pwarn">不保养的话，可能会引发打印故障。</p>' : '');
+  $('#careWash').addEventListener('click', () => { $('#printerModal').hidden = true; openWash(); });
+  $('#carePoop').addEventListener('click', () => { $('#printerModal').hidden = true; openPoop(); });
+  sfx.soft(); $('#printerModal').hidden = false; updateGuide();
+}
+$('#prClose').addEventListener('click', () => { $('#printerModal').hidden = true; updateGuide(); });
+
+/* ---------- day 2: put the scraper away ---------- */
+function openStow() {
+  openTidy({ title: '把刮刀收进收纳架', tools: [{ id: 'scraper', name: '刮刀', kind: 'long' }],
+    prefill: { 0: 'cal', 1: 'plier', 4: 'debur', 5: 'glue', 6: 'marker', 7: 'pencil' },
+    after: () => { st.room.scraper = true; } });
+  $('#tidyHint').textContent = '刮刀长长的，放进空着的长仓。';
+}
+
+/* ---------- day 2: messaging D ---------- */
+/* Real: D only messages first when she has an order. When asked, she replies much later, as if she just woke up, and sends dinosaur stickers. */
+const DINO = '<svg viewBox="0 0 84 84" aria-label="粉色恐龙表情包"><g stroke="#6E4A31" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round">' +
+  '<text x="8" y="16" font-size="12" fill="#4A3324" stroke="none" font-family="Noto Sans SC, sans-serif">yuh.</text>' +
+  '<path d="M16 80 q-4 -22 6 -36 q-4 -18 12 -24 q12 -4 24 2 q14 6 12 20 q-2 10 -10 13 q10 10 6 25 Z" fill="#F4A6D7"></path>' +
+  '<path d="M28 42 q14 6 28 0" fill="none"></path>' +
+  '<ellipse cx="34" cy="30" rx="5.5" ry="6.5" fill="#FFFDF6"></ellipse><ellipse cx="52" cy="30" rx="5.5" ry="6.5" fill="#FFFDF6"></ellipse>' +
+  '<circle cx="35" cy="31" r="2.4" fill="#4A3324" stroke="none"></circle><circle cx="51" cy="31" r="2.4" fill="#4A3324" stroke="none"></circle>' +
+  '<path d="M28 24 l-3 -3 M30 22.5 l-1.5 -3.5 M56 22.5 l1.5 -3.5 M58 24 l3 -3" stroke-width="1.1"></path>' +
+  '<path d="M22 66 q-2 -10 6 -14 q4 4 2 9 M62 66 q2 -10 -6 -14 q-4 4 -2 9" fill="#F4A6D7"></path>' +
+  '<ellipse cx="27" cy="39" rx="3" ry="1.6" fill="#E77AB8" stroke="none"></ellipse><ellipse cx="59" cy="39" rx="3" ry="1.6" fill="#E77AB8" stroke="none"></ellipse></g></svg>';
+const D_AFTER = [
+  { s: 'n', t: '过了好久，她才回。像是刚起床。' },
+  { s: 'n', t: 'D 很内向。平时不会主动发消息，只有要做东西的时候，才会来找我。' },
+  { s: 'n', t: '那个恐龙表情包，大概是社恐的意思。' }
+];
+/* Hestia's script (2026-10-18): after the sticker, ask about the bookmark, tell her about the new filament and AMS, invite her over. */
+const DINO_FLOWER = DINO.replace('aria-label="粉色恐龙表情包"', 'aria-label="拿着小花的粉色恐龙"').replace('>yuh.<', '>谢谢你<')
+  .replace('</g></svg>', '<path d="M40 50 V40" stroke-width="1.2"></path><g fill="#FFFDF6" stroke-width="1"><circle cx="40" cy="34" r="3"></circle><circle cx="45" cy="37" r="3"></circle><circle cx="43" cy="42" r="3"></circle><circle cx="37" cy="42" r="3"></circle><circle cx="35" cy="37" r="3"></circle></g><circle cx="40" cy="38.5" r="2.2" fill="#E3B969" stroke-width=".8"></circle></g></svg>');
+const D_CHAT = [
+  { me: '那书签怎么样？', d: ['还有点小问题。'] },
+  { me: '我新到了一些耗材，还有了 AMS，可以打多色了。', d: ['哇'] },
+  { me: '那你过来吗？', d: ['今天算了，明天我早点过去。', { stk: DINO_FLOWER }] }
+];
+function openDChat() {
+  phoneStory = true;
+  $('#ipTime').textContent = fmtClock(st.min);
+  $('#ipScreen').classList.remove('poster-on');
+  const page = $('#ipPage'); delete page.dataset.busy;
+  page.innerHTML = '<div class="ch-nav"><span class="ch-back" aria-hidden="true">‹</span><span class="ch-who"><i class="ch-av ch-avd">' + avatarHTML('D') + '</i><b>D</b></span><span></span></div>' +
+    '<div class="ip-scroll ch-body" id="chBody"><p class="ch-time">今天</p></div>';
+  const body = () => $('#chBody');
+  const add = (cls, html) => { const d = document.createElement('div'); d.className = cls; d.innerHTML = html; body().appendChild(d); body().scrollTop = 1e5; return d; };
+  const wait = ms => reduced ? 150 : ms;
+  const panel = (hint, opts, pick) => {
+    const el = document.createElement('div'); el.className = 'ch-panel'; el.id = 'chOpts';
+    el.innerHTML = '<div class="ch-input ch-in-panel"><span>发消息</span></div><small>' + hint + '</small>' + opts.map((t, n) => '<button type="button" class="ch-opt" data-n="' + n + '">' + t + '</button>').join('');
+    const old = page.querySelector(':scope > .ch-input'); if (old) old.remove();
+    page.appendChild(el); delete page.dataset.busy; body().scrollTop = 1e5;
+    el.querySelectorAll('.ch-opt').forEach(b => b.addEventListener('click', () => { el.remove(); pick(+b.dataset.n); }));
+  };
+  const input = () => { if (!page.querySelector(':scope > .ch-input')) { const i = document.createElement('div'); i.className = 'ch-input'; i.innerHTML = '<span>发消息</span>'; page.appendChild(i); } };
+  const done = () => {
+    delete page.dataset.busy;
+    const d = document.createElement('button'); d.type = 'button'; d.className = 'ip-done ch-done'; d.id = 'ipDone'; d.textContent = '放下手机';
+    d.addEventListener('click', closePhone); page.appendChild(d);
+  };
+  const dSays = (lines, then) => {
+    const typing = add('ch-b ch-l ch-typing', '<i></i><i></i><i></i>');
+    let n = 0;
+    const next = () => {
+      const l = lines[n++];
+      if (n === 1) typing.remove();
+      if (l.stk) { add('ch-b ch-l ch-stk', l.stk); sfx.spawn(); } else { add('ch-b ch-l', l); sfx.soft(); }
+      if (n < lines.length) setTimeout(next, wait(800)); else setTimeout(then, wait(400));
+    };
+    setTimeout(next, wait(1100));
+  };
+  const talk = i => {
+    if (i >= D_CHAT.length) { done(); return; }
+    panel('回她', [D_CHAT[i].me], () => {
+      page.dataset.busy = '1'; input(); sfx.spawn();
+      add('ch-b ch-r', D_CHAT[i].me);
+      dSays(D_CHAT[i].d, () => talk(i + 1));
+    });
+  };
+  panel('要问问她吗？', ['在忙吗？', '算了，先不打扰她。'], n => {
+    if (n === 1) { sfx.soft(); closePhone(); return; }
+    page.dataset.busy = '1'; input(); sfx.spawn();
+    add('ch-b ch-r', '在忙吗？'); add('ch-read', '已送达');
+    Q.unshift(...D_AFTER); st.dMsg = true;
+    st.jr.push({ spr: 'bm1', t: '问 D 书签怎么样。她过了好久才回，说还有点小问题。约好了明天她早点过来。' });
+    setTimeout(() => { add('ch-time', '过了很久'); dSays(['刚起……', { stk: DINO }], () => talk(0)); }, wait(1300));
+  });
+  $('#phoneModal').hidden = false; sfx.soft(); updateGuide();
+}
+
+const STORY_DO = { unpack: openUnpack, ams: openAms, site: openSite, stow: openStow, dchat: openDChat };
+
 /* ---------- desk phone & contacts ---------- */
 function renderDeskPhone() {
   const on = st && (st.phoneNew || st.pendingCard);
@@ -1877,7 +3205,6 @@ function renderDeskPhone() {
   $('#phScreen').setAttribute('fill', on ? '#CFE3DE' : '#48615F');
   $('#deskPhone').classList.toggle('ping-on', !!(st && st.pendingCard));
 }
-const IPTIME = { morning: '10:12', afternoon: '15:40', dusk: '18:10' };
 const SEARCH_SVG = '<svg viewBox="0 0 14 14" aria-hidden="true"><circle cx="6" cy="6" r="4.6" fill="none" stroke="currentColor" stroke-width="1.6"></circle><path d="M9.5 9.5 L13 13" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path></svg>';
 const ACTS = [
   ['信息', '<path d="M3 4.5 h18 a2 2 0 0 1 2 2 v9 a2 2 0 0 1 -2 2 h-11 l-5 4 v-4 h-2 a2 2 0 0 1 -2 -2 v-9 a2 2 0 0 1 2 -2 Z"></path>'],
@@ -1886,7 +3213,7 @@ const ACTS = [
   ['邮件', '<rect x="2" y="5" width="20" height="14" rx="2.5"></rect><path d="M3 6.5 l9 6.5 9 -6.5" fill="none"></path>']
 ];
 function openPhone(id) {
-  $('#ipTime').textContent = IPTIME[st.time] || '10:12';
+  $('#ipTime').textContent = fmtClock(st.min);
   renderPhone(id || null);
   $('#phoneModal').hidden = false;
   st.phoneNew = false; renderDeskPhone(); sfx.soft(); updateGuide();
@@ -1929,18 +3256,34 @@ function renderPhone(id) {
   }
   const sc = page.querySelector('.ip-scroll'); if (sc) sc.scrollTop = 0;
 }
-$('#phoneModal').addEventListener('click', e => { if (e.target.id === 'phoneModal' && !$('#chOpts') && !document.querySelector('.ch-typing')) closePhone(); });
+$('#phoneModal').addEventListener('click', e => { if (e.target.id === 'phoneModal' && !$('#chOpts') && !document.querySelector('.ch-typing') && !$('#ipPage').dataset.busy) closePhone(); });
 function openPeople() { openPhone(); }
 
 
 /* ---------- things kept in the room ---------- */
 function renderRoom(fx) {
-  const g = $('#roomOrg'), v = st.room.tidy ? 'org_full' : 'org';
-  if (g.dataset.v !== v) { g.dataset.v = v; g.innerHTML = '<g class="roomitem" transform="translate(656 204) scale(3.6)"><g stroke="#6E4A31" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round" fill="none">' + S[v] + '</g></g>'; }
+  renderRack(); renderAmsRoom(); renderDesk(); renderBin();
+  const g = $('#roomOrg'), v = st.room.scraper ? 'org_full2' : st.room.tidy ? 'org_full' : 'org';
+  if (g.dataset.v !== v) { g.dataset.v = v; g.innerHTML = '<g class="roomitem" transform="translate(672 204) scale(3.6)"><g stroke="#6E4A31" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round" fill="none">' + S[v] + '</g></g>'; }
   document.querySelectorAll('#pegTools [class^="pt-"]').forEach(el => { const k = 't_' + el.getAttribute('class').slice(3); if (!el.firstChild) el.innerHTML = S[k]; });
   $('#pegTools').setAttribute('opacity', st.room.tidy ? 0 : 1);
   g.setAttribute('opacity', st.room.org ? 1 : 0);
   if (fx === 'org' && !reduced) { const it = g.firstChild; it.classList.remove('appear'); void it.getBoundingClientRect(); it.classList.add('appear'); }
+}
+/* AMS lite on the desk left of the printer, four colours, tube up into the printer */
+function renderAmsRoom(fx) {
+  const g = $('#roomAms'), on = !!(st && st.room.ams);
+  $('#topSpool').setAttribute('opacity', on ? 0 : 1);
+  if (!on) { g.innerHTML = ''; return; }
+  const sp = (cx, cy, s) => '<ellipse cx="' + (cx + 3) + '" cy="' + cy + '" rx="9" ry="12" fill="#E2D2B5"></ellipse><circle cx="' + cx + '" cy="' + cy + '" r="12" fill="#ECDFC6"></circle>' +
+    '<circle cx="' + cx + '" cy="' + cy + '" r="8.6" fill="' + s.c + '"' + (s.clear ? ' fill-opacity=".55"' : '') + '></circle><circle cx="' + cx + '" cy="' + cy + '" r="3.2" fill="#ECDFC6"></circle>';
+  g.innerHTML = '<g class="' + (fx ? 'amsin' : '') + '">' +
+    '<path d="M130 236 C 128 150, 210 40, 292 50" stroke="#6E4A31" stroke-width="3.6" fill="none"></path><path d="M130 236 C 128 150, 210 40, 292 50" stroke="#FFFDF6" stroke-width="2" fill="none"></path>' +
+    '<ellipse cx="130" cy="303" rx="30" ry="3" fill="#6E4A31" fill-opacity=".14" stroke="none"></ellipse>' +
+    '<rect x="106" y="290" width="48" height="11" rx="3" fill="#CBC6B8"></rect><rect x="127" y="238" width="6" height="53" fill="#B9B3A5"></rect>' +
+    '<path d="M112 250 L148 250 M112 276 L148 276" stroke-width="2.2"></path>' +
+    sp(116, 250, SPOOLS[0]) + sp(144, 250, SPOOLS[1]) + sp(116, 276, SPOOLS[2]) + sp(144, 276, SPOOLS[3]) +
+    '<rect x="124" y="232" width="12" height="8" rx="2" fill="#8B827A"></rect></g>';
 }
 function showInRoom(x) { SV.z = 1; SV.x = x; SV.y = 210; applyView(); }
 
@@ -1952,7 +3295,7 @@ function viewSize() {
   const r = sceneSvg.getBoundingClientRect();
   if (!r.width || !r.height) return null;
   const A = r.width / r.height;
-  let vh = SV.BH / SV.z, vw = vh * A;
+  let vh = ($('#stage').classList.contains('folded') ? SV.H : SV.BH) / SV.z, vw = vh * A;
   if (vw > SV.W) { vw = SV.W; vh = vw / A; }
   return { vw, vh, r };
 }
@@ -2015,12 +3358,65 @@ function openMeet(who) {
 $('#meetOk').addEventListener('click', () => { $('#meetModal').hidden = true; step(); });
 $('#peopleClose').addEventListener('click', () => { $('#peopleModal').hidden = true; updateGuide(); });
 /* ---------- journal ---------- */
+function journalItems() {
+  return st.day === 2 ? st.jr : st.done.map(k => ({ spr: k, t: JOURNAL[k] })).concat(st.night === 'org' ? [{ spr: 'org', t: JOURNAL.org_night }] : []);
+}
 function openJournal() {
-  $('#journalBody').innerHTML = st.done.map(k => '<div class="jitem">' + spr(k === 'org' && st.room.tidy ? 'org_full' : k) + '<span>' + JOURNAL[k] + '</span></div>').join('') +
-    (st.room.tidy ? '<p class="jnote">明天：抽空搞一把刮刀。</p>' : '');
+  const items = journalItems();
+  st.dayDone = true; saveDiary(); renderCal();
+  $('#jTitle').textContent = '杭州 · ' + DAYNAME[st.day];
+  $('#journalBody').innerHTML = items.map(x => '<div class="jitem">' + spr(x.spr) + '<span>' + x.t + '</span></div>').join('') +
+    (st.day === 1 && st.night ? '<p class="jnote">明天：一早来取收纳架。</p>' : '') +
+    (st.day === 2 && st.dMsg ? '<p class="jnote">明天：D 会早点过来。</p>' : '');
+  const nb = $('#nextDayBtn');
+  nb.textContent = st.day === 1 ? '第二天' : '第三天（制作中）'; nb.disabled = st.day !== 1;
   $('#journalModal').hidden = false; updateGuide();
 }
-$('#againBtn').addEventListener('click', () => { $('#journalModal').hidden = true; start(); });
+/* ---------- desk calendar: a circle for each finished day, tap a day to read its diary ---------- */
+const DIARY_KEY = 'shuangchengji-diary-';
+const DIARY_DEFAULT = { 1: [{ spr: 'bm1', t: JOURNAL.bm1 }, { spr: 'org', t: JOURNAL.org_night }] };
+const CN = ['零', '一', '二', '三', '四', '五', '六', '七', '八', '九', '十', '十一', '十二', '十三', '十四', '十五'];
+function saveDiary() { try { localStorage.setItem(DIARY_KEY + st.day, JSON.stringify(journalItems())); } catch (e) {} }
+function diaryOf(d) {
+  if (d === st.day) return journalItems();
+  try { const v = JSON.parse(localStorage.getItem(DIARY_KEY + d)); if (v && v.length) return v; } catch (e) {}
+  return DIARY_DEFAULT[d] || [];
+}
+const dayDone = d => d < st.day || (d === st.day && st.dayDone);
+/* The page shows today; when a new day starts yesterday's page is torn off and a stub stays at the binding. */
+function renderCal(tear) {
+  const shown = st.dayDone ? st.day + 1 : st.day, torn = shown - 1;
+  let stubs = '';
+  for (let i = 0; i < torn; i++) { const y = 346 - (i + 1) * 1.3; stubs += '<path d="M397 ' + (y + 2) + ' V' + y + ' H455 V' + (y + 2) + ' l-3 1.2 -3 -1.2 -3 1.4 -3 -1.4 -3 1.2 -3 -1.2 -3 1.3 -3 -1.3 -3 1.2 -3 -1.2 -3 1.4 -3 -1.4 -3 1.2 -3 -1.2 -3 1.3 -3 -1.3 -3 1.2 -3 -1.2 -4 1.2 Z" fill="#F4EEE2" stroke-width=".7"></path>'; }
+  $('#calStubs').innerHTML = stubs;
+  $('#calNum').textContent = shown; $('#calSub').textContent = '第' + (CN[shown] || shown) + '天';
+  const t = $('#calTear');
+  if (tear && !reduced) {
+    t.innerHTML = '<g class="tearoff"><rect x="396" y="357" width="60" height="39" fill="#FFFDF6"></rect>' +
+      '<text x="426" y="383" font-size="25" text-anchor="middle" fill="#4A3324" stroke="none" font-family="ZCOOL XiaoWei, Noto Serif SC, serif">' + torn + '</text>' +
+      '<text x="426" y="392" font-size="6.4" text-anchor="middle" fill="#8A6A50" stroke="none" font-family="Noto Sans SC, sans-serif">第' + CN[torn] + '天</text></g>';
+    setTimeout(() => { t.innerHTML = ''; }, 1600);
+  } else t.innerHTML = '';
+}
+function openCal(sel) {
+  sel = sel || st.day;
+  let g = '';
+  for (let d = 1; d <= 14; d++) {
+    const can = d <= st.day;
+    g += '<button type="button" class="cday' + (d === sel ? ' on' : '') + '" data-d="' + d + '"' + (can ? '' : ' disabled') + '>' + d +
+      (dayDone(d) ? '<svg viewBox="0 0 40 40" aria-hidden="true"><path d="M6 22 A14 13 0 1 1 10 30" fill="none" stroke="#B9694C" stroke-width="2" stroke-linecap="round"></path></svg>' : '') +
+      (d === st.day ? '<small>今天</small>' : '') + '</button>';
+  }
+  $('#calGrid').innerHTML = g;
+  const items = diaryOf(sel);
+  $('#calCap').textContent = DAYNAME[sel] ? '杭州 · ' + DAYNAME[sel] : '第 ' + sel + ' 天';
+  $('#calDiary').innerHTML = items.length ? items.map(x => '<div class="jitem">' + spr(x.spr) + '<span>' + x.t + '</span></div>').join('') : '<div class="jitem"><span>' + (sel === st.day ? '今天还没有记下什么。' : '这一天的日记还空着。') + '</span></div>';
+  $('#calGrid').querySelectorAll('.cday:not([disabled])').forEach(b => b.addEventListener('click', () => { sfx.soft(); openCal(+b.dataset.d); }));
+  $('#calModal').hidden = false; updateGuide();
+}
+$('#calClose').addEventListener('click', () => { $('#calModal').hidden = true; updateGuide(); });
+$('#againBtn').addEventListener('click', () => { $('#journalModal').hidden = true; start(st.day); });
+$('#nextDayBtn').addEventListener('click', () => { if (st.day !== 1) return; $('#journalModal').hidden = true; start(2, st.coins, { drawer: st.drawer, desk: st.desk, rel: st.rel, trash: st.trash }); showInRoom(600); setTimeout(() => renderCal(true), 500); });
 
 /* ---------- menu ---------- */
 const menu = $('#menu'), menuBtn = $('#menuBtn');
@@ -2028,8 +3424,9 @@ function toggleMenu(v) { menu.hidden = !v; menuBtn.setAttribute('aria-expanded',
 menuBtn.addEventListener('click', e => { e.stopPropagation(); toggleMenu(menu.hidden); });
 stage.addEventListener('click', e => { if (!menu.hidden && !menu.contains(e.target) && e.target !== menuBtn) toggleMenu(false); });
 $('#muteBtn').addEventListener('click', e => { const m = sfx.toggle(); e.currentTarget.textContent = '声音：' + (m ? '关' : '开'); toggleMenu(false); });
-$('#tutBtn').addEventListener('click', () => { toggleMenu(false); markTutDone(false); start(); });
-$('#restartBtn').addEventListener('click', () => { toggleMenu(false); start(); });
+$('#tutBtn').addEventListener('click', () => { toggleMenu(false); markTutDone(false); start(1); });
+$('#restartBtn').addEventListener('click', () => { toggleMenu(false); start(st.day); });
+$('#dayBtn').addEventListener('click', () => { toggleMenu(false); start(st.day === 1 ? 2 : 1); });
 $('#peopleBtn').addEventListener('click', () => { toggleMenu(false); openPeople(); });
 function artLabel() { $('#artBtn').textContent = '人物画风：' + (ART === 'chibi' ? 'Q 版' : '半身'); $('#standee').classList.toggle('chibi', ART === 'chibi'); }
 $('#artBtn').addEventListener('click', () => {
@@ -2049,18 +3446,69 @@ setInterval(() => {
   if (ch) { updatePips(); if (st.tut) updateGuide(); }
 }, 250);
 
-function start() {
+function start(day, coins, keep) {
+  day = day === 2 ? 2 : 1;
   cancelAnimationFrame(printRaf); cancelAnimationFrame(L.raf); sfx.humStop();
-  $('#liftModal').hidden = true; $('#journalModal').hidden = true; $('#meetModal').hidden = true; $('#peopleModal').hidden = true; $('#phoneModal').hidden = true; $('#cardModal').hidden = true; $('#knockModal').hidden = true; $('#notif').hidden = true; $('#tidyModal').hidden = true; phoneStory = false;
-  st = fresh(); renderDeskPhone(); renderRoom(); SV.x = 320; SV.y = 210; SV.z = 1; applyView(); Q = [];
+  document.querySelectorAll('.modal').forEach(m => { m.hidden = true; }); $('#notif').hidden = true; $('#notifDim').hidden = true; phoneStory = false;
+  ORDERS = day === 2 ? ORDERS2 : ORDERS1; POST = day === 2 ? POST2 : POST1; ORDERS2[1] = null;
+  st = freshDay(day, coins); keep = keep || {}; st.drawer = (keep.drawer || []).slice(); st.desk = (keep.desk || []).map(d => Object.assign({}, d)); if (keep.rel) st.rel = Object.assign({}, keep.rel); st.trash = (keep.trash || []).slice(); storyOn = storyWait = false; curLine = null; foldView = null; setFold(!st.tut, true); renderDeskPhone(); renderRoom(); SV.x = st.tut ? 320 : 400; SV.y = st.tut ? 210 : 265; SV.z = 1; applyView(); Q = [];
+  $('#dayText').textContent = '杭州 · ' + DAYNAME[day];
+  setLaptop(day === 2 ? 'org_full' : null); renderCal();
+  $('#dayBtn').textContent = day === 1 ? '去第二天' : '回到第一天';
   $('#coinText').textContent = st.coins;
   setGrow(0); setHead(0, 0); G.glow.setAttribute('opacity', '0'); G.lcd.textContent = '待命';
   $('#scene').classList.remove('printing');
+  if (st.printer === 'ready') { G.spr.innerHTML = S[st.pending]; setGrow(1); G.glow.setAttribute('opacity', '1'); G.lcd.textContent = '可取件'; }
   setTime('morning');
   renderBoard();
-  queue(INTRO);
+  queue(day === 2 ? INTRO2 : INTRO, true);
 }
-start();
+// Two views, like a cozy street game: the studio is the main view; the big
+// 合成 button bottom-left switches to the merge desk, 工作室 switches back.
+// (An engine build may need a loading step here.)
+function isFolded() { return $('#stage').classList.contains('folded'); }
+function placeModeBtns() {
+  const sc = $('#scene'), y = sc.offsetTop + sc.offsetHeight;
+  const a = $('#toBoard'), b = $('#toRoom'), f = isFolded();
+  a.hidden = !f; b.hidden = f || !!(st && st.tut);
+  a.style.top = (y - 78 - 12) + 'px'; b.style.top = (y - 58 - 10) + 'px';
+}
+function setFold(v, quiet) {
+  const sg = $('#stage');
+  if (sg.classList.contains('folded') !== v) {
+    if (v) foldView = { x: SV.x, y: SV.y, z: SV.z }; else if (foldView) { Object.assign(SV, foldView); foldView = null; } else SV.y = Math.min(SV.y, 230);
+    sg.classList.toggle('folded', v);
+    if (!v && !quiet && !reduced) { sg.classList.remove('switching'); void sg.offsetWidth; sg.classList.add('switching'); setTimeout(() => sg.classList.remove('switching'), 320); }
+  }
+  placeModeBtns(); applyView(); if (st) updateGuide();
+}
+function updateModeDot() {
+  const d = $('#toBoardDot'), o = curOrder();
+  const n = st.printer === 'ready' ? '!' : (o && !st.printed[st.order]) ? '1' : '';
+  d.hidden = !n; d.textContent = n;
+}
+$('#toBoard').addEventListener('click', () => { sfx.wake(); sfx.soft(); setFold(false); });
+$('#toRoom').addEventListener('click', () => { if (st.tut) return; sfx.soft(); setFold(true); });
+window.addEventListener('resize', placeModeBtns);
+function openDrawer() {
+  const g = {}; st.drawer.forEach((x, i) => { const key = x.k + ':' + x.lv; (g[key] = g[key] || { x, idx: [] }).idx.push(i); });
+  const list = Object.values(g).sort((a, b) => a.x.k.localeCompare(b.x.k) || b.x.lv - a.x.lv);
+  $('#drGrid').innerHTML = list.length ? list.map(({ x, idx }) => { const d = describe(x); return '<button type="button" class="dritem" data-k="' + x.k + '" data-lv="' + x.lv + '">' + spr(d.spr) + d.name + (idx.length > 1 ? '<em>×' + idx.length + '</em>' : '') + '</button>'; }).join('') : '<p class="drempty">抽屉是空的。</p>';
+  sfx.soft(); $('#drawerModal').hidden = false; updateGuide();
+}
+$('#drGrid').addEventListener('click', e => {
+  const b = e.target.closest('.dritem'); if (!b) return;
+  const j = emptyCells()[0];
+  if (j == null) { hint('桌上没有空位了。', 2200); return; }
+  const k = b.dataset.k, lv = +b.dataset.lv, i = st.drawer.findIndex(x => x.k === k && x.lv === lv);
+  if (i < 0) return;
+  st.drawer.splice(i, 1); st.board[j] = { k, lv };
+  sfx.place(); renderBoard({ spawn: j });
+  if (st.drawer.length) openDrawer(); else { $('#drawerModal').hidden = true; updateGuide(); }
+});
+$('#drClose').addEventListener('click', () => { $('#drawerModal').hidden = true; updateGuide(); });
+start(location.hash === '#day2' ? 2 : 1);
+if (/[?&]debug\b/.test(location.search)) window.__dbg = { st: () => st, giveTo, putOnDesk, renderBoard, openWash, openPoop, applyClock };
 })();
 </script>
 
