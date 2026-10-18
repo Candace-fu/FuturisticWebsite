@@ -500,6 +500,8 @@ body.framed .stage{border-radius:34px;box-shadow:0 0 0 1px rgba(74,51,36,.18),0 
 .prow b.hot{color:var(--clay)}
 .prow b.dim{color:var(--mute);font-weight:400}
 .psec{margin:10px 0 0;font-family:var(--f-ui);font-size:12px;letter-spacing:2px;color:var(--mute)}
+.pcare{display:flex;gap:8px;margin-top:6px}.pcare .sbtn{flex:1;height:40px}.pcare .sbtn:disabled{opacity:.45}
+.pwarn{margin:8px 0 0;font-family:var(--f-ui);font-size:13px;color:var(--clay)}
 .skempty{grid-column:1/-1;margin:0;padding:18px 8px;text-align:center;font-family:var(--f-ui);font-size:13px;color:var(--mute)}
 @keyframes spin{to{transform:rotate(360deg)}}
 @keyframes glow{0%,100%{opacity:.35}50%{opacity:1}}
@@ -1386,13 +1388,13 @@ function fresh(day) {
   b[2] = { k: 'idea', lv: 1 }; b[7] = { k: 'idea', lv: 1 }; b[10] = { k: 'fil', lv: 1 };
   return { board: b, gens: { gen_idea: { c: 6, t: 0 }, gen_fil: { c: 6, t: 0 } }, coins: 120, order: -1, printed: {}, done: [],
     time: 'morning', notif: false, tidy: null, met: {}, saved: {}, pendingCard: null, phoneNew: false, room: { org: false, tidy: false }, sel: -1, slots: { idea: null, fil: null }, printer: 'idle', pLeft: 0, pProg: 0, pending: null, tut: true,
-    day: 1, jr: [], choice: null };
+    day: 1, jr: [], choice: null, maint: { plate: 0, poop: 0 } };
 }
 function freshDay(day, coins) {
   const s = fresh();
   if (day !== 2) return s;
   return Object.assign(s, { day: 2, tut: false, coins: coins || 170, met: { D: true }, saved: { D: true },
-    room: { org: true, tidy: true, scraper: false, spools: false }, ams: null, unpack: {} });
+    room: { org: true, tidy: true, scraper: false, spools: false }, ams: null, unpack: {}, maint: { plate: 2, poop: 2 } });
 }
 const boardEl = $('#board'), nextBtn = $('#nextBtn'), dlg = $('#dlg');
 const GMAX = 6, GREGEN = 1600;
@@ -1711,6 +1713,7 @@ function renderScene() {
   if (st.printer === 'idle') tag.textContent = '打印机 · 待命';
   else if (st.printer === 'cooling') tag.textContent = '降温中';
   else if (st.printer === 'ready') tag.textContent = '打印好了 · 点击取件';
+  if (st.printer === 'idle' && needsCare()) tag.textContent = '打印机 · 该保养了';
   $('#scene').classList.toggle('ready', st.printer === 'ready');
 }
 /* Like a classic RPG, everything in the room says something when tapped. Rects are in scene SVG units, checked in order. */
@@ -1726,7 +1729,7 @@ const LOOKS = [
   { r: [436, 30, 622, 192], t: () => st.room.tidy ? '洞洞板。工具都收进收纳架了，空出一大片。' : '洞洞板。打印用的工具都挂在这里。' },
   { r: [40, 200, 112, 306], t: () => '一盆绿植。' },
   { r: [14, 20, 176, 216], t: () => '窗外是杭州。' },
-  { r: [740, 455, 800, 515], t: () => '垃圾桶。' }
+  { r: [740, 455, 800, 515], t: () => st.room.binPoop ? '垃圾桶。里面是清出来的竹屎。' : '垃圾桶。' }
 ];
 function scenePoint(e) {
   const m = sceneSvg.getScreenCTM(); if (!m) return null;
@@ -1821,6 +1824,8 @@ $('#placeBtn').addEventListener('click', () => {
   if (j < 0) { $('#liftHint').textContent = '桌上没有空位了。先把用不上的收进抽屉，再点打印机取件。'; $('#liftModal').hidden = true; updateGuide(); return; }
   st.board[j] = { k: st.pending };
   st.printed[st.order] = true; st.pending = null; st.printer = 'idle'; st.sel = j;
+  st.maint.plate++; st.maint.poop++;
+  if (needsCare()) setTimeout(() => hint(st.maint.poop >= POOP_MAX ? '竹屎堆满了，点打印机清理一下。' : '打印板该洗了，点打印机看看。', 3400), 1200);
   setGrow(0); G.glow.setAttribute('opacity', '0'); G.lcd.textContent = '待命';
   $('#liftModal').hidden = true; cancelAnimationFrame(L.raf);
   sfx.place(); renderBoard({ spawn: j });
@@ -2450,8 +2455,11 @@ $('#skClose').addEventListener('click', () => { $('#sketchModal').hidden = true;
 
 /* ---------- printer status: looking after the printer will matter later in the game ---------- */
 /* Temperatures are Bambu's PLA preset on the textured PEI plate (nozzle 220 °C, bed 55 °C).
-   HUMIDITY is a draft value until Hestia gives a real reading from her hygrometer. */
-const HUMIDITY = 65;
+   Hestia: the Hangzhou studio's humidity floats between 30 and 45%. Maintenance from her: empty the
+   purge waste (竹屎) and wash the plate every few prints, or prints may fail (failures start on day 3). */
+const humidity = () => 30 + (st.day * 7 + st.done.length * 3) % 16;
+const PLATE_MAX = 3, POOP_MAX = 4;
+const needsCare = () => st.maint && (st.maint.plate >= PLATE_MAX || st.maint.poop >= POOP_MAX);
 function realMinutes(t) {
   const h = /(\d+)\s*小时/.exec(t), m = /(\d+)\s*分/.exec(t), sec = /(\d+)\s*秒/.exec(t);
   return (h ? +h[1] * 60 : 0) + (m ? +m[1] : 0) + (sec ? +sec[1] / 60 : 0);
@@ -2463,16 +2471,25 @@ function openPrinter() {
   const hot = st.printer === 'printing', o = curOrder();
   const list = sketchList(), mins = list.reduce((a, x) => { const d = printData(x.k); return a + (d.real ? realMinutes(d.real.time) : 0); }, 0);
   const grams = list.reduce((a, x) => { const d = printData(x.k); return a + (d.real ? parseFloat(d.real.g) : 0); }, 0);
+  const m = st.maint;
   $('#prBody').innerHTML =
     row('状态', state, hot || st.printer === 'ready' ? 'hot' : '') +
     (hot && o && o.layers ? row('进度', Math.round(st.pProg * o.layers) + ' / ' + o.layers + ' 层') : '') +
     row('喷嘴', hot ? '220 °C' : st.printer === 'cooling' ? '降温中' : '室温', hot ? 'hot' : 'dim') +
     row('热床', hot ? '55 °C' : st.printer === 'cooling' || st.printer === 'ready' ? '降温中' : '室温', hot ? 'hot' : 'dim') +
     row('打印板', 'Bambu 纹理 PEI 板') +
+    row('打印板干净吗', m.plate >= PLATE_MAX ? '该清洗了（打了 ' + m.plate + ' 次）' : m.plate ? '打了 ' + m.plate + ' 次，还行' : '刚洗过', m.plate >= PLATE_MAX ? 'hot' : '') +
+    row('竹屎', m.poop >= POOP_MAX ? '堆满了，该清理了' : m.poop ? '攒了一点（' + m.poop + ' 次打印）' : '清空了', m.poop >= POOP_MAX ? 'hot' : '') +
     row('耗材', st.room.ams ? 'AMS lite：白、灰、黑、透明' : st.room.spools ? '白、灰、黑、透明（挂在耗材架上）' : '顶上挂着一卷 PLA') +
-    row('环境湿度', st.done.includes('stand') || (st.day > 2 && diaryOf(2).some(x => x.spr === 'stand')) ? HUMIDITY + '%' : '不知道（还没有温湿度计）', st.done.includes('stand') ? '' : 'dim') +
+    row('环境湿度', st.done.includes('stand') || (st.day > 2 && diaryOf(2).some(x => x.spr === 'stand')) ? humidity() + '%' : '不知道（还没有温湿度计）', st.done.includes('stand') ? '' : 'dim') +
     '<p class="psec">累计</p>' +
-    row('打印次数', list.length + ' 次') + row('打印时长', fmtMinutes(mins)) + row('用掉的耗材', Math.round(grams * 10) / 10 + ' g');
+    row('打印次数', list.length + ' 次') + row('打印时长', fmtMinutes(mins)) + row('用掉的耗材', Math.round(grams * 10) / 10 + ' g') +
+    '<p class="psec">保养</p><div class="pcare">' +
+    '<button type="button" class="sbtn" id="careWash"' + (m.plate && st.printer === 'idle' ? '' : ' disabled') + '>清洗打印板</button>' +
+    '<button type="button" class="sbtn" id="carePoop"' + (m.poop ? '' : ' disabled') + '>清理竹屎</button></div>' +
+    (needsCare() ? '<p class="pwarn">不保养的话，可能会引发打印故障。</p>' : '');
+  $('#careWash').addEventListener('click', () => { m.plate = 0; sfx.place(); hint('打印板取下来洗干净，擦干，装回去了。', 2800); renderScene(); openPrinter(); });
+  $('#carePoop').addEventListener('click', () => { m.poop = 0; st.room.binPoop = true; sfx.place(); hint('把竹屎倒进了垃圾桶。', 2600); renderScene(); openPrinter(); });
   sfx.soft(); $('#printerModal').hidden = false; updateGuide();
 }
 $('#prClose').addEventListener('click', () => { $('#printerModal').hidden = true; updateGuide(); });
