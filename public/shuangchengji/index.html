@@ -1418,7 +1418,7 @@ const INTRO2 = [
 const MORNING2 = [
   { s: 'n', t: '收纳架放好了。洞洞板上的工具，一件件收进去吧。' },
   { do: 'tidy' },
-  { s: 'me', t: '哎呀，今天太着急了，两个模型都是直接掰下来的。' },
+  { s: 'me', t: '哎呀，昨天太着急了，两个模型都是直接掰下来的。' },
   { s: 'me', t: '这可不是好习惯……抽空得搞把刮刀了。' },
   { s: 'n', t: '收纳架摆在桌上，长仓还空着。' },
   { s: 'me', t: '今天得把刮刀打出来。' },
@@ -1903,7 +1903,7 @@ function openLift() {
   $('#liftTitle').textContent = SINGLE[p].name;
   $('#liftSpr').innerHTML = S[p];
   const pick = st.day === 2 && !!st.room.scraper;
-  $('#liftText').hidden = true; $('#placeBtn').hidden = true; $('#flexBtn').hidden = pick; $('#liftPick').hidden = !pick;
+  $('#liftText').hidden = true; $('#placeBtn').hidden = true; $('#liftGive').hidden = true; $('#liftGive').innerHTML = ''; $('#flexBtn').hidden = pick; $('#liftPick').hidden = !pick;
   $('#flexBtn').textContent = '按住，掰弯打印板'; $('#liftScraper').setAttribute('opacity', 0);
   const warm = curOrder() ? '打印板还是温的。' : '';
   $('#liftHint').textContent = pick ? warm + '这次怎么取？' : warm + '按住下面的按钮（或按住图），把打印板轻轻掰弯。';
