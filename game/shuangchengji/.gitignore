@@ -1,0 +1,12 @@
+# Godot 自动生成的缓存，每台电脑会自己重建，不要同步
+.godot/
+/android/
+# 导出的安装包
+/build/
+*.ipa
+*.apk
+# 导出设置里可能有证书和团队 ID，先不进仓库
+export_presets.cfg
+# Blender 自动备份
+*.blend1
+*.blend2
