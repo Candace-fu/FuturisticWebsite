@@ -1,5 +1,6 @@
 import { defineConfig, loadEnv, type Plugin } from 'vite'
 import path from 'path'
+import fs from 'node:fs'
 import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
 import { projects } from './src/app/data/projects'
@@ -123,6 +124,29 @@ function agentProxyPlugin(apiKey: string | undefined): Plugin {
   }
 }
 
+// The independently deployed Friends game must survive a main-site rebuild.
+function preserveFriendsGame(): Plugin {
+  return {
+    name: 'preserve-friends-game',
+    apply: 'build',
+    writeBundle(output) {
+      const source = process.env.PILLS_FRIENDS_GAME ||
+        '/mnt/workspace/pills.fun/home/.local/share/friends-live/index.html'
+      if (!fs.existsSync(source)) {
+        if (process.env.PILLS_FRIENDS_GAME) throw new Error('Friends game source is missing')
+        return
+      }
+      const html = fs.readFileSync(source, 'utf8')
+      if (!html.includes('双城记') || !/<html/i.test(html)) {
+        throw new Error('Friends game source is not valid game HTML')
+      }
+      const target = path.resolve(output.dir || 'dist', 'shuangchengji/index.html')
+      fs.mkdirSync(path.dirname(target), { recursive: true })
+      fs.copyFileSync(source, target)
+    },
+  }
+}
+
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
 
@@ -133,6 +157,7 @@ export default defineConfig(({ mode }) => {
     plugins: [
       react(),
       tailwindcss(),
+      preserveFriendsGame(),
       agentProxyPlugin(env.SILICONFLOW_API_KEY),
     ],
     resolve: {

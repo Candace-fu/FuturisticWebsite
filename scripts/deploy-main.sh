@@ -36,10 +36,12 @@ trap 'rm -rf "$check_dir"' EXIT
 verify() {
     [[ "$(cat dist/.deployed-commit)" == "$requested" ]] || return 1
     curl --fail --silent --show-error --retry 3 --max-time 30 https://pills.fun/ -o /dev/null || return 1
-    if [[ -f public/shuangchengji/index.html ]]; then
+    game_source="$base/home/.local/share/friends-live/index.html"
+    [[ -f "$game_source" ]] || game_source=public/shuangchengji/index.html
+    if [[ -f "$game_source" ]]; then
         curl --fail --silent --show-error --retry 3 --max-time 30 \
             -D "$check_dir/headers" https://pills.fun/shuangchengji/ -o "$check_dir/game.html" || return 1
-        cmp -s public/shuangchengji/index.html "$check_dir/game.html" || return 1
+        cmp -s "$game_source" "$check_dir/game.html" || return 1
         tr -d '\r' < "$check_dir/headers" | grep -Eiq '^Cache-Control:.*no-cache' || return 1
     fi
 }

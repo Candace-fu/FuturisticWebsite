@@ -34,3 +34,26 @@ ssh web@pills.fun /mnt/workspace/pills.fun/bin/deploy-site --rollback
 The server's Nginx configuration is separate from Git and retains the no-cache
 rule for `/shuangchengji/`. Production is served from `site/dist`; do not run
 `npm run build` directly there, or upload changes only into `dist`.
+
+## Friends game ownership
+
+The game is now published from the private `Candace-fu/friends` repository,
+`h5/index.html`. This repository continues to publish the main website.
+The server retains the current independent game at
+`/mnt/workspace/pills.fun/home/.local/share/friends-live/index.html`.
+The Vite build copies that file over the legacy game in its output, so this
+repository's deployments do not replace Friends updates. Local builds without
+that server file keep their normal behavior; `PILLS_FRIENDS_GAME` can explicitly
+select a source file for verification.
+
+Both deployments use the same server lock to avoid racing with a directory
+swap. The main-site post-deploy check compares against the retained Friends
+game. Friends publishes one HTML file atomically and retains a previous version.
+To roll back only the game using an ordinary administrator SSH key:
+
+```sh
+ssh web@pills.fun /mnt/workspace/pills.fun/home/.local/bin/deploy-friends --rollback
+```
+
+After a manual full-site rollback, restore the desired Friends game as needed;
+the full-site backup is a snapshot and may contain an earlier game version.
