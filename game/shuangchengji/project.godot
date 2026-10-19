@@ -1,5 +1,5 @@
 ; Engine configuration file.
-; 双城记 正式版（Godot 4.5，iOS 优先）。用 Godot 编辑器打开这个文件夹即可。
+; 双城记 正式版（Godot 4.7，iOS 优先）。用 Godot 编辑器打开这个文件夹即可。
 
 config_version=5
 
@@ -8,7 +8,7 @@ config_version=5
 config/name="双城记"
 config/description="以真实生活为蓝本的 3D 打印剧情游戏"
 run/main_scene="res://scenes/studio.tscn"
-config/features=PackedStringArray("4.5", "Mobile")
+config/features=PackedStringArray("4.7", "Mobile")
 
 [display]
 
